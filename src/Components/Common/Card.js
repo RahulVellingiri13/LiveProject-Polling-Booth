@@ -1090,8 +1090,6 @@
 
 // this code REMOVES all the function from that COMMENTS
 
-
-
 import React, { useState, useRef } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
