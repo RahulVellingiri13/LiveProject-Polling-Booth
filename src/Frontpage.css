@@ -1,0 +1,90 @@
+/* Frontpg.css */
+
+.bodyy {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #ffffff;
+    background-color: #5A8D8E; 
+}
+
+.containerrr {
+    text-align: center;
+    max-width: 400px;
+    margin:auto;
+    margin-top: 215px;
+}
+
+.polling-logoo {
+    font-size: 80px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+h1 {
+    margin: 20px 0;
+    font-size: 36px;
+}
+
+.signup-options {
+    margin: 20px 0;
+}
+
+.signupp-button {
+    background-color:#06b4d6 ;
+    color: #ffffff;
+    border: none;
+    padding: 15px 30px;
+    margin: 10px 0;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 25px;
+    width: 100%;
+}
+
+.signupp-button:hover {
+    background-color: #05cff7;
+}
+
+.login-linkk {
+    margin-top: 20px;
+}
+
+.login-linkk a {
+    color: #05cff7;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.login-linkk a:hover {
+    text-decoration: underline;
+}
+
+/* Alignment for the row and column */
+.vh-100 {
+    height: 100vh;
+}
+
+.left-column {
+    /* background-color: #333333; Example color for the left column */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Frontpg.css */
+
+.polling-logoo {
+    max-width: 80%;
+    height: auto;
+    margin: auto;
+}
+
+/* Ensure the left-column is centered */
+.left-column {
+    /* background-color: #333333; Optional background color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

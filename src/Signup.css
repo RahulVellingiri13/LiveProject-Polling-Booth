@@ -1,0 +1,231 @@
+.a1{
+    margin-left: 10px;
+  }
+  .a2{
+    margin-left: -10px;
+  }
+  .b1 {
+      text-align: center;
+      background-color: #DAF1F6;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+    .b2{
+      background-color: #DAF1F6;
+    }
+    
+    .x1 {
+      margin-top: 20px;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;;
+    }
+    
+    .x2 {
+      font-weight: bold;
+    }
+    
+    .x3, .x4, .x8 {
+      margin-bottom: 15px;
+    }
+    
+    .x5, .x6, .x7 {
+      margin-bottom: 15px;
+    }
+    
+    .z9 {
+      width: 100%;
+      background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+    }
+    .z9:hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+    .z10{
+      width: 100%;
+      background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+    }
+    .z10:hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+    .or{
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .b1 h1 {
+        font-size: 24px;
+      }
+    
+      .x1 {
+        margin-top: 10px;
+      }
+    
+      .x2 {
+        font-size: 18px;
+      }
+    
+      .x3, .x4, .x8 {
+        margin-bottom: 10px;
+      }
+    
+      .x5, .x6, .x7 {
+        margin-bottom: 10px;
+      }
+    
+      .z9 {
+        width: 100%;
+        background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+      }
+      .z9:hover{
+        background-color: #05cff7;
+        height: 14;
+      }
+      .z10{
+        width: 100%;
+        background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+      }
+      .z10:hover{
+        background-color: #05cff7;
+        height: 14;
+      }
+      .or{
+        text-align: center;
+      }
+    
+      .text-center {
+        text-align: center;
+      }
+    
+      .row {
+        margin: 0;
+      }
+    
+      .col-sm-4 {
+        max-width: 100%;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .b1 h1 {
+        font-size: 20px;
+      }
+    
+      .x1 {
+        margin-top: 5px;
+      }
+    
+      .x2 {
+        font-size: 16px;
+      }
+    
+      .x3, .x4, .x8 {
+        margin-bottom: 8px;
+      }
+    
+      .x5, .x6, .x7 {
+        margin-bottom: 8px;
+      }
+    
+      .z9 {
+        width: 100%;
+        background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+      }
+      .z9:hover{
+        background-color: #05cff7;
+        height: 14;
+      }
+  
+      .z10{
+        width: 100%;
+        background-color:#06b4d6 ;
+      border-radius: 10px;
+      border: none;
+      }
+      .z10:hover{
+        background-color: #05cff7;
+        height: 14;
+      }
+      .or{
+        text-align: center;
+      }
+    
+    
+      .text-center {
+        text-align: center;
+      }
+    
+      .row {
+        margin: 0;
+      }
+    
+      .col-sm-4 {
+        max-width: 100%;
+      }
+    }
+  
+  
+    .otp-button{
+      width: 100%;
+      background-color:#06b4d6 ;
+    border-radius: 10px;
+    border: none;
+    }
+    .otp-button:hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+  
+    .otp-verification{
+      width: 100%;
+      background-color:#06b4d6 ;
+    border-radius: 10px;
+    border: none;
+    }
+    .otp-verification:hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+  
+    .verify-otp-button{
+      width: 100%;
+      background-color:#06b4d6 ;
+    border-radius: 10px;
+    border: none;
+    }
+    .verify-otp-button:hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+  
+    .otp-button{
+      width: 50%;
+      background-color:#06b4d6 ;
+      margin-left: 150px;
+    border-radius: 10px;
+    border: none;
+    }
+  
+    .otp-button :hover{
+      background-color: #05cff7;
+      height: 14;
+    }
+  
+  
+    /* .passwordd-input-container{
+      width: 275px;
+      margin-top: 15px;
+      
+  
+    }
+  
+  .passwordd-toggle-icon{
+    margin-top: -15px;
+  } */

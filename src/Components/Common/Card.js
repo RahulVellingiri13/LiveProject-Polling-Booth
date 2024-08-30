@@ -1090,16 +1090,27 @@
 
 // this code REMOVES all the function from that COMMENTS
 
-import React, { useState, useRef } from "react";
+
+
+
+
+import React, { useState, useRef, useContext } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
+import Onepoll from "../Onepoll";
+import CommentsComp from "./CommentsComp";
+import { PageContext } from "../../App";
 // import Comment from "./Comment";
 
+
 function CardComp({
+  
     index,
+    pollId,
+    _id,
   name,
   createdon,
   title,
@@ -1111,7 +1122,11 @@ function CardComp({
   onPollSubmit,
   onCardClick,
 }) {
+  let [page,setPage,pollid,setPollid]=useContext(PageContext)
+  // let [pollid,setPollid]=useContext(PageContext)
+  console.log(pollid)
     let navigate=useNavigate()
+    // let [pollid,setPollid]=useState("")
     console.log(index)
   const [liked, setLiked] = useState(false); // New state for likes
   const [likeCount, setLikeCount] = useState(5); // New state for likes count
@@ -1188,6 +1203,7 @@ function CardComp({
 
 
   const handleViewComment = () => {
+    
     onCardClick({
       index,
       name,
@@ -1204,6 +1220,18 @@ function CardComp({
     });
   };
 console.log(options)
+
+let handleOnepoll=(_id)=>{
+console.log(_id)
+// navigate('/onepoll/'+_id
+setPage("CommentsComp")
+console.log(page)
+setPollid(_id)
+console.log(page,pollid)
+
+
+
+}
   return (
     <Card>
       <Card.Body>
@@ -1277,8 +1305,10 @@ console.log(options)
             like
           </p>
 
-        <p style={{ cursor: "pointer", color: "blue" }} onClick={()=>handleViewComment(index)}>
-            <i className="bi bi-chat-quote-fill" ></i> Comments
+        <p style={{ cursor: "pointer", color: "blue" }} 
+        // onClick={()=>handleViewComment(index)}
+        >
+            <i className="bi bi-chat-quote-fill" onClick={()=>handleOnepoll(_id)}  ></i> Comments
           </p>
 
           <p
@@ -1362,3 +1392,262 @@ export default CardComp;
 
 
 // //=------------------------------------------------------------------------------------------------
+
+
+// import React, { useState, useRef } from "react";
+// import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+// import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+// import { useNavigate } from "react-router-dom";
+// import axios from "axios"; // Import Axios
+
+// function CardComp({
+//   index,
+//   pollId,
+//   _id,
+//   name,
+//   createdon,
+//   title,
+//   status,
+//   question,
+//   options,
+//   votingPeriod,
+//   category,
+//   onPollSubmit,
+//   onCardClick,
+// }) {
+//   const navigate = useNavigate();
+//   const [pollid, setPollid] = useState("");
+//   const [liked, setLiked] = useState(false);
+//   const [likeCount, setLikeCount] = useState(5);
+//   const [comments, setComments] = useState([
+//     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
+//     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
+//   ]);
+//   const [selectedOption, setSelectedOption] = useState(null);
+//   const [showOverlay, setShowOverlay] = useState(false);
+//   const target = useRef(null);
+
+//   const toggleLike = async () => {
+//     try {
+//       const response = await axios.post("http://92.205.109.210:8028/polls/likeonpoll", {
+//         pollId: pollId, // Pass the poll ID to the API
+//       });
+
+//       if (response.data.success) {
+//         setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+//         setLiked(!liked);
+//       } else {
+//         console.error("Error liking/unliking poll:", response.data.message);
+//       }
+//     } catch (error) {
+//       console.error("Error liking/unliking poll:", error.message);
+//     }
+//   };
+
+//   const handleVote = async (index) => {
+//     try {
+//       const response = await axios.post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         pollId: pollId, // Pass the poll ID to the API
+//         optionIndex: index, // Pass the selected option index
+//       });
+
+//       if (response.data.success) {
+//         setSelectedOption(index);
+//       } else {
+//         console.error("Error voting/unvoting:", response.data.message);
+//       }
+//     } catch (error) {
+//       console.error("Error voting/unvoting:", error.message);
+//     }
+//   };
+
+//   const handleOptionChange = (index) => {
+//     if (selectedOption === index) {
+//       unselectOption(); // Unselect the option if it's already selected
+//     } else {
+//       handleVote(index); // Call the API to vote
+//     }
+//   };
+
+//   const unselectOption = () => {
+//     setSelectedOption(null);
+//   };
+
+//   const handleShareClick = () => {
+//     setShowOverlay(!showOverlay);
+//   };
+
+//   const handleViewComment = () => {
+//     onCardClick({
+//       index,
+//       name,
+//       createdon,
+//       title,
+//       status,
+//       question,
+//       options,
+//       votingPeriod,
+//       category,
+//       likeCount,
+//       liked,
+//       comments,
+//     });
+//   };
+
+//   const handleOnepoll = (_id) => {
+//     console.log(_id);
+//   };
+
+//   return (
+//     <Card onClick={() => handleOnepoll(_id)}>
+//       <Card.Body>
+//         <Card.Header className="d-flex justify-content-between align-items-center">
+//           <div>
+//             <h6>Name: {name}</h6>
+//             <p>Created: {createdon}</p>
+//             <p>Title: {title}</p>
+//             <p>Status: {status}</p>
+//           </div>
+//           <Button variant="primary">Follow</Button>
+//         </Card.Header>
+
+//         <Card.Text>
+//           <div className="mt-3 mb-3">{question}</div>
+//           <Card className="mb-3">
+//             <Card.Body>
+//               <Card.Header className="d-flex justify-content-between">
+//                 <p>Poll Ends on {votingPeriod}</p>
+//                 <p>Category: {category}</p>
+//               </Card.Header>
+//               <Card.Text className="d-flex flex-column">
+//                 {options.map((option, index) => (
+//                   <div key={index}>
+//                     {selectedOption === index ? (
+//                       <ProgressBar
+//                         now={100}
+//                         label={option}
+//                         onClick={unselectOption}
+//                         style={{ cursor: "pointer" }}
+//                       />
+//                     ) : (
+//                       <div className="form-check">
+//                         <input
+//                           className="form-check-input"
+//                           type="radio"
+//                           id={`option${index + 1}`}
+//                           name="options"
+//                           value={option}
+//                           onChange={() => handleOptionChange(index)}
+//                           checked={selectedOption === index}
+//                         />
+//                         <label
+//                           className="form-check-label"
+//                           htmlFor={`option${index + 1}`}
+//                         >
+//                           {option}
+//                         </label>
+//                       </div>
+//                     )}
+//                   </div>
+//                 ))}
+//               </Card.Text>
+//             </Card.Body>
+//           </Card>
+//         </Card.Text>
+
+//         <Card.Footer className="d-flex justify-content-between">
+//           <p>
+//             <button
+//               onClick={toggleLike}
+//               style={{ background: "none", border: "none", cursor: "pointer" }}
+//             >
+//               <FontAwesomeIcon
+//                 icon={liked ? solidHeart : regularHeart}
+//                 style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+//               />
+//             </button>
+//             <span style={{ marginLeft: "8px" }}>{likeCount}</span> like
+//           </p>
+
+//           <p
+//             style={{ cursor: "pointer", color: "blue" }}
+//             onClick={() => handleViewComment(index)}
+//           >
+//             <i className="bi bi-chat-quote-fill"></i> Comments
+//           </p>
+
+//           <p
+//             ref={target}
+//             onClick={handleShareClick}
+//             style={{ cursor: "pointer" }}
+//           >
+//             <i className="bi bi-share"></i> Share
+//           </p>
+//           <Overlay
+//             show={showOverlay}
+//             target={target.current}
+//             placement="top"
+//             containerPadding={20}
+//             rootClose
+//             onHide={() => setShowOverlay(false)}
+//           >
+//             <Popover id="popover-contained">
+//               <Popover.Header as="h3">Share this Poll</Popover.Header>
+//               <Popover.Body>
+//                 <div className="d-flex justify-content-around">
+//                   <a
+//                     href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-facebook"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-twitter"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://www.instagram.com/?url=yourPollLink"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-instagram"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-whatsapp"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                 </div>
+//               </Popover.Body>
+//             </Popover>
+//           </Overlay>
+//         </Card.Footer>
+//       </Card.Body>
+//     </Card>
+//   );
+// }
+
+// export default CardComp;
