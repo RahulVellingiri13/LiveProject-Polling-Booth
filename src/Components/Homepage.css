@@ -1,156 +1,150 @@
 body {
-    font-family: Arial, sans-serif;
-     background-color: #f0f0f0; 
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
 }
-  
+
 .polling-booth header {
-    display: flex;
-    justify-content:space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #5A8D8E; 
-    color: white;
-  }
-  
-  .polling-booth header h1 {
-    margin: 0;
-    font-family: sans-serif;
-  }
-  
-  .polling-booth header input {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: none;
-    width: 40%;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #5a8d8e;
+  color: white;
+}
 
-  .polling-booth h4 {
-    font-family: sans-serif;
-    font-size: 1.5rem;
-  }
+.polling-booth header h1 {
+  margin: 0;
+  font-family: sans-serif;
+}
 
-  .polling-booth .container {
-    display: flex;
-    flex-direction:row;
-    justify-content:space-between;
-    padding: 1rem;
-  }
-  
-  .polling-booth aside {
-    flex: 1;
-    margin-right: 1rem;
-    padding: 1rem;
-    background-color:#e7e7e7;
-    border: 3px solid #ddd;
-    margin-left:-6rem ;
-    /* change the left aside div/nav height and color here*/
-    height: 40rem;
-  }
+.polling-booth header input {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border: none;
+  width: 40%;
+}
 
-  .polling-booth aside nav ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .polling-booth aside nav ul li {
-    padding: 0.5rem;
-    background-color:white;
-    border-radius: 10px;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-  }
-  
-  .polling-booth .categories {
-    background-color:lightgray;
-    padding: 1rem;
-    border-radius: 5px;
-    /* the scroll down function*/
-    position: relative;
-    width: 13rem;
+.polling-booth h4 {
+  font-family: sans-serif;
+  font-size: 1.5rem;
+}
+
+.polling-booth .container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.polling-booth aside {
+  flex: 1;
+  margin-right: 1rem;
+  padding: 1rem;
+  background-color: #e7e7e7;
+  border: 3px solid #ddd;
+  margin-left: -6rem;
+  /* change the left aside div/nav height and color here*/
+  height: 40rem;
+}
+
+.polling-booth aside nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.polling-booth aside nav ul li {
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 10px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.polling-booth .categories {
+  background-color: lightgray;
+  padding: 1rem;
+  border-radius: 5px;
+  /* the scroll down function*/
+  position: relative;
+  width: 13rem;
   height: 3rem;
+}
 
-  }
-  
+.polling-booth .categories nav {
+  display: flex;
+  flex-direction: column;
 
-  .polling-booth .categories nav {
-    display: flex;
-    flex-direction: column;
+  /* the scroll down function*/
+  overflow: auto;
+  width: 100%;
+  height: 19rem;
+}
+.polling-booth .categories nav button {
+  padding: 0.5rem;
+  margin: 0.2rem;
+  border-radius: 10px;
+  background-color: white;
+}
+.polling-booth .sign-out {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #5aafa2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+}
 
-   /* the scroll down function*/
-    overflow: auto;
-    width: 100%;
-    height: 19rem;
+.polling-booth main {
+  flex: 3;
+  margin-right: -2.5rem;
+  margin-left: -0.5rem;
+  position: relative;
+}
+.polling-booth main nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* width: 100%; */
+  overflow: auto;
+  width: 100%;
+  height: 40rem;
+}
 
-  }
-  .polling-booth .categories nav button{
-    padding: 0.5rem;
-    margin: 0.2rem;
-    border-radius: 10px;
-    background-color:white;
-  }
-  .polling-booth .sign-out {
-    margin-top: 1rem;
-    padding: 0.5rem;
-    background-color: #5aafa2;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .polling-booth main {
-    flex: 3;
-    margin-right: -2.5rem;
-    margin-left: -0.5rem;
-    position: relative;
-   
-  }
-  .polling-booth main nav{
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   /* width: 100%; */
-   overflow:auto;
-   width: 100%;
-   height: 40rem;
-
-  }
-
-
-  
-  .polling-booth .trending-polls {
-    flex: 1.5;
-    background-color: #e7e7e7;
-    padding: 0.5rem;
-    border-radius: 5px;
-    margin-left: 3rem;
-    margin-right: -5.7rem;
-    position: relative;
-    width: 13rem;
-     /* change the right aside div/nav height and color here*/
-    height: 40rem;
-    
-  }
+.polling-booth .trending-polls {
+  flex: 1.5;
+  background-color: #e7e7e7;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin-left: 3rem;
+  margin-right: -5.7rem;
+  position: relative;
+  width: 13rem;
+  /* change the right aside div/nav height and color here*/
+  height: 40rem;
+}
 /*   
   .polling-booth .trending-polls h2 {
     margin-top: 0;
     }
  */
- .polling-booth .trending-polls nav{
-  display:flex;
-  flex-direction:column;
+.polling-booth .trending-polls nav {
+  display: flex;
+  flex-direction: column;
   justify-content: space-evenly;
   overflow: auto;
   width: 100%;
   height: 35rem;
- }
+}
 
-
- @media screen and (max-width: 768px) {
+/* 
+ @media screen and (min-width: 400px) {
   .polling-booth header {
     flex-direction: column;
     align-items: flex-start;
+    background-color: red;
+    color: red;
   }
 
   .polling-booth header input {
@@ -166,7 +160,7 @@ body {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
-    height: auto; /* Adjust height for mobile */
+    height: auto;
     margin-bottom: 1rem;
   }
 
@@ -178,7 +172,7 @@ body {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
-    height: auto; /* Adjust height for mobile */
+    height: auto;
     margin-bottom: 1rem;
   }
 
@@ -188,14 +182,85 @@ body {
   }
 
   .polling-booth main nav {
-    height: auto; /* Adjust height for mobile */
+    height: auto; 
   }
 
   .polling-booth .trending-polls nav {
-    height: auto; /* Adjust height for mobile */
+    height: auto;
   }
 }
 
+*/
 
- 
+@media screen and (max-width: 440px) {
+  .polling-booth header {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+
+  .polling-booth header h1 {
+    font-size: 250%;
+    margin-bottom: 0.5rem;
+  }
+
+  .polling-booth header input {
+    width: 70%;
+    margin-bottom: 0.5rem;
+  }
+
+  .polling-booth h4 {
+    font-size: 1.2rem;
+  }
+
+  .polling-booth .container {
+    flex-direction:column;
+    margin-left: -0.9rem;
+    width: 50%;
+  }
+
+  .polling-booth aside {
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 1rem;
+    height: auto;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction:row;
+  }
+
+  .polling-booth .categories {
+    width: 100%;
+    height: auto;
+  }
+
+  .polling-booth .categories nav {
+    height: 25rem;
+  }
+
+  .polling-booth main {
+    margin: 0;
+    padding: 0.5rem;
   
+  }
+
+  .polling-booth main nav {
+    height: auto;
+  }
+
+  .polling-booth .trending-polls {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 1rem;
+    height: auto;
+    padding: 0.5rem;
+  }
+
+  .polling-booth .trending-polls nav {
+    height: auto;
+  }
+
+  .polling-booth .sign-out {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}

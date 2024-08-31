@@ -564,22 +564,27 @@
 
 //----------------------------------------------------------------
 
-import React, { useState, useRef,useEffect } from "react";
-import { Card, Button, ProgressBar, Overlay, Popover, Form } from "react-bootstrap";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Card,
+  Button,
+  ProgressBar,
+  Overlay,
+  Popover,
+  Form,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { BsBack } from "react-icons/bs";
 import axios from "axios";
-import { useContext} from "react";
+import { useContext } from "react";
 import { PageContext } from "../../App";
 // import Onepoll from "../Onepoll";
 import CardComp from "./Card";
 import Polllist from "../Polllist";
 
-
-function CommentsComp(  ) {
-
+function CommentsComp() {
   // const {
   //   name,
   //   createdon,
@@ -596,49 +601,50 @@ function CommentsComp(  ) {
   const [liked, setLiked] = useState(false); // State for likes
   const [likeCount, setLikeCount] = useState(""); // State for likes count
   // const [comments, setComments] = useState(initialComments); // State for Comments
-  const [newComment, setNewComment] = useState(''); // State for new comment input
+  const [newComment, setNewComment] = useState(""); // State for new comment input
   const [replyText, setReplyText] = useState({}); // State for replies
-  const [selectedOption, setSelectedOption] = useState(null); // State for selected option
+  const [selectedOption, setSelectedOption] = useState(""); // State for selected option
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null); // Reference for the share button
-  let [onepoll,setOnepoll] = useState("");
-  let [error, setError] = useState(''); 
-  let [loading, setLoading] = useState(true); 
-  let [page,setPage,pollid,setPollid]=useContext(PageContext)
-console.log(pollid,page)
+  let [onepoll, setOnepoll] = useState("");
+  let [error, setError] = useState("");
+  
+  let [page, setPage, pollid, setPollid] = useContext(PageContext);
+  console.log(pollid, page);
 
-
-
-useEffect(()=>{
-  axios.post("http://92.205.109.210:8028/polls/getone",{
-    poll_id:pollid
-  }).then(res=>{
-    console.log(res.data)
-    setOnepoll(res.data)
-    console.log(onepoll.status)
-  })
-},[])
- console.log(onepoll.status)
+  useEffect(() => {
+    axios
+      .post("http://92.205.109.210:8028/polls/getone", {
+        poll_id: pollid,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setOnepoll(res.data);
+        console.log(onepoll.status);
+      });
+  }, []);
+  console.log(onepoll.status);
   // const toggleLike = () => {
   //   // setLikeCount(liked ? likeCount - 1 : likeCount + 1);
   //   setLiked(!liked);
   // };
 
-  const handleOptionChange = (index) => {
-    if (selectedOption === index) {
-      unselectOption(); // Unselect the option if it's already selected
-    } else {
-      setSelectedOption(index); // Select the option
-    }
-  };
-
-  const unselectOption = () => {
-    setSelectedOption(null); // Unselect the currently selected option
-  };
-
-  // const handleShareClick = () => {
-  //   setShowOverlay(!showOverlay); // Toggle the overlay visibility
+  // const handleOptionChange = (index) => {
+  //   if (selectedOption === index) {
+  //     unselectOption(); // Unselect the option if it's already selected
+  //   } else {
+  //     setSelectedOption(index); // Select the option
+  //   }
   // };
+
+  // const unselectOption = () => {
+  //   setSelectedOption(null); // Unselect the currently selected option
+  // };
+
+
+  const handleShareClick = () => {
+    setShowOverlay(!showOverlay); // Toggle the overlay visibility
+  };
 
   // const handleAddComment = () => {
   //   if (newComment.trim()) {
@@ -702,61 +708,61 @@ useEffect(()=>{
   //   });
   //   setComments(updatedComments);
   // };
-const onBackClick=()=>{
- window.location.href="/Homepage"
-}
-console.log(onepoll)
-// console.log(onepoll)
+  const onBackClick = () => {
+    window.location.href = "/Homepage";
+  };
+  console.log(onepoll);
+  // console.log(onepoll)
 
-const toggleLike = () => {
-  setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-  setLiked(!liked);
-};
-const handleLike=()=>{
-axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
-  poll_id:onepoll._id,
-   user_id:onepoll.createdBy._id
-}).then(res=>{
-  console.log(res.data)
-})
-
-}
-
+  const toggleLike = () => {
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    setLiked(!liked);
+  };
+  const handleLike = () => {
+    axios
+      .post("http://92.205.109.210:8028/polls/likeonpoll", {
+        poll_id: onepoll._id,
+        user_id: onepoll.createdBy._id,
+      })
+      .then((res) => {
+        console.log(res.data);
+      });
+  };
+  console.log(onepoll.options);
 
   return (
     <>
-    {/* <h1>Comments</h1> */}
+      {/* <h1>Comments</h1> */}
 
- <Card>
-      <Card.Body>
-        <Button onClick={onBackClick} variant="secondary" className="mb-3">
-          <BsBack /> Back to All Polls
-        </Button>
+      <Card>
+        <Card.Body>
+          <Button onClick={onBackClick} variant="secondary" className="mb-3">
+            <BsBack /> Back to All Polls
+          </Button>
 
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <div>
-            {/* <h6>Name:{onepoll.createdBy.user_name}</h6> */}
-            <h6>Name: {onepoll.createdBy?.user_name || 'Unknown'}</h6>
-            <p>Created At:{onepoll.createdAt} </p>
-            <p>Expiration Time: {onepoll.expirationTime} </p>
-            {/* <p>Title:{onepoll.title} </p> */}
-            <p>Question:{onepoll.question}</p>
-            <p>Status:{onepoll.status}</p>
-           
-          </div>
-          <Button variant="primary">Follow</Button>
-        </Card.Header>
+          <Card.Header className="d-flex justify-content-between align-items-center">
+            <div>
+              {/* <h6>Name:{onepoll.createdBy.user_name}</h6> */}
+              <h6>Name: {onepoll.createdBy?.user_name || "Unknown"}</h6>
+              <p>Created At:{onepoll.createdAt} </p>
+              <p>Expiration Time: {onepoll.expirationTime} </p>
+              {/* <p>Title:{onepoll.title} </p> */}
+              <p>Question:{onepoll.question}</p>
+              <p>Status:{onepoll.status}</p>
+            </div>
+            <Button variant="primary">Follow</Button>
+          </Card.Header>
 
-        <Card.Text>
-          <div className="mt-3 mb-3"></div>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Header className="d-flex justify-content-between">
-                {/* <p>Poll Ends on {onepoll.expirationTime}</p>
-                <p>Category:{onepoll.category} </p> */}
-              </Card.Header>
-              <Card.Text className="d-flex flex-column">
-              {/* {options.map((option, index) => (
+          <Card.Text>
+            <div className="mt-3 mb-3"></div>
+            <Card className="mb-3">
+              <Card.Body>
+                <Card.Header className="d-flex justify-content-between">
+                  <p>Poll Ends on {onepoll.expirationTime}</p>
+                  {/* <p>Category:{onepoll.category} </p> */}
+                </Card.Header>
+                <Card.Text className="d-flex flex-column">
+                  {/* {onepoll.options.map((option, index) => (
                   <div key={index}>
                     {selectedOption === index ? (
                       <ProgressBar
@@ -785,32 +791,66 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
                       </div>
                     )}
                   </div>
-                ))}
-                 */}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Card.Text>
+                ))} */}
+                  <div>
+                    {onepoll.options.map((option, index) => (
+                      <div key={index}>
+                        {/* {selectedOption === index ? (
+            <ProgressBar
+              now={100}
+              label={option}
+              onClick={unselectOption} // Unselect on clicking the progress bar
+              style={{ cursor: 'pointer' }}
+            />
+          ) : ( */}
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            // id={`option${index + 1}`}
+                            // name="options"
+                            // value={option}
+                            // onChange={() => handleOptionChange(index)}
+                            // checked={selectedOption === index}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`option${index + 1}`}
+                          >
+                            {option}
+                          </label>
+                        </div>
+                        ){/* } */}
+                      </div>
+                    ))}
+                  </div>
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Card.Text>
 
-        <Card.Footer className="d-flex justify-content-between">
-          <p>
-            <button
-             onClick={toggleLike}
-              style={{ background: "none", border: "none", cursor: "pointer" }}
-            >
-              <FontAwesomeIcon
-                icon={liked ? solidHeart : regularHeart}
-                style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
-                onClick={handleLike}
-              />
-            </button>
-            <span style={{ marginLeft: "8px" }}>{likeCount}</span>{" "}
-            like
-          </p>
+          <Card.Footer className="d-flex justify-content-between">
+            <p>
+              <button
+                onClick={toggleLike}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={liked ? solidHeart : regularHeart}
+                  style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+                  onClick={handleLike}
+                />
+              </button>
+              <span style={{ marginLeft: "8px" }}>{likeCount}</span> like
+            </p>
 
-          <p
+            <p
             ref={target}
-  
+            onClick={handleShareClick}
             style={{ cursor: "pointer" }}
           >
             <i className="bi bi-share"></i> Share
@@ -823,7 +863,7 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
             rootClose
             onHide={() => setShowOverlay(false)}
           >
-            <Popover id="popover-contained">
+            <Popover id="popover-contained" >
               <Popover.Header as="h3">Share this Poll</Popover.Header>
               <Popover.Body>
                 <div className="d-flex justify-content-around">
@@ -832,7 +872,10 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className="bi bi-facebook" style={{ fontSize: "35px" }}></i>
+                    <i
+                      className="bi bi-facebook"
+                      style={{ fontSize: "35px" }}
+                    ></i>
                   </a>
                   &nbsp;&nbsp;
                   <a
@@ -840,7 +883,10 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className="bi bi-twitter" style={{ fontSize: "35px" }}></i>
+                    <i
+                      className="bi bi-twitter"
+                      style={{ fontSize: "35px" }}
+                    ></i>
                   </a>
                   &nbsp;&nbsp;
                   <a
@@ -848,7 +894,10 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className="bi bi-instagram" style={{ fontSize: "35px" }}></i>
+                    <i
+                      className="bi bi-instagram"
+                      style={{ fontSize: "35px" }}
+                    ></i>
                   </a>
                   &nbsp;&nbsp;
                   <a
@@ -856,33 +905,35 @@ axios.post("http://92.205.109.210:8028/polls/likeonpoll",{
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <i className="bi bi-whatsapp" style={{ fontSize: "35px" }}></i>
+                    <i
+                    className ="bi bi-whatsapp"
+                      style={{ fontSize: "35px" }}
+                    ></i>
                   </a>
+                  {/* Add more social media links here */}
                 </div>
               </Popover.Body>
             </Popover>
           </Overlay>
-        </Card.Footer>
+          </Card.Footer>
 
-        <Card.Text>
-          <h6>Comments:</h6>
-          
-            
-          <Form inline className="mt-3">
-            <Form.Control
-              type="text"
-              placeholder="Add a comment..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-            />
-            <Button variant="primary">Add Comment</Button>
-          </Form>
-        </Card.Text>
-      </Card.Body>
-    </Card>
-</>
+          <Card.Text>
+            <h6>Comments:</h6>
 
-    
+            <Form inline className="mt-3">
+              <Form.Control
+                type="text"
+                placeholder="Add a comment..."
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+              <Button variant="primary">Add Comment</Button>
+            </Form>
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </>
+
     // <Card>
     //   <h1>comments</h1>
     //   <Card.Body>

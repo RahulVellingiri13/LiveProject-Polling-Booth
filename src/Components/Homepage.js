@@ -6,7 +6,16 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Homepage.css";
 import axios from "axios";
 // /Users/rahul/Desktop/pollingbooth/src/CssComponents
-import { Card, Button,Row,Col,Form ,InputGroup,ProgressBar,Container} from "react-bootstrap";
+import {
+  Card,
+  Button,
+  Row,
+  Col,
+  Form,
+  InputGroup,
+  ProgressBar,
+  Container,
+} from "react-bootstrap";
 import Polllist from "./Polllist";
 import AddPoll from "./AddPoll";
 import Pollresults from "./Pollresults";
@@ -15,63 +24,66 @@ import CommentsComp from "./Common/CommentsComp";
 import { PageContext } from "../App";
 // import logo from './src/images/logo.png';
 
-
 function Homepage() {
- let [page,setPage]=useContext(PageContext)
- let [polls, setPolls] = useState([]);
- const [searchQuery, setSearchQuery] = useState(""); 
+  let [page, setPage] = useContext(PageContext);
+  let [polls, setPolls] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
- const [trendingPolls, setTrendingPolls] = useState([]);
+  const [trendingPolls, setTrendingPolls] = useState([]);
 
- useEffect(() => {
-  axios
-    .get("http://92.205.109.210:8028/polls/top3")
-    .then((response) => {
-      setTrendingPolls(response.data);
-    })
-    .catch((error) => {
-      console.error("Error fetching trending polls:", error);
-    });
-}, []);
-
-
- // Function to handle page navigation
- let handlePageClick=(component)=>{
-  setPage(component)
- }
- // Function to add a new poll to the poll list
- let addNewPoll = (newPoll) => {
-  setPolls([...polls, newPoll]);
-  setPage('Polllist'); // Navigate to Polllist after adding a poll
-};
-
-const handleSearchChange = async (e) => {
-  const query = e.target.value;
-  setSearchQuery(query);
-
-  if (query.trim() === "") {
-    // Clear search results and refetch all polls or handle accordingly
-    setPolls([]); // Optionally clear polls or reset them
-  } else {
-    try {
-      const response = await axios.post("http://92.205.109.210:8028/polls/search", {
-        params: { query }
+  useEffect(() => {
+    axios
+      .get("http://92.205.109.210:8028/polls/top3")
+      .then((response) => {
+        setTrendingPolls(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching trending polls:", error);
       });
-      setPolls(response.data);
-    } catch (error) {
-      console.error("Error searching polls:", error);
+  }, []);
+
+  // Function to handle page navigation
+  let handlePageClick = (component) => {
+    setPage(component);
+  };
+  // Function to add a new poll to the poll list
+  let addNewPoll = (newPoll) => {
+    setPolls([...polls, newPoll]);
+    setPage("Polllist"); // Navigate to Polllist after adding a poll
+  };
+
+  const handleSearchChange = async (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    if (query.trim() === "") {
+      // Clear search results and refetch all polls or handle accordingly
+      setPolls([]); // Optionally clear polls or reset them
+    } else {
+      try {
+        const response = await axios.post(
+          "http://92.205.109.210:8028/polls/search",
+          {
+            params: { query },
+          }
+        );
+        setPolls(response.data);
+      } catch (error) {
+        console.error("Error searching polls:", error);
+      }
     }
-  }
-};
+  };
 
-
- return (
+  return (
     <div className="polling-booth">
       <header>
         <h1>POLLING BOOTH</h1>
-        <input type="text" placeholder="Search"  
-        value={searchQuery}
-          onChange={handleSearchChange}/>
+        <input
+          type="text"
+          placeholder="Search"
+          value={searchQuery}
+          onChange={handleSearchChange}
+        />
         <div className="user-info">
           <h4>
             Welcome! User <i class="bi bi-person-circle"></i>
@@ -82,16 +94,16 @@ const handleSearchChange = async (e) => {
         <aside>
           <nav>
             <ul>
-              <li onClick={()=>handlePageClick('Polllist')}>
-                <i class="bi bi-list"  > </i>Poll List
+              <li onClick={() => handlePageClick("Polllist")}>
+                <i class="bi bi-list"> </i>Poll List
               </li>
-              <li onClick={()=>handlePageClick('AddPoll')}>
+              <li onClick={() => handlePageClick("AddPoll")}>
                 <i class="bi bi-plus-circle"> </i> Add Poll
               </li>
-              <li onClick={()=>handlePageClick('Pollresults')}>
+              <li onClick={() => handlePageClick("Pollresults")}>
                 <i class="bi bi-check2-circle"></i> Voted Polls
               </li>
-              <li onClick={()=>handlePageClick('Userdetails')}>
+              <li onClick={() => handlePageClick("Userdetails")}>
                 <i class="bi bi-person-circle"></i> User Details
               </li>
             </ul>
@@ -120,23 +132,21 @@ const handleSearchChange = async (e) => {
         </aside>
         <main>
           <nav>
-       
-{/* 
+            {/* 
           {page === 'Polllist' && <Polllist />}
       {page === 'AddPoll' && <AddPoll />}
       {page === 'Pollresults' && <Pollresults />}
       {page === 'Userdetails' && <Userdetails/>}
  */}
 
-            {page === 'Polllist' && <Polllist polls={polls}/>}
-            {page === 'AddPoll' && <AddPoll addNewPoll={addNewPoll} />}
-            {page === 'Pollresults' && <Pollresults />}
-            {page === 'Userdetails' && <Userdetails />}
-            {page === "CommentsComp" && <CommentsComp/>}
+            {page === "Polllist" && <Polllist polls={polls} />}
+            {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
+            {page === "Pollresults" && <Pollresults />}
+            {page === "Userdetails" && <Userdetails />}
+            {page === "CommentsComp" && <CommentsComp />}
 
-         
-{/*THIS IS THE FINAL CODE FOR POLE LISTS PAGE */}
- 
+            {/*THIS IS THE FINAL CODE FOR POLE LISTS PAGE */}
+
             {/* <Card>
       <Card.Body>
         <Card.Header className="d-flex justify-content-between align-items-center">
@@ -328,11 +338,8 @@ const handleSearchChange = async (e) => {
       </Card.Body>
     </Card>  */}
 
+            {/*THIS IS THE FINAL CODE FOR ADD POLE PAGE */}
 
-
-{/*THIS IS THE FINAL CODE FOR ADD POLE PAGE */}
-
- 
             {/* <Card style={{ padding: "20px", borderRadius: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
             <Card.Header style={{textAlign:"center"}}> Create Your Polls here!</Card.Header>
       <Form>
@@ -416,12 +423,7 @@ const handleSearchChange = async (e) => {
     </Card> 
  */}
 
-
-
-
-
-{/*THIS IS THE FINAL CODE FOR POLE RESULTS PAGE */}
-
+            {/*THIS IS THE FINAL CODE FOR POLE RESULTS PAGE */}
 
             {/* <Card className="m-3">
       <Card.Body>
@@ -469,42 +471,35 @@ const handleSearchChange = async (e) => {
         </Card.Footer>
       </Card.Body>
     </Card>  */}
-
-
-
-
-
-
-
           </nav>
 
           {/* Add more polls here */}
         </main>
         <aside className="trending-polls">
-      <h4>TRENDING POLLS</h4>
-      <hr />
+          <h4>TRENDING POLLS</h4>
+          <hr />
 
-      <nav>
-        {trendingPolls.map((poll) => (
-          <Card key={poll._id}>
-            <Card.Body>
-              <Card.Header>Question: {poll.question}</Card.Header>
-              <Card.Text>
-                <p>
-                  <i className="bi bi-check2-circle"></i> Total Votes: {poll.totalVotes}
-                </p>
-                <hr />
-                <p>
-                  <i className="bi bi-heart-fill"></i> Total Likes: {poll.totalLikes}
-                </p>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        ))}
-      </nav>
-    </aside>
-
-        
+          <nav>
+            {trendingPolls.map((poll) => (
+              <Card key={poll._id}>
+                <Card.Body>
+                  <Card.Header>Question: {poll.question}</Card.Header>
+                  <Card.Text>
+                    <p>
+                      <i className="bi bi-check2-circle"></i> Total Votes:{" "}
+                      {poll.totalVotes}
+                    </p>
+                    <hr />
+                    <p>
+                      <i className="bi bi-heart-fill"></i> Total Likes:{" "}
+                      {poll.totalLikes}
+                    </p>
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
+          </nav>
+        </aside>
       </div>
     </div>
   );
