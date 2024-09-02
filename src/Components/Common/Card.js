@@ -1688,6 +1688,7 @@ function CardComp({
 
   const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
   const [showVoteButton, setShowVoteButton] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null); // Reference for the share button
@@ -1745,31 +1746,6 @@ function CardComp({
     setShowVoteButton(false);
   };
 
-  // const handleVoteClick = () => {
-  //   if (selectedOption !== null) {
-  //     const selectedOptionValue = options[selectedOption];
-
-  //     handleVote(selectedOptionValue);
-  //   }
-  // };
-
-  // const handleVoteClick = async () => {
-  //   if (selectedOption !== null) {
-  //     const selectedOptionValue = options[selectedOption];
-
-  //     try {
-
-  //       const response = await axios.post('http://92.205.109.210:8028/polls/voteonpoll', {
-  //         option: selectedOptionValue,
-  //       });
-
-  //       console.log('Vote submitted successfully:', response.data);
-  //     } catch (error) {
-
-  //       console.error('Error submitting vote:', error);
-  //     }
-  //   }
-  // };
 
   const handleVoteClick = () => {
     if (selectedOption !== null) {
@@ -1778,14 +1754,21 @@ function CardComp({
       axios
         .post("http://92.205.109.210:8028/polls/voteonpoll", {
           option: selectedOptionValue,
+          
+          poll_id: _id,
+          user_id: createdBy._id,
         })
+
         .then((response) => {
           console.log("Vote submitted successfully:", response.data);
+          setHasVoted(true);
         })
         .catch((error) => {
           console.error("Error submitting vote:", error);
         });
     }
+
+    
   };
   const handleShareClick = () => {
     setShowOverlay(!showOverlay); // Toggle the overlay visibility
@@ -1866,7 +1849,8 @@ function CardComp({
                         <ProgressBar
                           now={100}
                           label={option}
-                          onClick={unselectOption}
+                          // onClick={unselectOption}
+                          onClick={() => setSelectedOption(null)}
                           style={{ cursor: "pointer" }}
                         />
                         {/* {showVoteButton && (
@@ -1906,8 +1890,10 @@ function CardComp({
                     variant="primary"
                     onClick={handleVoteClick}
                     className="mt-3 align-self-center"
+                    disabled={hasVoted}
                   >
-                    Vote
+                  {hasVoted ? 'Voted' : 'Vote'}
+                
                   </Button>
                 )}
               </Card.Text>

@@ -1660,13 +1660,18 @@ function CommentsComp() {
   //   likeCount: initialLikeCount,
   //   comments: initialComments,
   // } = cardData;
-  const [totallike,setTotallike]=useState(0)
+  const [totallike, setTotallike] = useState(0);
   const [liked, setLiked] = useState(false); // State for likes
   const [likeCount, setLikeCount] = useState(""); // State for likes count
   const [comments, setComments] = useState([]); // State for Comments
   const [newComment, setNewComment] = useState(""); // State for new comment input
   const [replyText, setReplyText] = useState({}); // State for replies
+
+
   const [selectedOption, setSelectedOption] = useState(null); // State for selected option
+ const [showVoteButton, setShowVoteButton] = useState(false);
+  const [hasVoted, setHasVoted] = useState(false);
+
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null); // Reference for the share button
   let [onepoll, setOnepoll] = useState("");
@@ -1755,11 +1760,35 @@ function CommentsComp() {
       unselectOption(); // Unselect the option if it's already selected
     } else {
       setSelectedOption(index); // Select the option
+      setShowVoteButton(true);
     }
   };
 
   const unselectOption = () => {
-    setSelectedOption(null); // Unselect the currently selected option
+    setSelectedOption(null);
+    setShowVoteButton(false);
+  };
+
+  const handleVoteClick = () => {
+    if (selectedOption !== null) {
+      const selectedOptionValue = onepoll.options[selectedOption];
+
+      axios
+        .post("http://92.205.109.210:8028/polls/voteonpoll", {
+          option: selectedOptionValue,
+
+          poll_id: onepoll._id,
+          user_id: onepoll.createdBy._id,
+        })
+
+        .then((response) => {
+          console.log("Vote submitted successfully:", response.data);
+          setHasVoted(true);
+        })
+        .catch((error) => {
+          console.error("Error submitting vote:", error);
+        });
+    }
   };
 
   const handleShareClick = () => {
@@ -1847,9 +1876,9 @@ function CommentsComp() {
       })
       .then((res) => {
         console.log(res.data);
-        setTotallike(res.data.Total_likes)
-        console.log(res.data.Total_likes)
-        console.log(totallike)
+        setTotallike(res.data.Total_likes);
+        console.log(res.data.Total_likes);
+        console.log(totallike);
       });
   };
 
@@ -1915,6 +1944,17 @@ function CommentsComp() {
                         )}
                       </div>
                     ))}
+                    {/* Conditionally render the vote button at the end of all options */}
+                    {selectedOption !== null && (
+                      <Button
+                        variant="primary"
+                        onClick={handleVoteClick}
+                        className="mt-3 align-self-center"
+                        disabled={hasVoted}
+                      >
+                        {hasVoted ? "Voted" : "Vote"}
+                      </Button>
+                    )}
                   </Card.Text>
                 )}
               </Card.Body>
@@ -1937,7 +1977,8 @@ function CommentsComp() {
                   onClick={handleLike}
                 />
               </button>
-              <span style={{ marginLeft: "8px" }}>total like:{totallike}</span> like
+              <span style={{ marginLeft: "8px" }}>total like:{totallike}</span>{" "}
+              like
             </p>
 
             <p ref={target} style={{ cursor: "pointer" }}>
