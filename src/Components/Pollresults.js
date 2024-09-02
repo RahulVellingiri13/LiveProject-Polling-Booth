@@ -61,7 +61,7 @@ function Pollresults() {
                   </Card.Text>
                 </Card.Body>
               </Card>
-
+                    
               <Card.Footer className="d-flex justify-content-between">
                 <p>
                   <i className="bi bi-heart"></i> {poll.likes || 0} Likes

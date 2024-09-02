@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./Homepage.css";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
 // /Users/rahul/Desktop/pollingbooth/src/CssComponents
 import {
   Card,
@@ -23,6 +24,9 @@ import Userdetails from "./Userdetails";
 import CommentsComp from "./Common/CommentsComp";
 import { PageContext } from "../App";
 // import logo from './src/images/logo.png';
+import OTPVerificationModal from "./Common/Otpverify";
+import { useNavigate } from "react-router-dom";
+
 
 function Homepage() {
   let [page, setPage] = useContext(PageContext);
@@ -30,6 +34,63 @@ function Homepage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [trendingPolls, setTrendingPolls] = useState([]);
+
+  const [googlegmail, setGooglegmail] = useState(
+    sessionStorage.getItem("email") || ""
+  );
+  const [googleusername, setGoogleusername] = useState(
+    sessionStorage.getItem("username") || ""
+  );
+
+  // const [otp, setOtp] = useState('');
+  // const [show, setShow] = useState(false);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
+
+  // const handleChange = (e) => {
+  //   setOtp(e.target.value);
+  // };
+
+  // const onSubmit = () => {
+
+  //   handleClose();
+  // };
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [show, setShow] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handlePhoneChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+
+  const handleOtpChange = (e) => {
+    setOtp(e.target.value);
+  };
+
+  const onPhoneSubmit = () => {
+    // Here logic to verify the phone number
+    // After that to the OTP step
+    setStep(2);
+  };
+
+  const navigate = useNavigate();
+
+  const onOtpSubmit = () => {
+    // Here logic to verify the OTP
+
+    handleClose();
+    // navigate("addPoll");
+  };
+
+  // let googlegmail=sessionStorage.getItem("email")
+  // let googleusername=sessionStorage.getItem("username")
+
+  console.log(googlegmail, googleusername);
 
   useEffect(() => {
     axios
@@ -57,8 +118,8 @@ function Homepage() {
     setSearchQuery(query);
 
     if (query.trim() === "") {
-      // Clear search results and refetch all polls or handle accordingly
-      setPolls([]); // Optionally clear polls or reset them
+     
+      setPolls([]); 
     } else {
       try {
         const response = await axios.post(
@@ -71,6 +132,15 @@ function Homepage() {
       } catch (error) {
         console.error("Error searching polls:", error);
       }
+    }
+  };
+
+  const handleAddPoll = () => {
+    if (googlegmail && googleusername) {
+      handleShow();
+      // return <OTPVerificationModal />;
+    } else {
+      setPage("AddPoll");
     }
   };
 
@@ -97,7 +167,7 @@ function Homepage() {
               <li onClick={() => handlePageClick("Polllist")}>
                 <i class="bi bi-list"> </i>Poll List
               </li>
-              <li onClick={() => handlePageClick("AddPoll")}>
+              <li onClick={handleAddPoll}>
                 <i class="bi bi-plus-circle"> </i> Add Poll
               </li>
               <li onClick={() => handlePageClick("Pollresults")}>
@@ -141,336 +211,16 @@ function Homepage() {
 
             {page === "Polllist" && <Polllist polls={polls} />}
             {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
+            
+
             {page === "Pollresults" && <Pollresults />}
             {page === "Userdetails" && <Userdetails />}
             {page === "CommentsComp" && <CommentsComp />}
 
-            {/*THIS IS THE FINAL CODE FOR POLE LISTS PAGE */}
 
-            {/* <Card>
-      <Card.Body>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6>Rahul</h6>
-            <p>Created: 3 hours ago</p>
-            <p>Title: testing</p>
-            <p>Status: open</p>
-          </div>
-          <Button variant="primary">Follow</Button>
-        </Card.Header>
 
-        <Card.Text>
-          <div className="mt-3 mb-3">test</div>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Header className="d-flex justify-content-between">
-                <p>0 Votes</p>
-                <p>Poll Ends in 9 days</p>
-              </Card.Header>
-              <Card.Text className="d-flex flex-column">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option1"
-                    name="options"
-                    value="op1"
-                  />
-                  <label className="form-check-label" htmlFor="option1">
-                    op1
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option2"
-                    name="options"
-                    value="op2"
-                  />
-                  <label className="form-check-label" htmlFor="option2">
-                    op2
-                  </label>
-                </div>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Card.Text>
-
-        <Card.Footer className="d-flex justify-content-between">
-          <p>
-            <i className="bi bi-heart"></i> like
-          </p>
-          <p>
-            <i className="bi bi-chat-quote-fill"></i> Comments
-          </p>
-          <p>
-            <i className="bi bi-share"></i> Share
-          </p>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
-    <Card>
-      <Card.Body>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6>Sanjay</h6>
-            <p>Created: 3 hours ago</p>
-            <p>Title: testing</p>
-            <p>Status: open</p>
-          </div>
-          <Button variant="primary">Follow</Button>
-        </Card.Header>
-
-        <Card.Text>
-          <div className="mt-3 mb-3">test</div>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Header className="d-flex justify-content-between">
-                <p>0 Votes</p>
-                <p>Poll Ends in 9 days</p>
-              </Card.Header>
-              <Card.Text className="d-flex flex-column">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option1"
-                    name="options"
-                    value="op1"
-                  />
-                  <label className="form-check-label" htmlFor="option1">
-                    op1
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option2"
-                    name="options"
-                    value="op2"
-                  />
-                  <label className="form-check-label" htmlFor="option2">
-                    op2
-                  </label>
-                </div>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Card.Text>
-
-        <Card.Footer className="d-flex justify-content-between">
-          <p>
-            <i className="bi bi-heart"></i> like
-          </p>
-          <p>
-            <i className="bi bi-chat-quote-fill"></i> Comments
-          </p>
-          <p>
-            <i className="bi bi-share"></i> Share
-          </p>
-        </Card.Footer>
-      </Card.Body>
-    </Card>
-
-    <Card>
-      <Card.Body>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6>Monkey D luffy</h6>
-            <p>Created: 3 hours ago</p>
-            <p>Title: testing</p>
-            <p>Status: open</p>
-          </div>
-          <Button variant="primary">Follow</Button>
-        </Card.Header>
-
-        <Card.Text>
-          <div className="mt-3 mb-3">test</div>
-          <Card className="mb-3">
-            <Card.Body>
-              <Card.Header className="d-flex justify-content-between">
-                <p>0 Votes</p>
-                <p>Poll Ends in 9 days</p>
-              </Card.Header>
-              <Card.Text className="d-flex flex-column">
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option1"
-                    name="options"
-                    value="op1"
-                  />
-                  <label className="form-check-label" htmlFor="option1">
-                    op1
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    id="option2"
-                    name="options"
-                    value="op2"
-                  />
-                  <label className="form-check-label" htmlFor="option2">
-                    op2
-                  </label>
-                </div>
-              </Card.Text>
-            </Card.Body>
-          </Card>
-        </Card.Text>
-
-        <Card.Footer className="d-flex justify-content-between">
-          <p>
-            <i className="bi bi-heart"></i> like
-          </p>
-          <p>
-            <i className="bi bi-chat-quote-fill"></i> Comments
-          </p>
-          <p>
-            <i className="bi bi-share"></i> Share
-          </p>
-        </Card.Footer>
-      </Card.Body>
-    </Card>  */}
-
-            {/*THIS IS THE FINAL CODE FOR ADD POLE PAGE */}
-
-            {/* <Card style={{ padding: "20px", borderRadius: "10px", boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)" }}>
-            <Card.Header style={{textAlign:"center"}}> Create Your Polls here!</Card.Header>
-      <Form>
-        <Form.Group controlId="pollTitle" className="mb-3">
-          <Form.Control type="text" placeholder="Title" />
-        </Form.Group>
-
-        <Form.Group controlId="pollQuestion" className="mb-3">
-          <Form.Control as="textarea" rows={2} placeholder="Question" />
-        </Form.Group>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="option1" className="mb-3">
-              <InputGroup>
-                <InputGroup.Text>
-                  <i className="bi bi-list"></i>
-                </InputGroup.Text>
-                <Form.Control type="text" placeholder="Option 1" />
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group controlId="option2" className="mb-3">
-              <InputGroup>
-                <InputGroup.Text>
-                  <i className="bi bi-list"></i>
-                </InputGroup.Text>
-                <Form.Control type="text" placeholder="Option 2" />
-              </InputGroup>
-            </Form.Group>
-
-            <Button variant="success" className="mb-3">
-              Add Option
-            </Button>
-          </Col>
-
-          <Col md={6}>
-            <Card className="mb-3">
-              <Card.Body>
-                <Card.Title>Tips On Better Polls</Card.Title>
-                <Card.Text>
-                  <ul>
-                    <li>Suggest short clear options</li>
-                    <li>The more options, the better</li>
-                    <li>Choose the poll duration</li>
-                    <li>Options can't be edited after post creation</li>
-                  </ul>
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="votingPeriod">
-              <Form.Label>Voting Period</Form.Label>
-              <Form.Control type="date" placeholder="dd-mm-yyyy" />
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Form.Group controlId="categorySelect" className="mb-3">
-          <Form.Label>Select Category:</Form.Label>
-          <Form.Select>
-            <option>Sample</option>
-            <option>Education</option>
-            <option>Entertainment</option>
-            <option>Politics</option>
-            <option>Sports</option>
-            <option>Research</option>
+          
            
-          </Form.Select>
-        </Form.Group>
-
-        <Button variant="secondary" className="me-2">
-          Cancel
-        </Button>
-        <Button variant="primary">Post</Button>
-      </Form>
-    </Card> 
- */}
-
-            {/*THIS IS THE FINAL CODE FOR POLE RESULTS PAGE */}
-
-            {/* <Card className="m-3">
-      <Card.Body>
-        <Card.Header className="d-flex justify-content-between align-items-center">
-          <div>
-            <h6>Rahul</h6>
-            <p>Created: 1 month ago</p>
-            <p>Title: undefined</p>
-            <p>Status: closed</p>
-          </div>
-          <Button variant="secondary">Follow</Button>
-        </Card.Header>
-
-        <Card.Text className="mt-3 mb-3">question q1</Card.Text>
-
-        <Button variant="secondary" className="mb-3">
-          Sample
-        </Button>
-
-        <Card className="mb-3">
-          <Card.Body>
-            <Card.Header className="d-flex justify-content-between">
-              <p>4 votes</p>
-              <p>Poll Ended!</p>
-            </Card.Header>
-            <Card.Text>
-              <div className="mb-2">
-                <ProgressBar now={80} label="4 %" variant="info" />
-              </div>
-              <div className="mb-2">
-                <ProgressBar now={0} label="0 shjsks" variant="secondary" />
-              </div>
-              <div className="mb-2">
-                <ProgressBar now={0} label="0 hsjsj" variant="secondary" />
-              </div>
-            </Card.Text>
-          </Card.Body>
-        </Card>
-
-        <Card.Footer className="d-flex justify-content-between">
-          <p>
-            <i className="bi bi-heart"></i> 1 Likes
-          </p>
-          <Button variant="primary">Comments</Button>
-        </Card.Footer>
-      </Card.Body>
-    </Card>  */}
           </nav>
 
           {/* Add more polls here */}
@@ -501,6 +251,78 @@ function Homepage() {
           </nav>
         </aside>
       </div>
+      {/* <Modal show={show} onHide={handleClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Verify OTP</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group controlId="formOtp">
+            <Form.Label>Enter OTP</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </Form>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary" onClick={handleClose}>
+          Close
+        </Button>
+        <Button variant="primary" onClick={onSubmit}>
+          Verify
+        </Button>
+      </Modal.Footer>
+    </Modal> */}  
+
+
+ <Modal show={show} onHide={handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {step === 1 ? "Verify Phone Number" : "Verify OTP"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>  
+          <Form>
+            {step === 1 && (
+              <Form.Group controlId="formPhoneNumber">
+                <Form.Label>Enter Phone Number</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Phone Number"
+                  value={phoneNumber}
+                  onChange={handlePhoneChange}
+                />
+              </Form.Group>
+            )}
+            {step === 2 && (
+              <Form.Group controlId="formOtp">
+                <Form.Label>Enter OTP</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter OTP"
+                  value={otp}
+                  onChange={handleOtpChange}
+                />
+              </Form.Group>
+            )}
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={step === 1 ? onPhoneSubmit : onOtpSubmit}
+          >
+            {step === 1 ? "Verify Phone Number" : "Verify OTP"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

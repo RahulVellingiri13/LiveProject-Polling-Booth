@@ -30,7 +30,6 @@
 // export default Userdetails
 
 
-
 import React, { useState, useEffect } from 'react';
 import { Card, Button, Col, Row } from 'react-bootstrap';
 import axios from 'axios';
