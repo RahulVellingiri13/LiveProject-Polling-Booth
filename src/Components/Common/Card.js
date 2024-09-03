@@ -1653,9 +1653,12 @@ import Onepoll from "../Onepoll";
 import CommentsComp from "./CommentsComp";
 import { PageContext } from "../../App";
 import axios from "axios";
-// import Comment from "./Comment";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function CardComp({
+  userId,
   index,
   pollId,
   _id,
@@ -1672,6 +1675,7 @@ function CardComp({
   onCardClick,
   handleVote,
 }) {
+  console.log(userId)
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
   // let [pollid,setPollid]=useContext(PageContext)
   console.log(pollid);
@@ -1688,7 +1692,7 @@ function CardComp({
 
   const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
   const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
+  const [hasVoted, setHasVoted] = useState(true);
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null); // Reference for the share button
@@ -1746,30 +1750,95 @@ function CardComp({
     setShowVoteButton(false);
   };
 
+  // const handleVoteClick = () => {
+  //   console.log(options);
+  //   console.log("vote");
+  //   console.log(selectedOption);
+  //   if (selectedOption !== null) {
+  //     const selectedOptionValue = options[selectedOption];
+  //     console.log(selectedOptionValue);
+  //     axios
+  //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
+  //         option: selectedOptionValue,
 
-  const handleVoteClick = () => {
-    if (selectedOption !== null) {
-      const selectedOptionValue = options[selectedOption];
+  //         poll_id: _id,
+  //         user_id: createdBy._id,
+  //       })
 
-      axios
-        .post("http://92.205.109.210:8028/polls/voteonpoll", {
-          option: selectedOptionValue,
+  //       .then((response) => {
+  //         toast.success('Your vote is successfully registered');
+  //         console.log("Vote submitted successfully:", response.data);
+  //         setHasVoted(true);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error submitting vote:", error);
+  //       });
+  //   }
+  // };
+
+  const handleVoteToggle = () => {
+  setHasVoted(!hasVoted)
+  //   console.log(hasVoted)
+    console.log(selectedOption,hasVoted)
+    if (selectedOption != null ) {
+      const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+console.log(selectedOptionValue)
+      
+
+        axios.post('http://92.205.109.210:8028/polls/voteonpoll', {
           
           poll_id: _id,
-          user_id: createdBy._id,
+         user_id: userId,
+         option: selectedOptionValue,
         })
-
-        .then((response) => {
-          console.log("Vote submitted successfully:", response.data);
-          setHasVoted(true);
+        .then(response => {
+          console.log( response.data);
+          console.log(response.data.message)
+          if(response.data.message == 'Vote recorded successfully.')
+            {
+          toast.success('Your vote is successfully registered');}
+          else{
+            toast.info('Your vote is removed successfully');
+          }
+          console.log( response.data);
+          setSelectedOption("")
         })
-        .catch((error) => {
-          console.error("Error submitting vote:", error);
+        .catch(error => {
+          console.error('Error submitting vote:', error);
         });
-    }
+      } 
+  //     else {
+       
+  //       toast.info('Your vote is removed successfully');
+  //       setHasVoted(false); 
+  //       setSelectedOption(""); 
+  // };
 
+// let handleVoteToggle=()=>{
+//   console.log(selectedOption,hasVoted)
+
+//     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+// console.log(selectedOptionValue)
     
-  };
+// console.log(_id, createdBy._id, selectedOptionValue)
+//       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+        
+//       poll_id: _id,
+//       user_id: userId,
+//        option: selectedOptionValue,
+//       })
+//       .then(response => {
+//         // toast.success('Your vote is successfully registered');
+//         console.log( response.data);
+       
+//       })
+//       .catch(error => {
+//         console.error('Error submitting vote:', error);
+//       });
+}
+
+
+
   const handleShareClick = () => {
     setShowOverlay(!showOverlay); // Toggle the overlay visibility
   };
@@ -1807,10 +1876,11 @@ function CardComp({
   };
 
   const handleLike = () => {
+    console.log(createdBy._id)
     axios
       .post("http://92.205.109.210:8028/polls/likeonpoll", {
         poll_id: _id,
-        user_id: createdBy._id,
+        user_id: userId
       })
       .then((res) => {
         console.log(res.data);
@@ -1853,15 +1923,6 @@ function CardComp({
                           onClick={() => setSelectedOption(null)}
                           style={{ cursor: "pointer" }}
                         />
-                        {/* {showVoteButton && (
-                          <Button
-                            variant="primary"
-                            onClick={handleVoteClick}
-                            className=""
-                          >
-                            Vote
-                          </Button>
-                        )} */}
                       </div>
                     ) : (
                       <div className="form-check">
@@ -1885,18 +1946,27 @@ function CardComp({
                   </div>
                 ))}
                 {/* Conditionally render the vote button at the end of all options */}
-                {selectedOption !== null && (
+                {/* {selectedOption !== null && (
                   <Button
                     variant="primary"
                     onClick={handleVoteClick}
                     className="mt-3 align-self-center"
                     disabled={hasVoted}
                   >
-                  {hasVoted ? 'Voted' : 'Vote'}
-                
+                    {hasVoted ? "Voted" : "Vote"}
                   </Button>
-                )}
-              </Card.Text>
+                )} */}
+                {selectedOption !== null && (
+          <Button
+            variant={hasVoted ? "primary" : "danger"}
+            onClick={()=>handleVoteToggle()}
+            className="mt-3 align-self-center"
+          >
+            {hasVoted ? 'Vote' : 'Unvote'}
+          </Button>
+        )}
+      </Card.Text>
+      <ToastContainer />
             </Card.Body>
           </Card>
         </Card.Text>

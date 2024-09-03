@@ -407,6 +407,7 @@ function Polllist({page,setPage}) {
     const fetchPolls = async () => {
       try {
         const response = await axios.post("http://92.205.109.210:8028/polls/getall");
+        console.log(response.data)
         setPolls(response.data); // Assuming the response data is an array of polls
         sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
       } catch (error) {
@@ -437,7 +438,7 @@ function Polllist({page,setPage}) {
       {currentView === "cards" ? (
         polls.map((poll, index) => (
           <CardComp
-         
+         userId={poll.createdBy._id}
             key={index}
             index={index}
             pollId={poll.poll_id}

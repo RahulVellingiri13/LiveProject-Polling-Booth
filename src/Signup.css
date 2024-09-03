@@ -234,3 +234,13 @@
   .passwordd-toggle-icon{
     margin-top: -15px;
   } */
+
+  .verifyotpbut{
+    width:250px;
+     /* background-color:white; */
+     background: #06b4d6; 
+     margin-top: 15px;
+      border:none;
+       border-radius:10px;
+        margin-left:100px;
+  }

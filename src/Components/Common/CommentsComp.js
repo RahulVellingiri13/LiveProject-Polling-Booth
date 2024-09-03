@@ -1635,6 +1635,7 @@ import {
   Overlay,
   Popover,
   Form,
+  Modal,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -1663,13 +1664,9 @@ function CommentsComp() {
   const [totallike, setTotallike] = useState(0);
   const [liked, setLiked] = useState(false); // State for likes
   const [likeCount, setLikeCount] = useState(""); // State for likes count
-  const [comments, setComments] = useState([]); // State for Comments
-  const [newComment, setNewComment] = useState(""); // State for new comment input
-  const [replyText, setReplyText] = useState({}); // State for replies
-
 
   const [selectedOption, setSelectedOption] = useState(null); // State for selected option
- const [showVoteButton, setShowVoteButton] = useState(false);
+  const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
@@ -1679,6 +1676,104 @@ function CommentsComp() {
   let [loading, setLoading] = useState(true);
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
   console.log(pollid, page);
+
+  //comment section
+
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([]);
+  const [showReplyModal, setShowReplyModal] = useState(false);
+  const [newReply, setNewReply] = useState("");
+  const [currentCommentId, setCurrentCommentId] = useState(null);
+
+  const handleAddComment = async () => {
+    console.log("addcomment");
+    console.log(newComment, onepoll._id, onepoll.createdBy._id);
+    if (newComment.trim() === "") return;
+
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/comment/createcomment",
+        {
+          comment: newComment,
+          poll_id: onepoll._id,
+          user_id: onepoll.createdBy._id,
+        }
+      );
+      console.log(response.data);
+      setComments((prev) => [response.data.comment, ...prev]);
+      setNewComment("");
+      // Add the new comment to the list
+      // setNewComment(response.data);
+      //  setNewComment((prevComments) => [...prevComments, response.data]);
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+
+  const handleLikeComment = async (index) => {
+    const updatedComments = [...comments];
+    updatedComments[index].likes += 1;
+    setComments(updatedComments);
+
+    // like count
+    try {
+      await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+        user_id: onepoll.createdBy._id,
+        comment_id: currentCommentId,
+      });
+    } catch (error) {
+      console.error("Error liking comment:", error);
+    }
+  };
+
+  //modal for reply
+
+  const handleOpenReplyModal = (commentId) => {
+    setCurrentCommentId(commentId);
+    setShowReplyModal(true);
+  };
+
+  //addd reply
+
+  const handleAddReply = async () => {
+    if (newReply.trim() === "") return;
+
+    try {
+      const response = await axios.post(
+        `http://92.205.109.210:8028/comment/replycomment`,
+        {
+          reply_msg: newReply,
+          poll_id: onepoll._id,
+          user_id: onepoll.createdBy._id,
+          comment_id: currentCommentId,
+        }
+      );
+      console.log(response.data);
+
+      // const updatedComments = comments.map((comment) =>
+      //   comment._id === currentCommentId
+      //     ? {
+      //         ...comment,
+      //         replies: [...comment.replies, response.data.reply_msg, newReply],
+      //       }
+      //     : comment
+      // );
+      const matchingComment = comments.find(
+        (comment) => comment._id === currentCommentId
+      );
+
+      matchingComment.replies = [...matchingComment.replies, response.data.reply];
+      
+
+
+      console.log(matchingComment);
+      setComments((prev) => [...prev, matchingComment]);
+      setNewReply("");
+      setShowReplyModal(false);
+    } catch (error) {
+      console.error("Error adding reply:", error);
+    }
+  };
 
   // useEffect(()=>{
   //   axios.post("http://92.205.109.210:8028/polls/getone",{
@@ -1706,54 +1801,27 @@ function CommentsComp() {
       });
   }, [pollid]);
   console.log(onepoll.status);
-  // const toggleLike = () => {
-  //   // setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-  //   setLiked(!liked);
-  // };
 
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      const newCommentObj = {
-        id: comments.length + 1,
-        text: newComment,
-        likes: 0,
-        replies: [],
-      };
-      setComments([...comments, newCommentObj]);
-      setNewComment(""); // Reset input field
-    }
-  };
+  useEffect(() => {
+    fetchComments();
+  }, [onepoll._id]);
 
-  const handleAddReply = (commentId) => {
-    if (replyText[commentId]?.trim()) {
-      const updatedComments = comments.map((comment) => {
-        if (comment.id === commentId) {
-          return {
-            ...comment,
-            replies: [
-              ...comment.replies,
-              {
-                id: comment.replies.length + 1,
-                text: replyText[commentId],
-                likes: 0,
-              },
-            ],
-          };
+  const fetchComments = async () => {
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/comment/getbyid",
+        {
+          poll_id: onepoll._id,
+          user_id: onepoll.createdBy._id,
         }
-        return comment;
-      });
-      setComments(updatedComments);
-      setReplyText({ ...replyText, [commentId]: "" });
+      );
+      setComments(response.data);
+      console.log("Comments are", comments);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
     }
   };
-
-  const handleLikeComment = (id) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === id ? { ...comment, likes: comment.likes + 1 } : comment
-      )
-    );
-  };
+  console.log("view comment", comments);
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
@@ -1770,9 +1838,10 @@ function CommentsComp() {
   };
 
   const handleVoteClick = () => {
+    console.log(selectedOption);
     if (selectedOption !== null) {
-      const selectedOptionValue = onepoll.options[selectedOption];
-
+      const selectedOptionValue = onepoll.options[selectedOption].option;
+      console.log(selectedOptionValue);
       axios
         .post("http://92.205.109.210:8028/polls/voteonpoll", {
           option: selectedOptionValue,
@@ -1795,68 +1864,6 @@ function CommentsComp() {
     setShowOverlay(!showOverlay); // Toggle the overlay visibility
   };
 
-  // const handleAddComment = () => {
-  //   if (newComment.trim()) {
-  //     const newCommentObj = {
-  //       id: comments.length + 1,
-  //       text: newComment,
-  //       likes: 0,
-  //       replies: [],
-  //     };
-  //     setComments([...comments, newCommentObj]);
-  //     setNewComment(''); // Reset input field
-  //   }
-  // };
-
-  // const handleLikeComment = (id) => {
-  //   setComments(
-  //     comments.map((comment) =>
-  //       comment.id === id ? { ...comment, likes: comment.likes + 1 } : comment
-  //     )
-  //   );
-  // };
-
-  const handleUnlikeComment = (id) => {
-    setComments(
-      comments.map((comment) =>
-        comment.id === id && comment.likes > 0
-          ? { ...comment, likes: comment.likes - 1 }
-          : comment
-      )
-    );
-  };
-
-  // const handleAddReply = (commentId) => {
-  //   if (replyText[commentId]?.trim()) {
-  //     const updatedComments = comments.map((comment) => {
-  //       if (comment.id === commentId) {
-  //         return {
-  //           ...comment,
-  //           replies: [
-  //             ...comment.replies,
-  //             { id: comment.replies.length + 1, text: replyText[commentId], likes: 0 },
-  //           ],
-  //         };
-  //       }
-  //       return comment;
-  //     });
-  //     setComments(updatedComments);
-  //     setReplyText({ ...replyText, [commentId]: '' });
-  //   }
-  // };
-
-  // const handleLikeReply = (commentId, replyId) => {
-  //   const updatedComments = comments.map((comment) => {
-  //     if (comment.id === commentId) {
-  //       const updatedReplies = comment.replies.map((reply) =>
-  //         reply.id === replyId ? { ...reply, likes: reply.likes + 1 } : reply
-  //       );
-  //       return { ...comment, replies: updatedReplies };
-  //     }
-  //     return comment;
-  //   });
-  //   setComments(updatedComments);
-  // };
   const onBackClick = () => {
     window.location.href = "/Homepage";
   };
@@ -1944,17 +1951,6 @@ function CommentsComp() {
                         )}
                       </div>
                     ))}
-                    {/* Conditionally render the vote button at the end of all options */}
-                    {selectedOption !== null && (
-                      <Button
-                        variant="primary"
-                        onClick={handleVoteClick}
-                        className="mt-3 align-self-center"
-                        disabled={hasVoted}
-                      >
-                        {hasVoted ? "Voted" : "Vote"}
-                      </Button>
-                    )}
                   </Card.Text>
                 )}
               </Card.Body>
@@ -2055,211 +2051,77 @@ function CommentsComp() {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
               />
-              <Button variant="primary">Add Comment</Button>
+              <Button
+                variant="primary"
+                onClick={handleAddComment}
+                disabled={!newComment}
+              >
+                Add Comment
+              </Button>
             </Form>
+
             {/* Display comments */}
             {comments.map((comment, index) => (
-              <div key={index} className="mt-3">
-                <p>{comment.text}</p>
-                <Button variant="link" onClick={() => handleLikeComment(index)}>
-                  Like ({comment.likes})
+              <div key={comment._id} className="mt-3">
+                <p>{comment.comment}</p>
+                <Button
+                  variant="link"
+                  onClick={() => handleLikeComment(comment._id)}
+                >
+                  Like ({comment.isliked})
                 </Button>
                 <Button
                   variant="link"
-                  onClick={() =>
-                    handleAddReply(index, prompt("Enter your reply:"))
-                  }
+                  onClick={() => handleOpenReplyModal(comment._id)}
                 >
                   Reply
                 </Button>
-
+                {console.log("comments-", comments)}
                 {/* Display replies */}
+                {/* {comments.map((comment) => { */}
+
                 {comment.replies.map((reply, replyIndex) => (
                   <div key={replyIndex} className="ml-3">
-                    <p>- {reply}</p>
+                    <p>- {reply.reply_msg}</p>
                   </div>
                 ))}
+                {/* })} */}
               </div>
             ))}
           </Card.Text>
+          {/* Reply Modal */}
+          <Modal show={showReplyModal} onHide={() => setShowReplyModal(false)}>
+            <Modal.Header closeButton>
+              <Modal.Title>Reply to Comment</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                <Form.Group controlId="replyInput">
+                  <Form.Label>Reply</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Write your reply..."
+                    value={newReply}
+                    onChange={(e) => setNewReply(e.target.value)}
+                  />
+                </Form.Group>
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                variant="secondary"
+                onClick={() => setShowReplyModal(false)}
+              >
+                Close
+              </Button>
+              <Button variant="primary" onClick={handleAddReply}>
+                Reply
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Card.Body>
       </Card>
     </>
-
-    // <Card>
-    //   <h1>comments</h1>
-    //   <Card.Body>
-    //     {/* <Button onClick={onBackClick} variant="secondary" className="mb-3">
-    //       <BsBack /> Back to All Polls
-    //     </Button> */}
-
-    //     <Card.Header className="d-flex justify-content-between align-items-center">
-    //       <div>
-    //         <h6>Name: </h6>
-    //         <p>Created: </p>
-    //         <p>Title: </p>
-    //         <p>Status: </p>
-    //       </div>
-    //       <Button variant="primary">Follow</Button>
-    //     </Card.Header>
-
-    //     <Card.Text>
-    //       <div className="mt-3 mb-3"></div>
-    //       <Card className="mb-3">
-    //         <Card.Body>
-    //           <Card.Header className="d-flex justify-content-between">
-    //             <p>Poll Ends on </p>
-    //             <p>Category:</p>
-    //           </Card.Header>
-    //           <Card.Text className="d-flex flex-column">
-    //             {/* {options.map((option, index) => (
-    //               <div key={index}>
-    //                 {selectedOption === index ? (
-    //                   <ProgressBar
-    //                     now={100}
-    //                     label={option}
-    //                     onClick={unselectOption} // Unselect on clicking the progress bar
-    //                     style={{ cursor: "pointer" }}
-    //                   />
-    //                 ) : (
-    //                   <div className="form-check">
-    //                     <input
-    //                       className="form-check-input"
-    //                       type="radio"
-    //                       id={`option${index + 1}`}
-    //                       name="options"
-    //                       value={option}
-    //                       onChange={() => handleOptionChange(index)}
-    //                       checked={selectedOption === index}
-    //                     />
-    //                     <label
-    //                       className="form-check-label"
-    //                       htmlFor={`option${index + 1}`}
-    //                     >
-    //                       {option}
-    //                     </label>
-    //                   </div>
-    //                 )}
-    //               </div>
-    //             ))} */}
-    //           </Card.Text>
-    //         </Card.Body>
-    //       </Card>
-    //     </Card.Text>
-
-    //     <Card.Footer className="d-flex justify-content-between">
-    //       <p>
-    //         <button
-    //           // onClick={toggleLike}
-    //           style={{ background: "none", border: "none", cursor: "pointer" }}
-    //         >
-    //           <FontAwesomeIcon
-    //             // icon={liked ? solidHeart : regularHeart}
-    //             style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
-    //           />
-    //         </button>
-    //         {/* <span style={{ marginLeft: "8px" }}>{likeCount}</span> */}
-    //         like
-    //       </p>
-
-    //       <p
-    //         ref={target}
-    //         // onClick={handleShareClick}
-    //         style={{ cursor: "pointer" }}
-    //       >
-    //         <i className="bi bi-share"></i> Share
-    //       </p>
-    //       {/* <Overlay
-    //         show={showOverlay}
-    //         target={target.current}
-    //         placement="top"
-    //         containerPadding={20}
-    //         rootClose
-    //         onHide={() => setShowOverlay(false)}
-    //       >
-    //         <Popover id="popover-contained">
-    //           <Popover.Header as="h3">Share this Poll</Popover.Header>
-    //           <Popover.Body>
-    //             <div className="d-flex justify-content-around">
-    //               <a
-    //                 href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
-    //                 target="_blank"
-    //                 rel="noopener noreferrer"
-    //               >
-    //                 <i className="bi bi-facebook" style={{ fontSize: "35px" }}></i>
-    //               </a>
-    //               &nbsp;&nbsp;
-    //               <a
-    //                 href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
-    //                 target="_blank"
-    //                 rel="noopener noreferrer"
-    //               >
-    //                 <i className="bi bi-twitter" style={{ fontSize: "35px" }}></i>
-    //               </a>
-    //               &nbsp;&nbsp;
-    //               <a
-    //                 href="https://www.instagram.com/?url=yourPollLink"
-    //                 target="_blank"
-    //                 rel="noopener noreferrer"
-    //               >
-    //                 <i className="bi bi-instagram" style={{ fontSize: "35px" }}></i>
-    //               </a>
-    //               &nbsp;&nbsp;
-    //               <a
-    //                 href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
-    //                 target="_blank"
-    //                 rel="noopener noreferrer"
-    //               >
-    //                 <i className="bi bi-whatsapp" style={{ fontSize: "35px" }}></i>
-    //               </a>
-    //             </div>
-    //           </Popover.Body>
-    //         </Popover>
-    //       </Overlay> */}
-    //     </Card.Footer>
-
-    //     {/* <Card.Text>
-    //       <h6>Comments:</h6>
-    //       <ul>
-    //         {comments.map((comment) => (
-    //           <li key={comment.id}>
-    //             {comment.text} (Likes: {comment.likes})
-    //             <Button variant="link" onClick={() => handleLikeComment(comment.id)}>Like</Button>
-    //             <Button variant="link" onClick={() => handleUnlikeComment(comment.id)}>Unlike</Button>
-    //             <Form inline>
-    //               <Form.Control
-    //                 type="text"
-    //                 placeholder="Reply..."
-    //                 value={replyText[comment.id] || ''}
-    //                 onChange={(e) => setReplyText({ ...replyText, [comment.id]: e.target.value })}
-    //               />
-    //               <Button variant="primary" onClick={() => handleAddReply(comment.id)}>Reply</Button>
-    //             </Form>
-    //             {comment.replies.length > 0 && (
-    //               <ul>
-    //                 {comment.replies.map((reply) => (
-    //                   <li key={reply.id}>
-    //                     {reply.text} (Likes: {reply.likes})
-    //                     <Button variant="link" onClick={() => handleLikeReply(comment.id, reply.id)}>Like</Button>
-    //                   </li>
-    //                 ))}
-    //               </ul>
-    //             )}
-    //           </li>
-    //         ))}
-    //       </ul>
-    //       <Form inline className="mt-3">
-    //         <Form.Control
-    //           type="text"
-    //           placeholder="Add a comment..."
-    //           value={newComment}
-    //           onChange={(e) => setNewComment(e.target.value)}
-    //         />
-    //         <Button variant="primary" onClick={handleAddComment}>Add Comment</Button>
-    //       </Form> */}
-    //     {/* </Card.Text> */}
-    //   </Card.Body>
-    // </Card>
   );
 }
 

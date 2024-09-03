@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import axios from 'axios'; 
 import './Newpassword.css';
 
 function Newpassword() {
+  let {number}=useParams()
+  console.log(number)
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [showSuccess, setShowSuccess] = useState(false);
+  const [apiError, setApiError] = useState(''); // State to handle API error messages
   const navigate = useNavigate();
+
+  const identifier = 'identifier';
 
   // Validation schema using Yup
   const validationSchema = Yup.object().shape({
@@ -21,14 +27,30 @@ function Newpassword() {
       .required('Please confirm your password'),
   });
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    setShowSuccess(true);
-    setSubmitting(false);
+  // Function to handle form submission and API integration
+  const handleSubmit = async (values, { setSubmitting }) => {
+    console.log(number,values.newPassword)
+    try {
+      const response = await axios.post('http://92.205.109.210:8028/api/updateuser', {
+        identifier: number, 
+        password: values.newPassword,
+      });
 
-    // After showing the success message, redirect to Loginpg
-    setTimeout(() => {
-      navigate('/Loginpg'); // Redirect to the Loginpg page
-    }, 2000); // Redirect after 2 seconds
+      if (response.status === 200) {
+        setShowSuccess(true);
+        setApiError(''); 
+
+        // After showing the success message, redirect to Loginpg
+        setTimeout(() => {
+          navigate('/Loginpg'); 
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error updating password:', error);
+      setApiError('Failed to reset the password. Please try again.');
+    } finally {
+      setSubmitting(false); 
+    }
   };
 
   return (
@@ -62,7 +84,7 @@ function Newpassword() {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Enter new password"
                       className="form-control"
-                      maxlength={6}
+                      maxLength={6}
                     />
                     <span
                       className="password-toggle-icon"
@@ -86,7 +108,7 @@ function Newpassword() {
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Confirm new password"
                       className="form-control"
-                      maxlength={6}
+                      maxLength={6}
                     />
                     <span
                       className="password-toggle-icon"
@@ -115,6 +137,11 @@ function Newpassword() {
                     Password reset successful! Redirecting to login...
                   </div>
                 )}
+                {apiError && (
+                  <div className="mt-3 text-danger text-center">
+                    {apiError}
+                  </div>
+                )}
               </Form>
             )}
           </Formik>
@@ -125,5 +152,3 @@ function Newpassword() {
 }
 
 export default Newpassword;
-
-
