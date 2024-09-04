@@ -54,7 +54,9 @@ function Newpassword() {
   };
 
   return (
+    
     <div
+    
       className="new-password-container"
       style={{
         backgroundColor: '#5A8D8E',
@@ -64,7 +66,19 @@ function Newpassword() {
         alignItems: 'center',
       }}
     >
+    
       <Card style={{ width: '30rem' }}>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
         <Card.Header className="text-center">
           <h3>Reset Your Password</h3>
         </Card.Header>

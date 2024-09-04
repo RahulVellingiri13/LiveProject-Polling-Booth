@@ -250,6 +250,17 @@ function Loginpg() {
         </Col>
         <Col sm={4}></Col>
       </Row>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
     </div>
   );
 }
