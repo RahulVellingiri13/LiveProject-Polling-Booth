@@ -1762,9 +1762,10 @@ function CommentsComp() {
         (comment) => comment._id === currentCommentId
       );
 
-      matchingComment.replies = [...matchingComment.replies, response.data.reply];
-      
-
+      matchingComment.replies = [
+        ...matchingComment.replies,
+        response.data.reply,
+      ];
 
       console.log(matchingComment);
       setComments((prev) => [...prev, matchingComment]);

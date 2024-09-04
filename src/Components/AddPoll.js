@@ -848,12 +848,13 @@ function AddPoll() {
       options: formattedOptions,
       duration: "2",
       category: "66cd7c8bc23040cebf12d75b",
-      createdBy: "66cd7c7bc23040cebf12d758",  // Adjust this according to your actual user ID
+      createdBy: "66d7e32f3ac2b23bcbbc9a88",  // Adjust this according to your actual user ID
     };
 console.log(typeof(pollData.duration))
     console.log("Preparing to submit Poll Data:", pollData); 
     axios.post("http://92.205.109.210:8028/polls/create",pollData)
-    alert("poll added")
+    // alert("poll added")
+    setSnackbarMessage("Your Poll is Successfully created");
 
     // try {
     //   const response = await axios.post("http://92.205.109.210:8028/polls/create",pollData);

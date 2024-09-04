@@ -39,7 +39,7 @@ body {
 .polling-booth aside {
   flex: 1;
   margin-right: 1rem;
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: #e7e7e7;
   border: 3px solid #ddd;
   margin-left: -6rem;
@@ -50,6 +50,7 @@ body {
 .polling-booth aside nav ul {
   list-style: none;
   padding: 0;
+  
 }
 
 .polling-booth aside nav ul li {
