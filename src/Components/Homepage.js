@@ -59,10 +59,13 @@ function Homepage() {
 
   //   handleClose();
   // };
+  sessionStorage.getItem("username")
+  console.log("session data",sessionStorage.getItem("username"))
 const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [show, setShow] = useState(false);
+  
   const [step, setStep] = useState(1);
 
   const handleClose = () => setShow(false);

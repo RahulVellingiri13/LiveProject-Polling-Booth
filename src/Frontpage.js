@@ -150,8 +150,9 @@ const Frontpg = () => {
   //             });
 
   let navigate = useNavigate();
-  
-  const[displayuser,Setdisplayuser]=useState(sessionStorage.setItem());
+
+  const[displayuser,Setdisplayuser]=useState();
+
 
   const handlegoogle = () => {
     sessionStorage.clear();
@@ -185,7 +186,10 @@ const Frontpg = () => {
         phone_number: email,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.status);
+        if(res.status === 409){
+          alert("User already exists")
+        }
         navigate("/homepage");
       });
   };

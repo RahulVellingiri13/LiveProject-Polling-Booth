@@ -1627,6 +1627,588 @@
 
 //updatedcode
 
+// import React, { useState, useRef, useEffect } from "react";
+// import {
+//   Card,
+//   Button,
+//   ProgressBar,
+//   Overlay,
+//   Popover,
+//   Form,
+//   Modal,
+// } from "react-bootstrap";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+// import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+// import { BsBack } from "react-icons/bs";
+// import axios from "axios";
+// import { useContext } from "react";
+// import { PageContext } from "../../App";
+// // import Onepoll from "../Onepoll";
+// import CardComp from "./Card";
+// import Polllist from "../Polllist";
+
+
+// function CommentsComp() {
+//   // const {
+//   //   name,
+//   //   createdon,
+//   //   title,
+//   //   status,
+//   //   question,
+//   //   options,
+//   //   votingPeriod,
+//   //   category,
+//   //   likeCount: initialLikeCount,
+//   //   comments: initialComments,
+//   // } = cardData;
+
+
+//   const [totallike, setTotallike] = useState(0);
+//   const [liked, setLiked] = useState(false); // State for likes
+//   const [likeCount, setLikeCount] = useState(""); // State for likes count
+
+//   const [selectedOption, setSelectedOption] = useState(null); // State for selected option
+//   const [showVoteButton, setShowVoteButton] = useState(false);
+//   const [hasVoted, setHasVoted] = useState(false);
+
+//   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
+//   const target = useRef(null); // Reference for the share button
+//   let [onepoll, setOnepoll] = useState("");
+//   let [error, setError] = useState("");
+//   let [loading, setLoading] = useState(true);
+//   let [page, setPage, pollid, setPollid] = useContext(PageContext);
+//   console.log(pollid, page);
+
+//   //comment section
+
+//   const [newComment, setNewComment] = useState("");
+//   const [comments, setComments] = useState([]);
+//   const [showReplyModal, setShowReplyModal] = useState(false);
+//   const [newReply, setNewReply] = useState("");
+//   const [currentCommentId, setCurrentCommentId] = useState(null);
+//   const [replyToReplyId, setReplyToReplyId] = useState(null);
+//   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false);
+//   const [newNestedReply, setNewNestedReply] = useState("");
+
+//   const handleAddComment = async () => {
+//     console.log("addcomment");
+//     console.log(newComment, onepoll._id, onepoll.createdBy._id);
+//     if (newComment.trim() === "") return;
+
+//     try {
+//       const response = await axios.post(
+//         "http://92.205.109.210:8028/comment/createcomment",
+//         {
+//           comment: newComment,
+//           poll_id: onepoll._id,
+//           user_id: onepoll.createdBy._id,
+//         }
+//       );
+//       console.log(response.data);
+//       setComments((prev) => [response.data.comment, ...prev]);
+//       setNewComment("");
+//       // Add the new comment to the list
+//       // setNewComment(response.data);
+//       //  setNewComment((prevComments) => [...prevComments, response.data]);
+//     } catch (error) {
+//       console.error("Error adding comment:", error);
+//     }
+//   };
+
+//   const handleLikeComment = async (index) => {
+//     const updatedComments = [...comments];
+//     updatedComments[index].likes += 1;
+//     setComments(updatedComments);
+
+//     // like count
+//     try {
+//       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+//         user_id: onepoll.createdBy._id,
+//         comment_id: currentCommentId,
+//       });
+//     } catch (error) {
+//       console.error("Error liking comment:", error);
+//     }
+//   };
+
+//   //modal for reply
+
+//   const handleOpenReplyModal = (commentId) => {
+//     setCurrentCommentId(commentId);
+//     setShowReplyModal(true);
+//   };
+
+//   //addd reply
+
+//   const handleAddReply = async () => {
+//     if (newReply.trim() === "") return;
+
+//     try {
+//       const response = await axios.post(
+//         `http://92.205.109.210:8028/comment/replycomment`,
+//         {
+//           reply_msg: newReply,
+//           poll_id: onepoll._id,
+//           user_id: onepoll.createdBy._id,
+//           comment_id: currentCommentId,
+//         }
+//       );
+//       console.log(response.data);
+
+//       const updatedComments = comments.map((comment) =>
+//         comment._id === currentCommentId
+//           ? {
+//               ...comment,
+//               replies: [...comment.replies, response.data.reply_msg, newReply],
+//             }
+//           : comment
+//       );
+//       // const matchingComment = comments.find(
+//       //   (comment) => comment._id === currentCommentId
+//       // );
+
+//       // matchingComment.replies = [
+//       //   ...matchingComment.replies,
+//       //   response.data.reply,
+//       // ];
+
+//       console.log(updatedComments);
+//       // setComments((prev) => [...prev, updatedComments]);
+//       setNewReply("");
+//       setShowReplyModal(false);
+//     } catch (error) {
+//       console.error("Error adding reply:", error);
+//     }
+//   };
+
+
+//   const handleOpenNestedReplyModal = (commentId, replyId) => {
+//     setCurrentCommentId(commentId);
+//     setReplyToReplyId(replyId);
+//     setShowNestedReplyModal(true);
+//   };
+
+//   const handleAddNestedReply = async () => {
+//     if (newNestedReply.trim() === "") return;
+
+//     try {
+//       const response = await axios.post(
+//         `http://92.205.109.210:8028/comment/replycomment`,
+//         {
+//           reply_msg: newNestedReply,
+//           poll_id: onepoll._id,
+//           user_id: onepoll.createdBy._id,
+//           comment_id: currentCommentId,
+    
+//         }
+//       )};
+//       const updatedComments = comments.map((comment) =>
+//         comment._id === currentCommentId
+//           ? {
+//               ...comment,
+//               replies: comment.replies.map((reply) =>
+//                 reply._id === replyToReplyId
+//                   ? {
+//                       ...reply,
+//                       replies: [...reply.replies, response.data.reply],
+//                     }
+//                   : reply
+//               ),
+//             }
+//           : comment
+//       );
+
+//       setComments(updatedComments); 
+//       setNewNestedReply("");
+//       setShowNestedReplyModal(false);
+//     } catch (error) {
+//       console.error("Error adding nested reply:", error);
+//     }
+//   };
+
+
+
+//   const handleLikeReply = async (commentId, replyId) => {
+//     const updatedComments = comments.map((comment) =>
+//       comment._id === commentId
+//         ? {
+//             ...comment,
+//             replies: comment.replies.map((reply) =>
+//               reply._id === replyId
+//                 ? { ...reply, likes: reply.likes + 1 } // Incrementing likes for the reply
+//                 : reply
+//             ),
+//           }
+//         : comment
+//     );
+//     setComments(updatedComments);
+
+//     try {
+//       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+//         user_id: onepoll.createdBy._id,
+//         comment_id: replyId,
+//       });
+//     } catch (error) {
+//       console.error("Error liking reply:", error);
+//     }
+//   };
+
+
+//   // useEffect(()=>{
+//   //   axios.post("http://92.205.109.210:8028/polls/getone",{
+//   //     poll_id:pollid
+//   //   }).then(res=>{
+//   //     console.log(res.data)
+//   //     setOnepoll(res.data)
+//   //     console.log(onepoll.status)
+//   //   })
+//   // },[])
+
+//   useEffect(() => {
+//     axios
+//       .post("http://92.205.109.210:8028/polls/getone", {
+//         poll_id: pollid,
+//       })
+//       .then((res) => {
+//         console.log(res.data);
+//         setOnepoll(res.data);
+//         setLoading(false);
+//       })
+//       .catch((err) => {
+//         setError("Error fetching poll data");
+//         setLoading(false);
+//       });
+//   }, [pollid]);
+//   console.log(onepoll.status);
+
+//   useEffect(() => {
+//     fetchComments();
+//   }, [onepoll._id]);
+
+//   const fetchComments = async () => {
+//     try {
+//       const response = await axios.post(
+//         "http://92.205.109.210:8028/comment/getbyid",
+//         {
+//           poll_id: onepoll._id,
+//           user_id: onepoll.createdBy._id,
+//         }
+//       );
+//       setComments(response.data);
+//       console.log("Comments are", comments);
+//     } catch (error) {
+//       console.error("Error fetching comments:", error);
+//     }
+//   };
+//   console.log("view comment", comments);
+
+//   const handleOptionChange = (index) => {
+//     if (selectedOption === index) {
+//       unselectOption(); // Unselect the option if it's already selected
+//     } else {
+//       setSelectedOption(index); // Select the option
+//       setShowVoteButton(true);
+//     }
+//   };
+
+//   const unselectOption = () => {
+//     setSelectedOption(null);
+//     setShowVoteButton(false);
+//   };
+
+//   const handleVoteClick = () => {
+//     console.log(selectedOption);
+//     if (selectedOption !== null) {
+//       const selectedOptionValue = onepoll.options[selectedOption].option;
+//       console.log(selectedOptionValue);
+//       axios
+//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//           option: selectedOptionValue,
+
+//           poll_id: onepoll._id,
+//           user_id: onepoll.createdBy._id,
+//         })
+
+//         .then((response) => {
+//           console.log("Vote submitted successfully:", response.data);
+//           setHasVoted(true);
+//         })
+//         .catch((error) => {
+//           console.error("Error submitting vote:", error);
+//         });
+//     }
+//   };
+
+//   const handleShareClick = () => {
+//     setShowOverlay(!showOverlay); // Toggle the overlay visibility
+//   };
+
+//   const onBackClick = () => {
+//     window.location.href = "/Homepage";
+//   };
+//   console.log(onepoll);
+//   // console.log(onepoll)
+
+//   const toggleLike = () => {
+//     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+//     setLiked(!liked);
+//   };
+
+//   const handleLike = () => {
+//     axios
+//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//         poll_id: onepoll._id,
+//         user_id: onepoll.createdBy._id,
+//       })
+//       .then((res) => {
+//         console.log(res.data);
+//         setTotallike(res.data.Total_likes);
+//         console.log(res.data.Total_likes);
+//         console.log(totallike);
+//       });
+//   };
+
+//   return (
+//     <>
+//       {/* <h1>Comments</h1> */}
+
+//       <Card>
+//         <Card.Body>
+//           <Button onClick={onBackClick} variant="secondary" className="mb-3">
+//             <BsBack /> Back to All Polls
+//           </Button>
+
+//           <Card.Header className="d-flex justify-content-between align-items-center">
+//             <div>
+//               {/* <h6>Name:{onepoll.createdBy.user_name}</h6> */}
+//               <h6>Name: {onepoll.createdBy?.user_name || "Unknown"}</h6>
+//               <p>Created At:{onepoll.createdAt} </p>
+//               <p>Expiration Time: {onepoll.expirationTime} </p>
+//               {/* <p>Title:{onepoll.title} </p> */}
+//               <p>Question:{onepoll.question}</p>
+//               <p>Status:{onepoll.status}</p>
+//             </div>
+//             <Button variant="primary">Follow</Button>
+//           </Card.Header>
+//           <Card.Text>
+//             <div className="mt-3 mb-3"></div>
+//             <Card className="mb-3">
+//               <Card.Body>
+//                 <Card.Header className="d-flex justify-content-between">
+//                   <p>Poll Ends on{onepoll.expirationTime}</p>
+//                   <p>Category:{onepoll.category_name} </p>
+//                 </Card.Header>
+//                 {onepoll.options && onepoll.options.length > 0 && (
+//                   <Card.Text className="d-flex flex-column">
+//                     {onepoll.options.map((optionObj, index) => (
+//                       <div key={index}>
+//                         {selectedOption === index ? (
+//                           <ProgressBar
+//                             now={100}
+//                             label={optionObj.option}
+//                             onClick={unselectOption}
+//                             style={{ cursor: "pointer" }}
+//                           />
+//                         ) : (
+//                           <div className="form-check">
+//                             <input
+//                               className="form-check-input"
+//                               type="radio"
+//                               id={`option${index + 1}`}
+//                               name="options"
+//                               value={optionObj.option}
+//                               onChange={() => handleOptionChange(index)}
+//                               checked={selectedOption === index}
+//                             />
+//                             <label
+//                               className="form-check-label"
+//                               htmlFor={`option${index + 1}`}
+//                             >
+//                               {optionObj.option}
+//                             </label>
+//                           </div>
+//                         )}
+//                       </div>
+//                     ))}
+//                   </Card.Text>
+//                 )}
+//               </Card.Body>
+//             </Card>
+//           </Card.Text>
+
+//           <Card.Footer className="d-flex justify-content-between">
+//             <p>
+//               <button
+//                 onClick={toggleLike}
+//                 style={{
+//                   background: "none",
+//                   border: "none",
+//                   cursor: "pointer",
+//                 }}
+//               >
+//                 <FontAwesomeIcon
+//                   icon={liked ? solidHeart : regularHeart}
+//                   style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+//                   onClick={handleLike}
+//                 />
+//               </button>
+//               <span style={{ marginLeft: "8px" }}>total like:{totallike}</span>{" "}
+//               like
+//             </p>
+
+//             <p ref={target} style={{ cursor: "pointer" }}>
+//               <i className="bi bi-share"></i> Share
+//             </p>
+//             <Overlay
+//               show={showOverlay}
+//               target={target.current}
+//               placement="top"
+//               containerPadding={20}
+//               rootClose
+//               onHide={() => setShowOverlay(false)}
+//             >
+//               <Popover id="popover-contained">
+//                 <Popover.Header as="h3">Share this Poll</Popover.Header>
+//                 <Popover.Body>
+//                   <div className="d-flex justify-content-around">
+//                     <a
+//                       href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+//                       target="_blank"
+//                       rel="noopener noreferrer"
+//                     >
+//                       <i
+//                         className="bi bi-facebook"
+//                         style={{ fontSize: "35px" }}
+//                       ></i>
+//                     </a>
+//                     &nbsp;&nbsp;
+//                     <a
+//                       href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+//                       target="_blank"
+//                       rel="noopener noreferrer"
+//                     >
+//                       <i
+//                         className="bi bi-twitter"
+//                         style={{ fontSize: "35px" }}
+//                       ></i>
+//                     </a>
+//                     &nbsp;&nbsp;
+//                     <a
+//                       href="https://www.instagram.com/?url=yourPollLink"
+//                       target="_blank"
+//                       rel="noopener noreferrer"
+//                     >
+//                       <i
+//                         className="bi bi-instagram"
+//                         style={{ fontSize: "35px" }}
+//                       ></i>
+//                     </a>
+//                     &nbsp;&nbsp;
+//                     <a
+//                       href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+//                       target="_blank"
+//                       rel="noopener noreferrer"
+//                     >
+//                       <i
+//                         className="bi bi-whatsapp"
+//                         style={{ fontSize: "35px" }}
+//                       ></i>
+//                     </a>
+//                   </div>
+//                 </Popover.Body>
+//               </Popover>
+//             </Overlay>
+//           </Card.Footer>
+
+//           <Card.Text>
+//             <h6>Comments:</h6>
+
+//             <Form inline className="mt-3">
+//               <Form.Control
+//                 type="text"
+//                 placeholder="Add a comment..."
+//                 value={newComment}
+//                 onChange={(e) => setNewComment(e.target.value)}
+//               />
+//               <Button
+//                 variant="primary"
+//                 onClick={handleAddComment}
+//                 disabled={!newComment}
+//               >
+//                 Add Comment
+//               </Button>
+//             </Form>
+
+//             {/* Display comments */}
+//             {comments.map((comment, index) => (
+//               <div key={comment._id} className="mt-3">
+//                 <p>{comment.comment}</p>
+//                 <Button
+//                   variant="link"
+//                   onClick={() => handleLikeComment(comment._id)}
+//                 >
+//                   Like ({comment.isliked})
+//                 </Button>
+//                 <Button
+//                   variant="link"
+//                   onClick={() => handleOpenReplyModal(comment._id)}
+//                 >
+//                   Reply
+//                 </Button>
+//                 {console.log("comments-", comments)}
+//                 {/* Display replies */}
+//                 {/* {comments.map((comment) => { */}
+
+//                 {comment.replies.map((reply, replyIndex) => (
+//                   <div key={replyIndex} className="ml-3">
+//                     <p>- {reply.reply_msg}</p>
+//                   </div>
+//                 ))}
+//                 {/* })} */}
+//               </div>
+//             ))}
+//           </Card.Text>
+//           {/* Reply Modal */}
+//           <Modal show={showReplyModal} onHide={() => setShowReplyModal(false)}>
+//             <Modal.Header closeButton>
+//               <Modal.Title>Reply to Comment</Modal.Title>
+//             </Modal.Header>
+//             <Modal.Body>
+//               <Form>
+//                 <Form.Group controlId="replyInput">
+//                   <Form.Label>Reply</Form.Label>
+//                   <Form.Control
+//                     type="text"
+//                     placeholder="Write your reply..."
+//                     value={newReply}
+//                     onChange={(e) => setNewReply(e.target.value)}
+//                   />
+//                 </Form.Group>
+//               </Form>
+//             </Modal.Body>
+//             <Modal.Footer>
+//               <Button
+//                 variant="secondary"
+//                 onClick={() => setShowReplyModal(false)}
+//               >
+//                 Close
+//               </Button>
+//               <Button variant="primary" onClick={handleAddReply}>
+//                 Reply
+//               </Button>
+//             </Modal.Footer>
+//           </Modal>
+//         </Card.Body>
+//       </Card>
+//     </>
+//   );
+// }
+
+// export default CommentsComp;
+
+//----------------------------------
+
 import React, { useState, useRef, useEffect } from "react";
 import {
   Card,
@@ -1644,50 +2226,33 @@ import { BsBack } from "react-icons/bs";
 import axios from "axios";
 import { useContext } from "react";
 import { PageContext } from "../../App";
-// import Onepoll from "../Onepoll";
-import CardComp from "./Card";
-import Polllist from "../Polllist";
 
 function CommentsComp() {
-  // const {
-  //   name,
-  //   createdon,
-  //   title,
-  //   status,
-  //   question,
-  //   options,
-  //   votingPeriod,
-  //   category,
-  //   likeCount: initialLikeCount,
-  //   comments: initialComments,
-  // } = cardData;
   const [totallike, setTotallike] = useState(0);
-  const [liked, setLiked] = useState(false); // State for likes
-  const [likeCount, setLikeCount] = useState(""); // State for likes count
-
-  const [selectedOption, setSelectedOption] = useState(null); // State for selected option
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
-
-  const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
-  const target = useRef(null); // Reference for the share button
+  const [showOverlay, setShowOverlay] = useState(false);
+  const target = useRef(null);
   let [onepoll, setOnepoll] = useState("");
   let [error, setError] = useState("");
   let [loading, setLoading] = useState(true);
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
-  console.log(pollid, page);
-
-  //comment section
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [newReply, setNewReply] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
+  
+  // Added state for nested replies
+  const [replyToReplyId, setReplyToReplyId] = useState(null); // New state for nested replies
+  const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
+  const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
 
   const handleAddComment = async () => {
-    console.log("addcomment");
-    console.log(newComment, onepoll._id, onepoll.createdBy._id);
     if (newComment.trim() === "") return;
 
     try {
@@ -1699,12 +2264,8 @@ function CommentsComp() {
           user_id: onepoll.createdBy._id,
         }
       );
-      console.log(response.data);
       setComments((prev) => [response.data.comment, ...prev]);
       setNewComment("");
-      // Add the new comment to the list
-      // setNewComment(response.data);
-      //  setNewComment((prevComments) => [...prevComments, response.data]);
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -1712,10 +2273,9 @@ function CommentsComp() {
 
   const handleLikeComment = async (index) => {
     const updatedComments = [...comments];
-    updatedComments[index].likes += 1;
+    updatedComments[index].likes += 1; // Edited code
     setComments(updatedComments);
 
-    // like count
     try {
       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
         user_id: onepoll.createdBy._id,
@@ -1726,14 +2286,10 @@ function CommentsComp() {
     }
   };
 
-  //modal for reply
-
   const handleOpenReplyModal = (commentId) => {
     setCurrentCommentId(commentId);
     setShowReplyModal(true);
   };
-
-  //addd reply
 
   const handleAddReply = async () => {
     if (newReply.trim() === "") return;
@@ -1748,27 +2304,17 @@ function CommentsComp() {
           comment_id: currentCommentId,
         }
       );
-      console.log(response.data);
 
-      // const updatedComments = comments.map((comment) =>
-      //   comment._id === currentCommentId
-      //     ? {
-      //         ...comment,
-      //         replies: [...comment.replies, response.data.reply_msg, newReply],
-      //       }
-      //     : comment
-      // );
-      const matchingComment = comments.find(
-        (comment) => comment._id === currentCommentId
+      const updatedComments = comments.map((comment) =>
+        comment._id === currentCommentId
+          ? {
+              ...comment,
+              replies: [...comment.replies, response.data.reply],
+            }
+          : comment
       );
 
-      matchingComment.replies = [
-        ...matchingComment.replies,
-        response.data.reply,
-      ];
-
-      console.log(matchingComment);
-      setComments((prev) => [...prev, matchingComment]);
+      setComments(updatedComments);
       setNewReply("");
       setShowReplyModal(false);
     } catch (error) {
@@ -1776,15 +2322,77 @@ function CommentsComp() {
     }
   };
 
-  // useEffect(()=>{
-  //   axios.post("http://92.205.109.210:8028/polls/getone",{
-  //     poll_id:pollid
-  //   }).then(res=>{
-  //     console.log(res.data)
-  //     setOnepoll(res.data)
-  //     console.log(onepoll.status)
-  //   })
-  // },[])
+ 
+  const handleOpenNestedReplyModal = (commentId, replyId) => {
+    setCurrentCommentId(commentId);
+    setReplyToReplyId(replyId);
+    setShowNestedReplyModal(true);
+  };
+
+  const handleAddNestedReply = async () => {
+    if (newNestedReply.trim() === "") return;
+
+    try {
+      const response = await axios.post(
+        `http://92.205.109.210:8028/comment/replycomment`,
+        {
+          reply_msg: newNestedReply,
+          poll_id: onepoll._id,
+          user_id: onepoll.createdBy._id,
+          comment_id: currentCommentId,
+          // reply_to_reply_id: replyToReplyId,
+        }
+      );
+
+      const updatedComments = comments.map((comment) =>
+        comment._id === currentCommentId
+          ? {
+              ...comment,
+              replies: comment.replies.map((reply) =>
+                reply._id === replyToReplyId
+                  ? {
+                      ...reply,
+                      replies: [...reply.replies, response.data.reply],
+                    }
+                  : reply
+              ),
+            }
+          : comment
+      );
+
+      setComments(updatedComments); // Edited code
+      setNewNestedReply(""); // Edited code
+      setShowNestedReplyModal(false); // Edited code
+    } catch (error) {
+      console.error("Error adding nested reply:", error);
+    }
+  };
+
+  // Added function to handle likes on replies
+  const handleLikeReply = async (commentId, replyId) => {
+    const updatedComments = comments.map((comment) =>
+      comment._id === commentId
+        ? {
+            ...comment,
+            replies: comment.replies.map((reply) =>
+              reply._id === replyId
+                ? { ...reply, likes: reply.likes + 1 } // Incrementing likes for the reply
+                : reply
+            ),
+          }
+        : comment
+    );
+    setComments(updatedComments);
+
+    try {
+      await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+        user_id: onepoll.createdBy._id,
+        comment_id: replyId,
+      });
+    } catch (error) {
+      console.error("Error liking reply:", error);
+    }
+  };
 
   useEffect(() => {
     axios
@@ -1792,7 +2400,6 @@ function CommentsComp() {
         poll_id: pollid,
       })
       .then((res) => {
-        console.log(res.data);
         setOnepoll(res.data);
         setLoading(false);
       })
@@ -1801,7 +2408,6 @@ function CommentsComp() {
         setLoading(false);
       });
   }, [pollid]);
-  console.log(onepoll.status);
 
   useEffect(() => {
     fetchComments();
@@ -1817,63 +2423,22 @@ function CommentsComp() {
         }
       );
       setComments(response.data);
-      console.log("Comments are", comments);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
   };
-  console.log("view comment", comments);
-
-  const handleOptionChange = (index) => {
-    if (selectedOption === index) {
-      unselectOption(); // Unselect the option if it's already selected
-    } else {
-      setSelectedOption(index); // Select the option
-      setShowVoteButton(true);
-    }
-  };
-
-  const unselectOption = () => {
-    setSelectedOption(null);
-    setShowVoteButton(false);
-  };
-
-  const handleVoteClick = () => {
-    console.log(selectedOption);
-    if (selectedOption !== null) {
-      const selectedOptionValue = onepoll.options[selectedOption].option;
-      console.log(selectedOptionValue);
-      axios
-        .post("http://92.205.109.210:8028/polls/voteonpoll", {
-          option: selectedOptionValue,
-
-          poll_id: onepoll._id,
-          user_id: onepoll.createdBy._id,
-        })
-
-        .then((response) => {
-          console.log("Vote submitted successfully:", response.data);
-          setHasVoted(true);
-        })
-        .catch((error) => {
-          console.error("Error submitting vote:", error);
-        });
-    }
-  };
 
   const handleShareClick = () => {
-    setShowOverlay(!showOverlay); // Toggle the overlay visibility
+    setShowOverlay(!showOverlay);
   };
 
   const onBackClick = () => {
     window.location.href = "/Homepage";
   };
-  console.log(onepoll);
-  // console.log(onepoll)
 
   const toggleLike = () => {
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-    setLiked(!liked);
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1); // Edited code
+    setLiked(!liked); // Edited code
   };
 
   const handleLike = () => {
@@ -1883,17 +2448,12 @@ function CommentsComp() {
         user_id: onepoll.createdBy._id,
       })
       .then((res) => {
-        console.log(res.data);
         setTotallike(res.data.Total_likes);
-        console.log(res.data.Total_likes);
-        console.log(totallike);
       });
   };
 
   return (
     <>
-      {/* <h1>Comments</h1> */}
-
       <Card>
         <Card.Body>
           <Button onClick={onBackClick} variant="secondary" className="mb-3">
@@ -1902,13 +2462,11 @@ function CommentsComp() {
 
           <Card.Header className="d-flex justify-content-between align-items-center">
             <div>
-              {/* <h6>Name:{onepoll.createdBy.user_name}</h6> */}
               <h6>Name: {onepoll.createdBy?.user_name || "Unknown"}</h6>
-              <p>Created At:{onepoll.createdAt} </p>
-              <p>Expiration Time: {onepoll.expirationTime} </p>
-              {/* <p>Title:{onepoll.title} </p> */}
-              <p>Question:{onepoll.question}</p>
-              <p>Status:{onepoll.status}</p>
+              <p>Created At: {onepoll.createdAt}</p>
+              <p>Expiration Time: {onepoll.expirationTime}</p>
+              <p>Question: {onepoll.question}</p>
+              <p>Status: {onepoll.status}</p>
             </div>
             <Button variant="primary">Follow</Button>
           </Card.Header>
@@ -1917,211 +2475,249 @@ function CommentsComp() {
             <Card className="mb-3">
               <Card.Body>
                 <Card.Header className="d-flex justify-content-between">
-                  <p>Poll Ends on{onepoll.expirationTime}</p>
-                  <p>Category:{onepoll.category_name} </p>
+                  <p>Poll Ends on {onepoll.expirationTime}</p>
+                  <p>Category: {onepoll.category}</p>
                 </Card.Header>
-                {onepoll.options && onepoll.options.length > 0 && (
-                  <Card.Text className="d-flex flex-column">
-                    {onepoll.options.map((optionObj, index) => (
-                      <div key={index}>
-                        {selectedOption === index ? (
-                          <ProgressBar
-                            now={100}
-                            label={optionObj.option}
-                            onClick={unselectOption}
-                            style={{ cursor: "pointer" }}
+                {onepoll.options && (
+                  <Card.Body>
+                    <div>
+                      {onepoll.options.map((option, index) => (
+                        <div key={index}>
+                          <Form.Check
+                            type="radio"
+                            label={option.option}
+                            name="options"
+                            checked={selectedOption === option.option}
+                            onChange={() => {
+                              setSelectedOption(option.option);
+                              setShowVoteButton(true);
+                            }}
+                            disabled={hasVoted}
                           />
-                        ) : (
-                          <div className="form-check">
-                            <input
-                              className="form-check-input"
-                              type="radio"
-                              id={`option${index + 1}`}
-                              name="options"
-                              value={optionObj.option}
-                              onChange={() => handleOptionChange(index)}
-                              checked={selectedOption === index}
+                          {hasVoted && (
+                            <ProgressBar
+                              now={option.percentage}
+                              label={`${option.percentage}%`}
                             />
-                            <label
-                              className="form-check-label"
-                              htmlFor={`option${index + 1}`}
-                            >
-                              {optionObj.option}
-                            </label>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </Card.Text>
+                          )}
+                        </div>
+                      ))}
+                      {showVoteButton && (
+                        <Button
+                          className="mt-3"
+                          onClick={() => {
+                            setHasVoted(true);
+                          }}
+                          disabled={hasVoted}
+                        >
+                          Vote
+                        </Button>
+                      )}
+                    </div>
+                  </Card.Body>
                 )}
+                <div>
+                  <p className="mt-3">
+                    Total Likes: {likeCount}
+                    <Button
+                      className="ml-2"
+                      variant="link"
+                      onClick={() => {
+                        toggleLike();
+                        handleLike();
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={liked ? solidHeart : regularHeart}
+                      />
+                    </Button>
+                  </p>
+                  <Button
+                    ref={target}
+                    onClick={handleShareClick}
+                    variant="link"
+                  >
+                    Share
+                  </Button>
+                  <Overlay
+                    show={showOverlay}
+                    target={target.current}
+                    placement="right"
+                    containerPadding={20}
+                  >
+                    <Popover id="popover-contained">
+                      <Popover.Body>
+                        <p>Share this poll on:</p>
+                        <div>
+                          <Button variant="outline-primary" className="me-2">
+                            Facebook
+                          </Button>
+                          <Button variant="outline-info" className="me-2">
+                            Twitter
+                          </Button>
+                          <Button variant="outline-danger" className="me-2">
+                            WhatsApp
+                          </Button>
+                        </div>
+                      </Popover.Body>
+                    </Popover>
+                  </Overlay>
+                </div>
               </Card.Body>
             </Card>
-          </Card.Text>
+            <div>
+              <h5>Comments</h5>
 
-          <Card.Footer className="d-flex justify-content-between">
-            <p>
-              <button
-                onClick={toggleLike}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={liked ? solidHeart : regularHeart}
-                  style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
-                  onClick={handleLike}
-                />
-              </button>
-              <span style={{ marginLeft: "8px" }}>total like:{totallike}</span>{" "}
-              like
-            </p>
-
-            <p ref={target} style={{ cursor: "pointer" }}>
-              <i className="bi bi-share"></i> Share
-            </p>
-            <Overlay
-              show={showOverlay}
-              target={target.current}
-              placement="top"
-              containerPadding={20}
-              rootClose
-              onHide={() => setShowOverlay(false)}
-            >
-              <Popover id="popover-contained">
-                <Popover.Header as="h3">Share this Poll</Popover.Header>
-                <Popover.Body>
-                  <div className="d-flex justify-content-around">
-                    <a
-                      href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="bi bi-facebook"
-                        style={{ fontSize: "35px" }}
-                      ></i>
-                    </a>
-                    &nbsp;&nbsp;
-                    <a
-                      href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="bi bi-twitter"
-                        style={{ fontSize: "35px" }}
-                      ></i>
-                    </a>
-                    &nbsp;&nbsp;
-                    <a
-                      href="https://www.instagram.com/?url=yourPollLink"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="bi bi-instagram"
-                        style={{ fontSize: "35px" }}
-                      ></i>
-                    </a>
-                    &nbsp;&nbsp;
-                    <a
-                      href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <i
-                        className="bi bi-whatsapp"
-                        style={{ fontSize: "35px" }}
-                      ></i>
-                    </a>
-                  </div>
-                </Popover.Body>
-              </Popover>
-            </Overlay>
-          </Card.Footer>
-
-          <Card.Text>
-            <h6>Comments:</h6>
-
-            <Form inline className="mt-3">
+              {/* Add Comment Input Moved Here */}
               <Form.Control
                 type="text"
                 placeholder="Add a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
+                className="mb-3" // Added margin for spacing
               />
               <Button
                 variant="primary"
+                className="mb-3" // Changed to mb-3 for spacing below the button
                 onClick={handleAddComment}
-                disabled={!newComment}
               >
-                Add Comment
+                Comment
               </Button>
-            </Form>
 
-            {/* Display comments */}
-            {comments.map((comment, index) => (
-              <div key={comment._id} className="mt-3">
-                <p>{comment.comment}</p>
-                <Button
-                  variant="link"
-                  onClick={() => handleLikeComment(comment._id)}
-                >
-                  Like ({comment.isliked})
-                </Button>
-                <Button
-                  variant="link"
-                  onClick={() => handleOpenReplyModal(comment._id)}
-                >
-                  Reply
-                </Button>
-                {console.log("comments-", comments)}
-                {/* Display replies */}
-                {/* {comments.map((comment) => { */}
-
-                {comment.replies.map((reply, replyIndex) => (
-                  <div key={replyIndex} className="ml-3">
-                    <p>- {reply.reply_msg}</p>
-                  </div>
-                ))}
-                {/* })} */}
-              </div>
-            ))}
+              {comments.map((comment, index) => (
+                <div key={comment._id} className="mb-3">
+                  <Card>
+                    <Card.Body>
+                      <p>{comment.comment}</p>
+                      <p>Likes: {comment.likes}</p>
+                      <Button
+                        variant="link"
+                        onClick={() => handleLikeComment(index)}
+                      >
+                        Like
+                      </Button>
+                      <Button
+                        variant="link"
+                        onClick={() => handleOpenReplyModal(comment._id)}
+                      >
+                        Reply
+                      </Button>
+                      {comment.replies.length > 0 && (
+                        <div style={{ marginLeft: "20px" }}>
+                          {comment.replies.map((reply) => (
+                            <div key={reply._id} className="mb-2">
+                              <Card>
+                                <Card.Body>
+                                  <p>{reply.reply_msg}</p>
+                                  <p>Likes: {reply.likes}</p>
+                                  <Button
+                                    variant="link"
+                                    onClick={() =>
+                                      handleLikeReply(comment._id, reply._id)
+                                    }
+                                  >
+                                    Like
+                                  </Button>
+                                  <Button
+                                    variant="link"
+                                    onClick={() =>
+                                      handleOpenNestedReplyModal(
+                                        comment._id,
+                                        reply._id
+                                      )
+                                    }
+                                  >
+                                    Reply
+                                  </Button>
+                                  {reply.replies && reply.replies.length > 0 && (
+                                    <div style={{ marginLeft: "20px" }}>
+                                      {reply.replies.map((nestedReply) => (
+                                        <div key={nestedReply._id}>
+                                          <Card>
+                                            <Card.Body>
+                                              <p>{nestedReply.reply_msg}</p>
+                                              <p>Likes: {nestedReply.likes}</p>
+                                              <Button
+                                                variant="link"
+                                                onClick={() =>
+                                                  handleLikeReply(
+                                                    comment._id,
+                                                    nestedReply._id
+                                                  )
+                                                }
+                                              >
+                                                Like
+                                              </Button>
+                                            </Card.Body>
+                                          </Card>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </Card.Body>
+                              </Card>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </Card.Body>
+                  </Card>
+                </div>
+              ))}
+            </div>
           </Card.Text>
-          {/* Reply Modal */}
-          <Modal show={showReplyModal} onHide={() => setShowReplyModal(false)}>
-            <Modal.Header closeButton>
-              <Modal.Title>Reply to Comment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form>
-                <Form.Group controlId="replyInput">
-                  <Form.Label>Reply</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Write your reply..."
-                    value={newReply}
-                    onChange={(e) => setNewReply(e.target.value)}
-                  />
-                </Form.Group>
-              </Form>
-            </Modal.Body>
-            <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => setShowReplyModal(false)}
-              >
-                Close
-              </Button>
-              <Button variant="primary" onClick={handleAddReply}>
-                Reply
-              </Button>
-            </Modal.Footer>
-          </Modal>
         </Card.Body>
       </Card>
+
+      <Modal show={showReplyModal} onHide={() => setShowReplyModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reply to Comment</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            type="text"
+            placeholder="Enter your reply..."
+            value={newReply}
+            onChange={(e) => setNewReply(e.target.value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowReplyModal(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleAddReply}>
+            Reply
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={showNestedReplyModal}
+        onHide={() => setShowNestedReplyModal(false)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Reply to Reply</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Control
+            type="text"
+            placeholder="Enter your reply..."
+            value={newNestedReply}
+            onChange={(e) => setNewNestedReply(e.target.value)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setShowNestedReplyModal(false)}
+          >
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleAddNestedReply}>
+            Reply
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

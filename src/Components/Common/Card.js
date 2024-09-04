@@ -1894,7 +1894,7 @@ function CardComp({
       <Card.Body>
         <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
-            <h6>Name: {createdBy.user_name}</h6>
+            {/* <h6>Name: {createdBy.user_name}</h6> */}
             <p>Created: {}</p>
             <p>Title: {title}</p>
             <p>Status: {status}</p>
