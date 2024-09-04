@@ -140,7 +140,7 @@ import axios from "axios";
 function Loginpg() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate(); // Initialize the useNavigate hook
-
+const [loginuser,setLoginuser]=useState("")
   const validationSchema = Yup.object().shape({
     phno: Yup.string()
       .required("Email or Mobile Number is required")
@@ -176,8 +176,13 @@ function Loginpg() {
                     .post("http://92.205.109.210:8028/log/loginuser", loginData)
                     .then((response) => {
                       console.log("Login successful:", response.data);
+                      console.log(response.data)
+                      console.log(response.data.user.user_name)
+                      
+                      setLoginuser(response.data.user.user_name)
+                      console.log(loginuser)
                       alert("Login successful!");
-                      navigate("/Homepage"); // Navigate to Homepage upon successful login
+                      navigate("/Homepage",{state:response.data.user.user_name}); // Navigate to Homepage upon successful login
                     })
                     .catch((error) => {
                       console.error(

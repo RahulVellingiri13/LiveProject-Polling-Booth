@@ -1894,8 +1894,8 @@ function CardComp({
       <Card.Body>
         <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
-            <h6>Name: {name}</h6>
-            <p>Created: {createdon}</p>
+            <h6>Name: {createdBy.user_name}</h6>
+            <p>Created: {}</p>
             <p>Title: {title}</p>
             <p>Status: {status}</p>
           </div>
@@ -1944,7 +1944,7 @@ function CardComp({
                     )}
                   </div>
                 ))}
-                
+
                 {/* Conditionally render the vote button at the end of all options */}
                 {/* {selectedOption !== null && (
                   <Button

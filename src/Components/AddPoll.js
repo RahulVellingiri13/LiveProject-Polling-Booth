@@ -847,8 +847,11 @@ function AddPoll() {
       question: pollQuestion,
       options: formattedOptions,
       duration: "2",
+      // category: "66cd7c8bc23040cebf12d75b",
+      // createdBy: "66d7e32f3ac2b23bcbbc9a88",
       category: "66cd7c8bc23040cebf12d75b",
-      createdBy: "66d7e32f3ac2b23bcbbc9a88",  // Adjust this according to your actual user ID
+      createdBy: "66d7e32f3ac2b23bcbbc9a88",
+       
     };
 console.log(typeof(pollData.duration))
     console.log("Preparing to submit Poll Data:", pollData); 

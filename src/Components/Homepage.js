@@ -25,10 +25,14 @@ import CommentsComp from "./Common/CommentsComp";
 import { PageContext } from "../App";
 // import logo from './src/images/logo.png';
 import OTPVerificationModal from "./Common/Otpverify";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 
 function Homepage() {
+  let loginuser=useLocation()
+  let newuser=loginuser.state
+  console.log(newuser)
+  console.log(loginuser.state)
   let [page, setPage] = useContext(PageContext);
   let [polls, setPolls] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,7 +59,7 @@ function Homepage() {
 
   //   handleClose();
   // };
-
+const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [show, setShow] = useState(false);
@@ -148,7 +152,8 @@ function Homepage() {
         try {
             await signOut(auth); // Sign out the user using Firebase
             sessionStorage.clear(); // Clear session storage
-            localStorage.removeItem("authToken"); // Remove any auth tokens
+            localStorage.removeItem("authToken"); // Remove any auth token
+            sessionStorage.clear()
             navigate("/loginpg"); // Redirect to login page
         } catch (error) {
             console.error("Error signing out:", error);
@@ -168,7 +173,7 @@ function Homepage() {
         />
         <div className="user-info">
           <h4>
-            Welcome! User <i class="bi bi-person-circle"></i>
+            Welcome! {googleuser?googleuser:newuser} <i class="bi bi-person-circle"></i>
           </h4>
         </div>
       </header>

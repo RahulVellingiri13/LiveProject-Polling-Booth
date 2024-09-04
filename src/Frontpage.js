@@ -173,10 +173,10 @@ let user_name=sessionStorage.getItem("username")
 let email=sessionStorage.getItem("email")
 console.log(user_name,email)
         // Navigate to the Signup page
-      
         axios.post("http://92.205.109.210:8028/api/createuser",{
           user_name:user_name,
-          email:email
+          email:email,
+          phone_number:email
         }
       ).then(res=>{
           console.log(res.data)
