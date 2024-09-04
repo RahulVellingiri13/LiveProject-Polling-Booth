@@ -99,7 +99,7 @@ body {
 
 .polling-booth main {
   flex: 3;
-  margin-right: -23.5rem;
+  margin-right: -35.5rem;
   margin-left: -0.5rem;
   position: relative;
 }
@@ -119,10 +119,10 @@ body {
   background-color: #e7e7e7;
   padding: 0.5rem;
   border-radius: 5px;
-  margin-left: 11.5rem;
+  margin-left: 22.5rem;
   margin-right: -5.7rem;
   position: relative;
-  width: 13rem;
+  /* width: 130rem; */
   /* change the right aside div/nav height and color here*/
   height: 40rem;
 }

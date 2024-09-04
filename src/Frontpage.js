@@ -34,7 +34,7 @@
 //   //                 console.error('Error signing in with Google:', error);
 //   //             });
 
-//   let navigate = useNavigate(); 
+//   let navigate = useNavigate();
 
 //   const handlegoogle = () => {
 //     sessionStorage.clear()
@@ -57,9 +57,9 @@
 //         //   email:result.user.email
 //         // }).then(res=>{
 //         //   console.log(res.data)
-        
+
 //         // })
-       
+
 //       })
 //       .catch((error) => {
 //         console.error("Error signing in with Google:", error);
@@ -107,10 +107,9 @@
 
 // export default Frontpg;
 
-
 // tuesday update
 
-import React from "react";
+import React, { useState } from "react";
 import { Row, Col, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
@@ -119,6 +118,10 @@ import "./Frontpage.css";
 import logo from "../src/Images/Pooling logo dem.jpeg";
 import { useFormik } from "formik";
 import axios from "axios";
+
+
+
+
 const Frontpg = () => {
   const formik = useFormik({
     initialValues: {
@@ -146,44 +149,46 @@ const Frontpg = () => {
   //                 console.error('Error signing in with Google:', error);
   //             });
 
-  let navigate = useNavigate(); 
+  let navigate = useNavigate();
+  
+  const[displayuser,Setdisplayuser]=useState(sessionStorage.setItem());
 
   const handlegoogle = () => {
-    sessionStorage.clear()
+    sessionStorage.clear();
     signInWithPopup(auth, provider)
       .then((result) => {
         console.log("User signed in:", result.user.displayName);
         console.log(result.user.email);
-        sessionStorage.clear()
+        sessionStorage.clear();
         // Store in sessionStorage
         sessionStorage.setItem("username", result.user.displayName);
         sessionStorage.setItem("email", result.user.email);
-        handleGooglesignup()
-      })  .catch((error) => {
+        handleGooglesignup();
+      })
+      .catch((error) => {
         console.error("Error signing in with Google:", error);
       });
-    }
+  };
+  // formik.setFieldValue("username", result.user.displayName || "");
+  // formik.setFieldValue("email", result.user.email || "");
+  let handleGooglesignup = () => {
+    console.log("gsignup");
 
-        // formik.setFieldValue("username", result.user.displayName || "");
-        // formik.setFieldValue("email", result.user.email || "");
-let handleGooglesignup=()=>{
-console.log("gsignup")
-
-let user_name=sessionStorage.getItem("username")
-let email=sessionStorage.getItem("email")
-console.log(user_name,email)
-        // Navigate to the Signup page
-        axios.post("http://92.205.109.210:8028/api/createuser",{
-          user_name:user_name,
-          email:email,
-          phone_number:email
-        }
-      ).then(res=>{
-          console.log(res.data)
-          navigate("/homepage");
-        
-        })
-      };
+    let user_name = sessionStorage.getItem("username");
+    let email = sessionStorage.getItem("email");
+    console.log(user_name, email);
+    // Navigate to the Signup page
+    axios
+      .post("http://92.205.109.210:8028/api/createuser", {
+        user_name: user_name,
+        email: email,
+        phone_number: email,
+      })
+      .then((res) => {
+        console.log(res.data);
+        navigate("/homepage");
+      });
+  };
   return (
     <Row className="bodyy">
       {/* Left Side - Column 6 */}
