@@ -391,7 +391,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 import CardComp from "./Common/Card";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CommentsComp from "./Common/CommentsComp";

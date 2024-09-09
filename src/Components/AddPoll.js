@@ -3,7 +3,6 @@
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import "bootstrap-icons/font/bootstrap-icons.css";
 
-
 // function AddPoll() {
 //   return (
 //     <>
@@ -113,7 +112,6 @@
 //       setPollOptions([...pollOptions, ""]);
 //     }
 //   };
-
 
 //   const handleOptionChange = (index, value) => {
 //     const newOptions = [...pollOptions];
@@ -280,9 +278,7 @@
 
 // export default AddPoll;
 
-
 //------------------------------------------------------------- V 3 -------------------------------------------------------
-
 
 // import React, { useState } from "react";
 // import { Card, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
@@ -329,7 +325,6 @@
 //       name: "Rahul", // Use your name or fetch dynamically
 //       status: "Open",
 //     };
-    
 
 //     // Retrieve existing polls from session storage
 //     const existingPolls = JSON.parse(sessionStorage.getItem("polls")) || [];
@@ -353,14 +348,13 @@
 //     // Your existing logic for submitting the poll
 
 //     setOpenSnackbar(true); // Show the snackbar when the button is clicked
-    
+
 //   };
 
 //   const handleCloseSnackbar = () => {
 //     setOpenSnackbar(false); // Close the snackbar
 
 //   };
-
 
 //   return (
 //     <Card
@@ -500,15 +494,10 @@
 
 // export default AddPoll;
 
-
-
 // user_id : 66cc6bff941bf1f0e99c9d74
 // cateogory_id : 66cc3e9151891283bacaa043
 
-
 /////----------------------------------------------------------------------------------------------
-
-
 
 // import React, { useState } from "react";
 // import { Card, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
@@ -558,8 +547,6 @@
 
 //     const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
 
-
-
 //     const formattedOptions = pollOptions.map(option => ({ option }));
 //     console.log(formattedOptions)
 
@@ -572,14 +559,14 @@
 //       createdBy: "66cd7c7bc23040cebf12d758",  // Adjust this according to your actual user ID
 //     };
 // console.log(typeof(pollData.duration))
-//     console.log("Preparing to submit Poll Data:", pollData); 
+//     console.log("Preparing to submit Poll Data:", pollData);
 //     axios.post("http://92.205.109.210:8028/polls/create",pollData)
 //     alert("poll added")
 
 //     // try {
 //     //   const response = await axios.post("http://92.205.109.210:8028/polls/create",pollData);
 
-//     //   console.log("Received response:", response); 
+//     //   console.log("Received response:", response);
 
 //     //   if (response.status === 200 || response.status === 201) {
 //     //     setSnackbarMessage("Your Poll is Successfully created");
@@ -786,16 +773,15 @@
 
 // export default AddPoll;
 
-
 //tuesday code
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-import axios from 'axios';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import axios from "axios";
 
 function AddPoll() {
   const [pollTitle, setPollTitle] = useState("");
@@ -805,10 +791,30 @@ function AddPoll() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [category, setCategory] = useState("");
+  const [categories,setCategories] = useState([]);
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://92.205.109.210:8028/category/getall");
+        console.log(response.data)
+        setCategories(response.data);
+console.log(categories)
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+let UserId=sessionStorage.getItem("googleuserId")||sessionStorage.getItem("loginuserId")
+console.log(UserId)
   const handleAddOption = () => {
     if (pollOptions.length < 4) {
       setPollOptions([...pollOptions, ""]);
@@ -828,8 +834,9 @@ function AddPoll() {
     }
   };
 
+
   const handleSubmit = async () => {
-    console.log("submit")
+    console.log("submit");
     const votingStart = `${votingDate}T${startTime}`;
     const votingEnd = `${votingDate}T${endTime}`;
 
@@ -837,11 +844,9 @@ function AddPoll() {
 
     const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
 
-
-
-    const formattedOptions = pollOptions.map(option => ({ option }));
-    console.log(formattedOptions)
-
+    const formattedOptions = pollOptions.map((option) => ({ option }));
+    console.log(formattedOptions);
+    console.log(UserId)
     const pollData = {
       title: pollTitle,
       question: pollQuestion,
@@ -849,20 +854,19 @@ function AddPoll() {
       duration: "2",
       // category: "66cd7c8bc23040cebf12d75b",
       // createdBy: "66d7e32f3ac2b23bcbbc9a88",
-      category: "66cd7c8bc23040cebf12d75b",
-      createdBy: "66d7e32f3ac2b23bcbbc9a88",
-       
+      category: category,
+      createdBy: UserId,
     };
-console.log(typeof(pollData.duration))
-    console.log("Preparing to submit Poll Data:", pollData); 
-    axios.post("http://92.205.109.210:8028/polls/create",pollData)
+    console.log(typeof pollData.duration);
+    console.log("Preparing to submit Poll Data:", pollData);
+    axios.post("http://92.205.109.210:8028/polls/create", pollData);
     // alert("poll added")
     setSnackbarMessage("Your Poll is Successfully created");
 
     // try {
     //   const response = await axios.post("http://92.205.109.210:8028/polls/create",pollData);
 
-    //   console.log("Received response:", response); 
+    //   console.log("Received response:", response);
 
     //   if (response.status === 200 || response.status === 201) {
     //     setSnackbarMessage("Your Poll is Successfully created");
@@ -949,9 +953,7 @@ console.log(typeof(pollData.duration))
                     type="text"
                     placeholder={`Option ${index + 1}`}
                     value={option}
-                    onChange={(e) =>
-                      handleOptionChange(index, e.target.value)
-                    }
+                    onChange={(e) => handleOptionChange(index, e.target.value)}
                   />
                   {pollOptions.length > 2 && (
                     <Button
@@ -1026,7 +1028,7 @@ console.log(typeof(pollData.duration))
           </Col>
         </Row>
 
-        <Form.Group controlId="categorySelect" className="mb-3">
+        {/* <Form.Group controlId="categorySelect" className="mb-3">
           <Form.Label>Select Category:</Form.Label>
           <Form.Select
             value={category}
@@ -1039,7 +1041,22 @@ console.log(typeof(pollData.duration))
             <option value="Sports">Sports</option>
             <option value="Research">Research</option>
           </Form.Select>
-        </Form.Group>
+        </Form.Group> */}
+
+        <Form.Group controlId="categorySelect" className="mb-3">
+      <Form.Label>Select Category:</Form.Label>
+      <Form.Select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      >
+        <option value="">Select Category</option>
+        {categories.map((cat) => (
+          <option key={cat._id} value={cat._id}>
+            {cat.category_name}
+          </option>
+        ))}
+      </Form.Select>
+    </Form.Group>
 
         <Button variant="secondary" className="me-2">
           Cancel
@@ -1052,12 +1069,12 @@ console.log(typeof(pollData.duration))
           open={openSnackbar}
           autoHideDuration={3000}
           onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             onClose={handleCloseSnackbar}
             severity={snackbarSeverity}
-            sx={{ width: '100%' }}
+            sx={{ width: "100%" }}
           >
             {snackbarMessage}
           </Alert>

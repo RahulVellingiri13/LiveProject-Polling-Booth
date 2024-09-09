@@ -178,7 +178,9 @@ const [loginuser,setLoginuser]=useState("")
                       console.log("Login successful:", response.data);
                       console.log(response.data)
                       console.log(response.data.user.user_name)
-                      
+                      sessionStorage.removeItem("loginuserId")
+                      sessionStorage.setItem("loginuserId",response.data.user._id)
+                      sessionStorage.getItem("loginuserId")
                       setLoginuser(response.data.user.user_name)
                       console.log(loginuser)
                       alert("Login successful!");

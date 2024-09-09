@@ -1,4 +1,4 @@
-// import React, { useState } from "react";
+
 import React, { useContext, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -45,6 +45,25 @@ function Homepage() {
   const [googleusername, setGoogleusername] = useState(
     sessionStorage.getItem("username") || ""
   );
+
+  //for categories
+
+  const [categories, setCategories] = useState([]);
+ 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("http://92.205.109.210:8028/category/getall");
+        console.log(response.data)
+        setCategories(response.data);
+console.log(categories)
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
 
   // const [otp, setOtp] = useState('');
   // const [show, setShow] = useState(false);
@@ -201,20 +220,10 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
           <div className="categories">
             <h4>CATEGORIES</h4>
             <nav>
-              <button>Entertainment</button>
-              <button>Travel</button>
-              <button>Education</button>
-              <button>Politics</button>
-              <button>Research</button>
-              <button>Medicine</button>
-              <button>Automation</button>
-              <button>Sports</button>
-              <button>Education</button>
-              <button>Politics</button>
-              <button>Research</button>
-              <button>Medicine</button>
-              {/* Add more categories here */}
-            </nav>
+      {categories.map((cat) => (
+        <button key={cat.category_id}>{cat.category_name}</button>
+      ))}
+    </nav>
             <button className="sign-out" onClick={handleSignOut}>
               Sign Out <i className="bi bi-box-arrow-right"></i>
             </button>
