@@ -2212,6 +2212,7 @@ import {
   Popover,
   Form,
   Modal,
+  ToastContainer,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -2220,6 +2221,7 @@ import { BsBack } from "react-icons/bs";
 import axios from "axios";
 import { useContext } from "react";
 import { PageContext } from "../../App";
+import { toast } from "react-toastify";
 
 function CommentsComp() {
   const [totallike, setTotallike] = useState(0);
@@ -2229,7 +2231,7 @@ function CommentsComp() {
   const [selectedOption, setSelectedOption] = useState(null);
   const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
-  
+
   const [showOverlay, setShowOverlay] = useState(false);
   const target = useRef(null);
   let [onepoll, setOnepoll] = useState("");
@@ -2262,10 +2264,11 @@ function CommentsComp() {
       );
       setComments((prev) => [response.data.comment, ...prev]);
       setNewComment("");
+      fetchComments()
     } catch (error) {
       console.error("Error adding comment:", error);
     }
-  };
+  };  
 
   const handleLikeComment = async (index) => {
     const updatedComments = [...comments];
@@ -2313,6 +2316,7 @@ function CommentsComp() {
       setComments(updatedComments);
       setNewReply("");
       setShowReplyModal(false);
+      
     } catch (error) {
       console.error("Error adding reply:", error);
     }
@@ -2408,7 +2412,7 @@ function CommentsComp() {
 
   useEffect(() => {
     fetchComments();
-  }, []);
+  }, [pollid]);
 
   const fetchComments = async () => {
     try {
@@ -2419,10 +2423,87 @@ function CommentsComp() {
           user_id: onepoll.createdBy._id,
         }
       );
+      console.log(response.data)
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
+  };
+
+  const handleOptionChange = (index) => {
+    if (selectedOption === index) {
+      unselectOption(); // Unselect the option if it's already selected
+    } else {
+      setSelectedOption(index); // Select the option
+      setShowVoteButton(true);
+    }
+  };
+  const unselectOption = () => {
+    setSelectedOption(null); // Unselect the currently selected option
+    setShowVoteButton(false);
+  };
+
+  const handleVoteToggle = () => {
+    setHasVoted(!hasVoted);
+    //   console.log(hasVoted)
+    console.log(selectedOption, hasVoted);
+    if (selectedOption != null) {
+      const selectedOptionValue = onepoll.options[selectedOption]; // Get the value of the selected option
+      console.log(selectedOptionValue);
+
+      axios
+        .post("http://92.205.109.210:8028/polls/voteonpoll", {
+          poll_id: onepoll._id,
+          user_id: onepoll.userId,
+          option: selectedOptionValue,
+        })
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.message);
+          if (response.data.message == "Vote recorded successfully.") {
+            toast.success("Your vote is successfully registered", {
+              autoClose: 1000,
+            });
+          } else {
+            toast.info("Your vote is removed successfully", {
+              autoClose: 1000,
+            });
+          }
+          console.log(response.data);
+          setSelectedOption("");
+        })
+        .catch((error) => {
+          console.error("Error submitting vote:", error);
+        });
+    }
+    //     else {
+
+    //       toast.info('Your vote is removed successfully');
+    //       setHasVoted(false);
+    //       setSelectedOption("");
+    // };
+
+    // let handleVoteToggle=()=>{
+    //   console.log(selectedOption,hasVoted)
+
+    //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+    // console.log(selectedOptionValue)
+
+    // console.log(_id, createdBy._id, selectedOptionValue)
+    //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+
+    //       poll_id: _id,
+    //       user_id: userId,
+    //        option: selectedOptionValue,
+    //       })
+    //       .then(response => {
+    //         // toast.success('Your vote is successfully registered');
+    //         console.log( response.data);
+
+    //       })
+    //       .catch(error => {
+    //         console.error('Error submitting vote:', error);
+    //       });
   };
 
   const handleShareClick = () => {
@@ -2449,7 +2530,7 @@ function CommentsComp() {
       });
   };
   console.log(onepoll);
- 
+
   return (
     <>
       <Card>
@@ -2485,37 +2566,52 @@ function CommentsComp() {
                     <div>
                       {onepoll.options.map((option, index) => (
                         <div key={index}>
-                          <Form.Check
-                            type="radio"
-                            label={option.option}
-                            name="options"
-                            checked={selectedOption === option.option}
-                            onChange={() => {
-                              setSelectedOption(option.option);
-                              setShowVoteButton(true);
-                            }}
-                            disabled={hasVoted}
-                          />
-                          {hasVoted && (
-                            <ProgressBar
-                              now={option.percentage}
-                              label={`${option.percentage}%`}
-                            />
+                          {selectedOption === index ? (
+                            <div>
+                              <ProgressBar
+                                now={100}
+                                label={option.option}
+                                name="options"
+                                onClick={() => setSelectedOption(null)}
+                                style={{ cursor: "pointer" }}
+                                // onChange={() => {
+                                //   setSelectedOption(option.option);
+                                //   setShowVoteButton(true);
+                                // }}
+                              />
+                            </div>
+                          ) : (
+                            <div className="form-check">
+                              <input
+                                className="form-check-input"
+                                type="radio"
+                                id={`option${index + 1}`}
+                                name="options"
+                                value={option.option}
+                                onChange={() => handleOptionChange(index)}
+                                checked={selectedOption === index}
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor={`option${index + 1}`}
+                              >
+                                {option.option}
+                              </label>
+                            </div>
                           )}
                         </div>
                       ))}
-                      {showVoteButton && (
+                      {selectedOption !== null && (
                         <Button
-                          className="mt-3"
-                          onClick={() => {
-                            setHasVoted(true);
-                          }}
-                          disabled={hasVoted}
+                          variant={hasVoted ? "primary" : "danger"}
+                          onClick={() => handleVoteToggle()}
+                          className="mt-3 align-self-center"
                         >
-                          Vote
+                          {hasVoted ? "Vote" : "Unvote"}
                         </Button>
                       )}
                     </div>
+                    <ToastContainer />
                   </Card.Body>
                 )}
                 <div>
@@ -2625,17 +2721,17 @@ function CommentsComp() {
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 className="mb-3"
-                
               />
               <Button
                 variant="primary"
                 className="mb-3"
                 onClick={handleAddComment}
+                disabled={!newComment}
               >
                 Comment
               </Button>
 
-              {comments.map((comment, index) => (
+              {comments && comments.map((comment, index) => (
                 <div key={comment._id} className="mb-3">
                   <Card>
                     <Card.Body>

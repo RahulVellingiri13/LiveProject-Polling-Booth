@@ -1914,23 +1914,13 @@ function CardComp({
                   <div key={index}>
                     {selectedOption === index ? (
                       <div>
-                      <ProgressBar>
                         <ProgressBar
-                          now={50}
+                          now={100}
                           label={option}
                           // onClick={unselectOption}
                           onClick={() => setSelectedOption(null)}
                           style={{ cursor: "pointer" }}
                         />
-                        <ProgressBar
-                          now={50}
-                          label={option}
-                          variant="danger"
-                          // onClick={unselectOption}
-                          onClick={() => setSelectedOption(null)}
-                          style={{ cursor: "pointer" }}
-                        />
-                        </ProgressBar>
                       </div>
                     ) : (
                       <div className="form-check">
@@ -1955,16 +1945,7 @@ function CardComp({
                 ))}
 
                 {/* Conditionally render the vote button at the end of all options */}
-                {/* {selectedOption !== null && (
-                  <Button
-                    variant="primary"
-                    onClick={handleVoteClick}
-                    className="mt-3 align-self-center"
-                    disabled={hasVoted}
-                  >
-                    {hasVoted ? "Voted" : "Vote"}
-                  </Button>
-                )} */}
+               
 
                 {selectedOption !== null && (
                   <Button

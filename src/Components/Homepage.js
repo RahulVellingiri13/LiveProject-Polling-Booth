@@ -1,4 +1,3 @@
-
 import React, { useContext, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,12 +26,13 @@ import { PageContext } from "../App";
 import OTPVerificationModal from "./Common/Otpverify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import CategoryComp from "./Common/CategoryComp";
 
 function Homepage() {
-  let loginuser=useLocation()
-  let newuser=loginuser.state
-  console.log(newuser)
-  console.log(loginuser.state)
+  let loginuser = useLocation();
+  let newuser = loginuser.state;
+  console.log(newuser);
+  console.log(loginuser.state);
   let [page, setPage] = useContext(PageContext);
   let [polls, setPolls] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,18 +46,56 @@ function Homepage() {
     sessionStorage.getItem("username") || ""
   );
 
-  //for categories
+  //getall polls
+  const [filteredPolls, setFilteredPolls] = useState([]);
+  const fetchPolls = async () => {
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/polls/getall"
+      );
+      console.log(response.data);
+      setPolls(response.data);
+      sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
+    } catch (error) {
+      console.error("Error fetching polls:", error);
+    }
+  };
 
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
- 
+
+  useEffect(() => {
+    if (selectedCategory) {
+      console.log("fetch cagegory");
+      console.log("Selected Category:", selectedCategory);
+
+      const filteredCategory = polls.filter((poll) =>
+        poll.category.some((cat) => cat._id === selectedCategory._id)
+      );
+      console.log("Filtered Polls:", filteredCategory);
+      setFilteredPolls(filteredCategory);
+      console.log(filteredPolls)
+     
+        setPage("category");
+      
+      
+   
+    
+    } else {
+      fetchPolls();
+    }
+  }, [selectedCategory]);
+  //for categories
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://92.205.109.210:8028/category/getall");
-        console.log(response.data)
+        const response = await axios.get(
+          "http://92.205.109.210:8028/category/getall"
+        );
+        console.log(response.data);
         setCategories(response.data);
-console.log(categories)
+        console.log(categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
@@ -65,13 +103,13 @@ console.log(categories)
     fetchCategories();
   }, []);
 
-const handleCategoryPage = (category)=>{
-  // setPage("category"); 
-  console.log("Selected Category:", category);
-  setSelectedCategory(category);
-}
-console.log("Selected Category:", selectedCategory);
-console.log("Selected Category page:", page);
+  const handleCategoryPage = (category) => {
+     setPage("category");
+    console.log("Selected Category:", category);
+    setSelectedCategory(category);
+  };
+  console.log("Selected Category:", selectedCategory);
+  console.log("Selected Category page:", page);
   // const [otp, setOtp] = useState('');
   // const [show, setShow] = useState(false);
   // const handleClose = () => setShow(false);
@@ -85,13 +123,15 @@ console.log("Selected Category page:", page);
 
   //   handleClose();
   // };
-  sessionStorage.getItem("username")
-  console.log("session data",sessionStorage.getItem("username"))
-const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
+  sessionStorage.getItem("username");
+  console.log("session data", sessionStorage.getItem("username"));
+  const [googleuser, setgoogleuser] = useState(
+    sessionStorage.getItem("username")
+  );
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [show, setShow] = useState(false);
-  
+
   const [step, setStep] = useState(1);
 
   const handleClose = () => setShow(false);
@@ -151,8 +191,7 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
     setSearchQuery(query);
 
     if (query.trim() === "") {
-     
-      setPolls([]); 
+      setPolls([]);
     } else {
       try {
         const response = await axios.post(
@@ -176,19 +215,18 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
       setPage("AddPoll");
     }
   };
-    const handleSignOut = async () => {
-        const auth = getAuth(); // Initialize Firebase Auth
-        try {
-            await signOut(auth); // Sign out the user using Firebase
-            sessionStorage.clear(); // Clear session storage
-            localStorage.removeItem("authToken"); // Remove any auth token
-            sessionStorage.clear()
-            navigate("/loginpg"); // Redirect to login page
-        } catch (error) {
-            console.error("Error signing out:", error);
-        }
-    };
-
+  const handleSignOut = async () => {
+    const auth = getAuth(); // Initialize Firebase Auth
+    try {
+      await signOut(auth); // Sign out the user using Firebase
+      sessionStorage.clear(); // Clear session storage
+      localStorage.removeItem("authToken"); // Remove any auth token
+      sessionStorage.clear();
+      navigate("/loginpg"); // Redirect to login page
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   return (
     <div className="polling-booth">
@@ -202,7 +240,8 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
         />
         <div className="user-info">
           <h4>
-            Welcome! {googleuser?googleuser:newuser} <i class="bi bi-person-circle"></i>
+            Welcome! {googleuser ? googleuser : newuser}{" "}
+            <i class="bi bi-person-circle"></i>
           </h4>
         </div>
       </header>
@@ -227,10 +266,15 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
           <div className="categories">
             <h4>CATEGORIES</h4>
             <nav>
-      {categories.map((cat) => (
-        <button onClick={() => handleCategoryPage(cat)} key={cat.category_id}>{cat.category_name}</button>
-      ))}
-    </nav>
+              {categories.map((cat) => (
+                <button
+                  onClick={() => handleCategoryPage(cat)}
+                  key={cat.category_id}
+                >
+                  {cat.category_name}
+                </button>
+              ))}
+            </nav>
             <button className="sign-out" onClick={handleSignOut}>
               Sign Out <i className="bi bi-box-arrow-right"></i>
             </button>
@@ -245,18 +289,20 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
       {page === 'Userdetails' && <Userdetails/>}
  */}
 
-            {page === "Polllist" && <Polllist polls={polls} selectedCategory={selectedCategory} />}
+            {page === "Polllist" && (
+              <Polllist
+                polls={polls}
+                setPolls={setPolls}
+                selectedCategory={selectedCategory}
+              />
+            )}
             {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
-            
 
             {page === "Pollresults" && <Pollresults />}
             {page === "Userdetails" && <Userdetails />}
             {page === "CommentsComp" && <CommentsComp />}
-
-
-
-          
-           
+            {page === "category" && 
+              <CategoryComp polls={polls} setPolls={setPolls} filteredPolls={filteredPolls} />}
           </nav>
 
           {/* Add more polls here */}
@@ -312,16 +358,15 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
           Verify
         </Button>
       </Modal.Footer>
-    </Modal> */}  
+    </Modal> */}
 
-
- <Modal show={show} onHide={handleClose} centered>
+      <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
             {step === 1 ? "Verify Phone Number" : "Verify OTP"}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>  
+        <Modal.Body>
           <Form>
             {step === 1 && (
               <Form.Group controlId="formPhoneNumber">
@@ -435,7 +480,6 @@ export default Homepage;
 //     }
 //   };
 
-  
 //   const onOtpSubmit = async () => {
 //     try {
 //       const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
@@ -453,7 +497,6 @@ export default Homepage;
 //       console.error("Error verifying OTP:", error);
 //     }
 //   };
-
 
 //   useEffect(() => {
 //     axios
@@ -670,6 +713,3 @@ export default Homepage;
 // }
 
 // export default Homepage;
-
-
-
