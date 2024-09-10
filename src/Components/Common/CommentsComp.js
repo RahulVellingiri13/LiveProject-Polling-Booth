@@ -1648,7 +1648,6 @@
 // import CardComp from "./Card";
 // import Polllist from "../Polllist";
 
-
 // function CommentsComp() {
 //   // const {
 //   //   name,
@@ -1662,7 +1661,6 @@
 //   //   likeCount: initialLikeCount,
 //   //   comments: initialComments,
 //   // } = cardData;
-
 
 //   const [totallike, setTotallike] = useState(0);
 //   const [liked, setLiked] = useState(false); // State for likes
@@ -1782,7 +1780,6 @@
 //     }
 //   };
 
-
 //   const handleOpenNestedReplyModal = (commentId, replyId) => {
 //     setCurrentCommentId(commentId);
 //     setReplyToReplyId(replyId);
@@ -1800,7 +1797,7 @@
 //           poll_id: onepoll._id,
 //           user_id: onepoll.createdBy._id,
 //           comment_id: currentCommentId,
-    
+
 //         }
 //       )};
 //       const updatedComments = comments.map((comment) =>
@@ -1819,15 +1816,13 @@
 //           : comment
 //       );
 
-//       setComments(updatedComments); 
+//       setComments(updatedComments);
 //       setNewNestedReply("");
 //       setShowNestedReplyModal(false);
 //     } catch (error) {
 //       console.error("Error adding nested reply:", error);
 //     }
 //   };
-
-
 
 //   const handleLikeReply = async (commentId, replyId) => {
 //     const updatedComments = comments.map((comment) =>
@@ -1853,7 +1848,6 @@
 //       console.error("Error liking reply:", error);
 //     }
 //   };
-
 
 //   // useEffect(()=>{
 //   //   axios.post("http://92.205.109.210:8028/polls/getone",{
@@ -2231,9 +2225,11 @@ function CommentsComp() {
   const [totallike, setTotallike] = useState(0);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState("");
+
   const [selectedOption, setSelectedOption] = useState(null);
   const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
+  
   const [showOverlay, setShowOverlay] = useState(false);
   const target = useRef(null);
   let [onepoll, setOnepoll] = useState("");
@@ -2246,12 +2242,12 @@ function CommentsComp() {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [newReply, setNewReply] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
-  
+
   // Added state for nested replies
   const [replyToReplyId, setReplyToReplyId] = useState(null); // New state for nested replies
   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
   const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
-
+  console.log(pollid);
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
@@ -2322,7 +2318,6 @@ function CommentsComp() {
     }
   };
 
- 
   const handleOpenNestedReplyModal = (commentId, replyId) => {
     setCurrentCommentId(commentId);
     setReplyToReplyId(replyId);
@@ -2400,7 +2395,9 @@ function CommentsComp() {
         poll_id: pollid,
       })
       .then((res) => {
+        console.log(res.data);
         setOnepoll(res.data);
+        console.log(onepoll);
         setLoading(false);
       })
       .catch((err) => {
@@ -2411,7 +2408,7 @@ function CommentsComp() {
 
   useEffect(() => {
     fetchComments();
-  }, [onepoll._id]);
+  }, []);
 
   const fetchComments = async () => {
     try {
@@ -2437,8 +2434,8 @@ function CommentsComp() {
   };
 
   const toggleLike = () => {
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1); // Edited code
-    setLiked(!liked); // Edited code
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    setLiked(!liked);
   };
 
   const handleLike = () => {
@@ -2451,7 +2448,8 @@ function CommentsComp() {
         setTotallike(res.data.Total_likes);
       });
   };
-
+  console.log(onepoll);
+ 
   return (
     <>
       <Card>
@@ -2476,7 +2474,11 @@ function CommentsComp() {
               <Card.Body>
                 <Card.Header className="d-flex justify-content-between">
                   <p>Poll Ends on {onepoll.expirationTime}</p>
-                  <p>Category: {onepoll.category}</p>
+                  <p>
+                    Category:{" "}
+                    {onepoll.category &&
+                      onepoll.category.map((item) => item.category_name)}
+                  </p>
                 </Card.Header>
                 {onepoll.options && (
                   <Card.Body>
@@ -2517,51 +2519,99 @@ function CommentsComp() {
                   </Card.Body>
                 )}
                 <div>
-                  <p className="mt-3">
-                    Total Likes: {likeCount}
-                    <Button
-                      className="ml-2"
-                      variant="link"
-                      onClick={() => {
-                        toggleLike();
-                        handleLike();
-                      }}
+                  <Card.Footer className="d-flex justify-content-between">
+                    <p>
+                      <button
+                        onClick={toggleLike}
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={liked ? solidHeart : regularHeart}
+                          style={{
+                            color: liked ? "red" : "gray",
+                            fontSize: "24px",
+                          }}
+                          onClick={handleLike}
+                        />
+                      </button>
+                      <span style={{ marginLeft: "8px" }}>
+                        total like: {totallike}
+                      </span>{" "}
+                      {/* Display the like count */}
+                      like
+                    </p>
+                    <p
+                      ref={target}
+                      onClick={handleShareClick}
+                      style={{ cursor: "pointer" }}
                     >
-                      <FontAwesomeIcon
-                        icon={liked ? solidHeart : regularHeart}
-                      />
-                    </Button>
-                  </p>
-                  <Button
-                    ref={target}
-                    onClick={handleShareClick}
-                    variant="link"
-                  >
-                    Share
-                  </Button>
-                  <Overlay
-                    show={showOverlay}
-                    target={target.current}
-                    placement="right"
-                    containerPadding={20}
-                  >
-                    <Popover id="popover-contained">
-                      <Popover.Body>
-                        <p>Share this poll on:</p>
-                        <div>
-                          <Button variant="outline-primary" className="me-2">
-                            Facebook
-                          </Button>
-                          <Button variant="outline-info" className="me-2">
-                            Twitter
-                          </Button>
-                          <Button variant="outline-danger" className="me-2">
-                            WhatsApp
-                          </Button>
-                        </div>
-                      </Popover.Body>
-                    </Popover>
-                  </Overlay>
+                      <i className="bi bi-share"></i> Share
+                    </p>
+                    <Overlay
+                      show={showOverlay}
+                      target={target.current}
+                      placement="top"
+                      containerPadding={20}
+                      rootClose
+                      onHide={() => setShowOverlay(false)}
+                    >
+                      <Popover id="popover-contained">
+                        <Popover.Header as="h3">Share this Poll</Popover.Header>
+                        <Popover.Body>
+                          <div className="d-flex justify-content-around">
+                            <a
+                              href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-facebook"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-twitter"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://www.instagram.com/?url=yourPollLink"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-instagram"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-whatsapp"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            {/* Add more social media links here */}
+                          </div>
+                        </Popover.Body>
+                      </Popover>
+                    </Overlay>
+                  </Card.Footer>
                 </div>
               </Card.Body>
             </Card>
@@ -2574,11 +2624,12 @@ function CommentsComp() {
                 placeholder="Add a comment..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="mb-3" // Added margin for spacing
+                className="mb-3"
+                
               />
               <Button
                 variant="primary"
-                className="mb-3" // Changed to mb-3 for spacing below the button
+                className="mb-3"
                 onClick={handleAddComment}
               >
                 Comment
@@ -2629,31 +2680,34 @@ function CommentsComp() {
                                   >
                                     Reply
                                   </Button>
-                                  {reply.replies && reply.replies.length > 0 && (
-                                    <div style={{ marginLeft: "20px" }}>
-                                      {reply.replies.map((nestedReply) => (
-                                        <div key={nestedReply._id}>
-                                          <Card>
-                                            <Card.Body>
-                                              <p>{nestedReply.reply_msg}</p>
-                                              <p>Likes: {nestedReply.likes}</p>
-                                              <Button
-                                                variant="link"
-                                                onClick={() =>
-                                                  handleLikeReply(
-                                                    comment._id,
-                                                    nestedReply._id
-                                                  )
-                                                }
-                                              >
-                                                Like
-                                              </Button>
-                                            </Card.Body>
-                                          </Card>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
+                                  {reply.replies &&
+                                    reply.replies.length > 0 && (
+                                      <div style={{ marginLeft: "20px" }}>
+                                        {reply.replies.map((nestedReply) => (
+                                          <div key={nestedReply._id}>
+                                            <Card>
+                                              <Card.Body>
+                                                <p>{nestedReply.reply_msg}</p>
+                                                <p>
+                                                  Likes: {nestedReply.likes}
+                                                </p>
+                                                <Button
+                                                  variant="link"
+                                                  onClick={() =>
+                                                    handleLikeReply(
+                                                      comment._id,
+                                                      nestedReply._id
+                                                    )
+                                                  }
+                                                >
+                                                  Like
+                                                </Button>
+                                              </Card.Body>
+                                            </Card>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    )}
                                 </Card.Body>
                               </Card>
                             </div>
@@ -2723,3 +2777,5 @@ function CommentsComp() {
 }
 
 export default CommentsComp;
+
+//-------------------------------

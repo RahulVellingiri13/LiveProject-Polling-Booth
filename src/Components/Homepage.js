@@ -49,6 +49,7 @@ function Homepage() {
   //for categories
 
   const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
  
   useEffect(() => {
     const fetchCategories = async () => {
@@ -64,7 +65,13 @@ console.log(categories)
     fetchCategories();
   }, []);
 
-
+const handleCategoryPage = (category)=>{
+  // setPage("category"); 
+  console.log("Selected Category:", category);
+  setSelectedCategory(category);
+}
+console.log("Selected Category:", selectedCategory);
+console.log("Selected Category page:", page);
   // const [otp, setOtp] = useState('');
   // const [show, setShow] = useState(false);
   // const handleClose = () => setShow(false);
@@ -188,7 +195,7 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
       <header>
         <h1>POLLING BOOTH</h1>
         <input
-          type="text"
+          type="search"
           placeholder="Search"
           value={searchQuery}
           onChange={handleSearchChange}
@@ -221,7 +228,7 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
             <h4>CATEGORIES</h4>
             <nav>
       {categories.map((cat) => (
-        <button key={cat.category_id}>{cat.category_name}</button>
+        <button onClick={() => handleCategoryPage(cat)} key={cat.category_id}>{cat.category_name}</button>
       ))}
     </nav>
             <button className="sign-out" onClick={handleSignOut}>
@@ -238,7 +245,7 @@ const [googleuser,setgoogleuser]=useState(sessionStorage.getItem("username"))
       {page === 'Userdetails' && <Userdetails/>}
  */}
 
-            {page === "Polllist" && <Polllist polls={polls} />}
+            {page === "Polllist" && <Polllist polls={polls} selectedCategory={selectedCategory} />}
             {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
             
 

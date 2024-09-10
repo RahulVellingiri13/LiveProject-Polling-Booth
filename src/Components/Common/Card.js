@@ -1890,14 +1890,13 @@ function CardComp({
   };
 
   return (
-    <Card>
+    <Card style={{width:"40rem"}}>
       <Card.Body>
         <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
-            {/* <h6>Name: {createdBy.user_name}</h6> */}
-            <p>Created: {}</p>
-            <p>Title: {title}</p>
-            <p>Status: {status}</p>
+            <h6>Name:{createdBy}</h6>
+            <p>Title:{title}</p>
+            <p>Status:{status}</p>
           </div>
           <Button variant="primary">Follow</Button>
         </Card.Header>
@@ -1915,13 +1914,23 @@ function CardComp({
                   <div key={index}>
                     {selectedOption === index ? (
                       <div>
+                      <ProgressBar>
                         <ProgressBar
-                          now={100}
+                          now={50}
                           label={option}
                           // onClick={unselectOption}
                           onClick={() => setSelectedOption(null)}
                           style={{ cursor: "pointer" }}
                         />
+                        <ProgressBar
+                          now={50}
+                          label={option}
+                          variant="danger"
+                          // onClick={unselectOption}
+                          onClick={() => setSelectedOption(null)}
+                          style={{ cursor: "pointer" }}
+                        />
+                        </ProgressBar>
                       </div>
                     ) : (
                       <div className="form-check">

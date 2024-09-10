@@ -5,7 +5,7 @@
 // import CardComp from "./Common/Card";
 
 // function Polllist() {
-  
+
 //   let polls = [
 //     {
 //       name: "Rahul",
@@ -30,7 +30,7 @@
 //   return (
 //     <>
 //       <>
-       
+
 //       </>
 //       {polls.map((poll) => {
 //         return (
@@ -233,7 +233,7 @@
 //           </Card.Footer>
 //         </Card.Body>
 //       </Card>
-      
+
 //     </>
 //   );
 // }
@@ -294,9 +294,6 @@
 
 //------------------------------------------------------------- V3 -------------------------------------------------------
 
-
-
-
 // import React, { useEffect, useState } from "react";
 // import CardComp from "./Common/Card"; // Make sure this imports your Card component
 // import "bootstrap/dist/css/bootstrap.min.css";
@@ -305,8 +302,8 @@
 // function Polllist() {
 //   console.log(sessionStorage.getItem("polls"))
 //   const [polls, setPolls] = useState([]);
-//   // const [currentView, setCurrentView] = useState("cards"); 
-//   // const [selectedCardData, setSelectedCardData] = useState(null); 
+//   // const [currentView, setCurrentView] = useState("cards");
+//   // const [selectedCardData, setSelectedCardData] = useState(null);
 
 //   useEffect(() => {
 //     // Retrieve all polls from session storage
@@ -317,7 +314,7 @@
 //   const handlePollSubmit = (newPoll) => {
 //     // Update the polls state with the new poll added at the top
 //     setPolls((prevPolls) => [newPoll, ...prevPolls]);
-    
+
 //     // Also update the session storage if needed
 //     sessionStorage.setItem("polls", JSON.stringify([newPoll, ...polls]));
 //   };
@@ -337,8 +334,6 @@
 //   };
 //   //following are the functions for the likes and replies for the comment
 
-  
-
 //   return (
 //     <>
 //       {/* {polls.map((poll, index) => (
@@ -347,14 +342,14 @@
 //           index={index}
 //           name={poll.name}
 //           createdon={poll.createdon}
-//           title={poll.pollTitle} 
-//           question={poll.pollQuestion} 
-//           options={poll.pollOptions} 
-//           votingPeriod={poll.votingPeriod} 
-//           category={poll.category} 
-//           status={poll.status} 
+//           title={poll.pollTitle}
+//           question={poll.pollQuestion}
+//           options={poll.pollOptions}
+//           votingPeriod={poll.votingPeriod}
+//           category={poll.category}
+//           status={poll.status}
 //           onPollSubmit={handlePollSubmit}
-//           onCardClick={handleCardClick} 
+//           onCardClick={handleCardClick}
 //         />
 //       ))} */}
 //       {currentView === "cards" ? (
@@ -380,7 +375,7 @@
 //           onBackClick={handleBackClick} // Handle the back button click
 //         />
 //       )}
-     
+
 //     </>
 //   );
 // }
@@ -388,36 +383,49 @@
 // export default Polllist;
 //------------------------------------------------------------------------------------------
 
-
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import CardComp from "./Common/Card";
 import "bootstrap/dist/css/bootstrap.min.css";
 import CommentsComp from "./Common/CommentsComp";
 
-function Polllist({page,setPage}) {
-  console.log(page)
+function Polllist({ page, setPage, selectedCategory }) {
+  console.log(page);
   const [polls, setPolls] = useState([]);
+  const [filteredPolls, setFilteredPolls] = useState([]);
   const [currentView, setCurrentView] = useState("cards");
   const [selectedCardData, setSelectedCardData] = useState(null);
 
   useEffect(() => {
-    // Function to fetch polls data from the API
     const fetchPolls = async () => {
       try {
-        const response = await axios.post("http://92.205.109.210:8028/polls/getall");
-        console.log(response.data)
-        setPolls(response.data); // Assuming the response data is an array of polls
+        const response = await axios.post(
+          "http://92.205.109.210:8028/polls/getall"
+        );
+        console.log(response.data);
+        setPolls(response.data);
         sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
       } catch (error) {
         console.error("Error fetching polls:", error);
       }
     };
 
-    // Retrieve polls from the API on component mount
     fetchPolls();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategory && polls.length > 0) {
+      console.log("Selected Category:", selectedCategory);
+
+      const filteredCategory = polls.filter((poll) =>
+        poll.category.some((cat) => cat._id === selectedCategory.category_id)
+      );
+      console.log("Filtered Polls:", filteredCategory);
+      setFilteredPolls(filteredCategory);
+    } else {
+      setFilteredPolls(polls);
+    }
+  }, [polls, selectedCategory]);
 
   const handlePollSubmit = (newPoll) => {
     setPolls((prevPolls) => [newPoll, ...prevPolls]);
@@ -438,20 +446,20 @@ function Polllist({page,setPage}) {
       {currentView === "cards" ? (
         polls.map((poll, index) => (
           <CardComp
-         userId={poll.createdBy._id}
+            userId={poll.createdBy._id}
             key={index}
             index={index}
             pollId={poll.poll_id}
             _id={poll._id}
             title={poll.title}
-            category={poll.category.map(cat => cat.category_name).join(", ")}
+            category={poll.category.map((cat) => cat.category_name).join(", ")}
             question={poll.question}
-            options={poll.options.map(opt => opt.option)}
+            options={poll.options.map((opt) => opt.option)}
             status={poll.status}
             createdBy={poll.createdBy.user_name}
             createdAt={poll.createdAt}
             onPollSubmit={handlePollSubmit}
-            onCardClick={() => handleCardClick(poll)} // Pass the whole poll object as cardData
+            onCardClick={() => handleCardClick(poll)}
           />
         ))
       ) : (
