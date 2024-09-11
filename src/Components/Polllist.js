@@ -503,6 +503,7 @@ function Polllist({ page, polls,setPolls,setPage, selectedCategory }) {
             category={poll.category.map((cat) => cat.category_name).join(", ")}
             question={poll.question}
             options={poll.options.map((opt) => opt.option)}
+            optionscount={poll.options.map((opt) => opt.count)}
             status={poll.status}
             createdBy={poll.createdBy.user_name}
             createdAt={poll.createdAt}

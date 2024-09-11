@@ -2250,6 +2250,28 @@ function CommentsComp() {
   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
   const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
   console.log(pollid);
+
+  useEffect(() => {
+    axios
+      .post("http://92.205.109.210:8028/polls/getone", {
+        poll_id: pollid,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setOnepoll(res.data);
+        console.log(onepoll);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError("Error fetching poll data");
+        setLoading(false);
+      });
+  }, [pollid]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [pollid]);
+  
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
@@ -2393,26 +2415,7 @@ function CommentsComp() {
     }
   };
 
-  useEffect(() => {
-    axios
-      .post("http://92.205.109.210:8028/polls/getone", {
-        poll_id: pollid,
-      })
-      .then((res) => {
-        console.log(res.data);
-        setOnepoll(res.data);
-        console.log(onepoll);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Error fetching poll data");
-        setLoading(false);
-      });
-  }, [pollid]);
-
-  useEffect(() => {
-    fetchComments();
-  }, [pollid]);
+  
 
   const fetchComments = async () => {
     try {
@@ -2595,7 +2598,7 @@ function CommentsComp() {
                                 className="form-check-label"
                                 htmlFor={`option${index + 1}`}
                               >
-                                {option.option}
+                                {option.option}  {option.count}
                               </label>
                             </div>
                           )}

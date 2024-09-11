@@ -455,8 +455,8 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
 
   return (
     <div className="category-container">
-      <h1>Category</h1>
-      <h2 className="category-title text-center">{polls.category_name}</h2>`
+      <h3>Category:{polls.category_name}</h3>
+      {/* <h2 className="category-title text-center">{polls.category_name}</h2>` */}
       {filteredPolls && filteredPolls.length > 0 ? (
         <div>
           {filteredPolls.map((poll) => (

@@ -1657,7 +1657,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function CardComp({
-  userId,
   index,
   pollId,
   _id,
@@ -1668,16 +1667,24 @@ function CardComp({
   status,
   question,
   options,
+  optionscount,
   votingPeriod,
   category,
   onPollSubmit,
   onCardClick,
   handleVote,
 }) {
+  
+  let userId =
+    sessionStorage.getItem("loginuserId") ||
+    sessionStorage.getItem("googleuserId");
+  console.log("userId:", userId);
   console.log(userId);
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
+  
   // let [pollid,setPollid]=useContext(PageContext)
   console.log(pollid);
+  console.log(optionscount)
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
@@ -2031,10 +2038,11 @@ const [totalVotes, setTotalVotes] = useState(0); // State for total votes
                 value={option}
                 onChange={() => handleOptionChange(index)}
                 checked={selectedOption === index}
-              />
+              />  
               <label className="form-check-label" htmlFor={`option${index + 1}`}>
-                {option}
+                {option} 
               </label>
+            
             </div>
           )}
         </div>
