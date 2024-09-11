@@ -2245,7 +2245,7 @@ function CommentsComp() {
   const [newReply, setNewReply] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
   const [likedComments, setLikedComments] = useState({});
-const [likedReplies, setLikedReplies] = useState({});
+  const [likedReplies, setLikedReplies] = useState({});
 
   // Added state for nested replies
   const [replyToReplyId, setReplyToReplyId] = useState(null); // New state for nested replies
@@ -2592,7 +2592,7 @@ const [likedReplies, setLikedReplies] = useState({});
       [index]: !prev[index],
     }));
   };
-  
+
   const toggleReplyLike = (commentId, replyId) => {
     setLikedReplies((prev) => ({
       ...prev,
@@ -2605,12 +2605,28 @@ const [likedReplies, setLikedReplies] = useState({});
 
   return (
     <>
-      <Card>
-        <Card.Body>
-          <Button onClick={onBackClick} variant="secondary" className="mb-3">
-            <BsBack /> Back to All Polls
-          </Button>
+      <nav
+        onClick={onBackClick}
+        style={{
+          position: "fixed",
 
+          height: "5%",
+          width: "46.5%",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          color: "black",
+          backgroundColor: "lightgrey",
+          zIndex: 1000,
+          cursor: "pointer",
+        }}
+      >
+        <i class="bi bi-box-arrow-in-left"></i>BACK TO ALL POLLS
+      </nav>
+
+      <Card style={{ marginTop: "7%" }}>
+        <Card.Body>
           <Card.Header className="d-flex justify-content-between align-items-center">
             <div>
               <h6>Name: {onepoll.createdBy?.user_name || "Unknown"}</h6>
@@ -2802,7 +2818,7 @@ const [likedReplies, setLikedReplies] = useState({});
               >
                 Comment
               </Button>
-{/* 
+              {/* 
               {comments.length > 0 &&
                 comments.map((comment, index) => (
                   <div key={comment._id} className="mb-3">
@@ -2888,118 +2904,165 @@ const [likedReplies, setLikedReplies] = useState({});
                   </div>
                 ))} */}
 
+              {comments.length > 0 &&
+                comments.map((comment, index) => (
+                  <div key={comment._id} className="mb-3">
+                    <Card>
+                      <Card.Body>
+                        <p>{comment.comment}</p>
+                        <p style={{ fontSize: "small", color: "grey" }}>
+                          @{comment.user_id.user_name}
+                        </p>
 
-
-                {comments.length > 0 &&
-  comments.map((comment, index) => (
-    <div key={comment._id} className="mb-3">
-      <Card>
-        <Card.Body>
-          <p>{comment.comment}</p>
-          <p style={{fontSize:"small", color:"grey"}}>@{comment.user_id.user_name}</p>
-          
-         
-          {/* <p>Likes: {comment.likes.count}</p> */}
-          <button
-            onClick={() => {
-              handleLikeComment(index); 
-              toggleCommentLike(index);
-            }}
-            style={{ background: "none", border: "none", cursor: "pointer" }}
-          >
-            <FontAwesomeIcon
-              icon={likedComments[index] ? solidHeart : regularHeart}
-              style={{
-                color: likedComments[index] ? "red" : "gray",
-                fontSize: "24px",
-              }}
-            />
-          </button>
-          {/* <span>Likes: {comment.likes}</span> */}
-          <span>{onepoll.total_likes}</span>
-          
-          <Button
-            variant="link"
-            onClick={() => handleOpenReplyModal(comment._id)}
-          >
-            Reply
-          </Button>
-          {comment.replies.length > 0 && (
-            <div style={{ marginLeft: "20px" }}>
-              {comment.replies.map((reply) => (
-                <div key={reply._id} className="mb-2">
-                  <Card>
-                    <Card.Body>
-                      <p>{reply.reply_msg}</p>
-                      <p style={{fontSize:"small", color:"grey"}}>@{comment.user_id.user_name}</p>
-                
-                      <button
-                        onClick={() => {
-                          handleLikeReply(comment._id, reply._id);
-                          toggleReplyLike(comment._id, reply._id);
-                        }}
-                        style={{ background: "none", border: "none", cursor: "pointer" }}
-                      >
-                        <FontAwesomeIcon
-                          icon={likedReplies[comment._id]?.[reply._id] ? solidHeart : regularHeart}
-                          style={{
-                            color: likedReplies[comment._id]?.[reply._id] ? "red" : "gray",
-                            fontSize: "24px",
+                        {/* <p>Likes: {comment.likes.count}</p> */}
+                        <button
+                          onClick={() => {
+                            handleLikeComment(index);
+                            toggleCommentLike(index);
                           }}
-                        />
-                      </button>
-                      {/* <span>Likes: {reply.likes}</span> */}
-                      <span>{onepoll.total_likes}</span>
-                      <Button
-                        variant="link"
-                        onClick={() =>
-                          handleOpenNestedReplyModal(comment._id, reply._id)
-                        }
-                      >
-                        Reply
-                      </Button>
-                      {reply.replies &&
-                        reply.replies.length > 0 && (
+                          style={{
+                            background: "none",
+                            border: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={
+                              likedComments[index] ? solidHeart : regularHeart
+                            }
+                            style={{
+                              color: likedComments[index] ? "red" : "gray",
+                              fontSize: "24px",
+                            }}
+                          />
+                        </button>
+                        {/* <span>Likes: {comment.likes}</span> */}
+                        <span>{onepoll.total_likes}</span>
+
+                        <Button
+                          variant="link"
+                          onClick={() => handleOpenReplyModal(comment._id)}
+                        >
+                          Reply
+                        </Button>
+                        {comment.replies.length > 0 && (
                           <div style={{ marginLeft: "20px" }}>
-                            {reply.replies.map((nestedReply) => (
-                              <div key={nestedReply._id}>
+                            {comment.replies.map((reply) => (
+                              <div key={reply._id} className="mb-2">
                                 <Card>
                                   <Card.Body>
-                                    <p>{nestedReply.reply_msg}</p>
-                                    <p>Likes: {nestedReply.likes}</p>
+                                    <p>{reply.reply_msg}</p>
+                                    <p
+                                      style={{
+                                        fontSize: "small",
+                                        color: "grey",
+                                      }}
+                                    >
+                                      @{comment.user_id.user_name}
+                                    </p>
+
                                     <button
                                       onClick={() => {
-                                        handleLikeReply(comment._id, nestedReply._id);
-                                        toggleReplyLike(comment._id, nestedReply._id);
+                                        handleLikeReply(comment._id, reply._id);
+                                        toggleReplyLike(comment._id, reply._id);
                                       }}
-                                      style={{ background: "none", border: "none", cursor: "pointer" }}
+                                      style={{
+                                        background: "none",
+                                        border: "none",
+                                        cursor: "pointer",
+                                      }}
                                     >
                                       <FontAwesomeIcon
-                                        icon={likedReplies[comment._id]?.[nestedReply._id] ? solidHeart : regularHeart}
+                                        icon={
+                                          likedReplies[comment._id]?.[reply._id]
+                                            ? solidHeart
+                                            : regularHeart
+                                        }
                                         style={{
-                                          color: likedReplies[comment._id]?.[nestedReply._id] ? "red" : "gray",
+                                          color: likedReplies[comment._id]?.[
+                                            reply._id
+                                          ]
+                                            ? "red"
+                                            : "gray",
                                           fontSize: "24px",
                                         }}
                                       />
                                     </button>
+                                    {/* <span>Likes: {reply.likes}</span> */}
+                                    <span>{onepoll.total_likes}</span>
+                                    <Button
+                                      variant="link"
+                                      onClick={() =>
+                                        handleOpenNestedReplyModal(
+                                          comment._id,
+                                          reply._id
+                                        )
+                                      }
+                                    >
+                                      Reply
+                                    </Button>
+                                    {reply.replies &&
+                                      reply.replies.length > 0 && (
+                                        <div style={{ marginLeft: "20px" }}>
+                                          {reply.replies.map((nestedReply) => (
+                                            <div key={nestedReply._id}>
+                                              <Card>
+                                                <Card.Body>
+                                                  <p>{nestedReply.reply_msg}</p>
+                                                  <p>
+                                                    Likes: {nestedReply.likes}
+                                                  </p>
+                                                  <button
+                                                    onClick={() => {
+                                                      handleLikeReply(
+                                                        comment._id,
+                                                        nestedReply._id
+                                                      );
+                                                      toggleReplyLike(
+                                                        comment._id,
+                                                        nestedReply._id
+                                                      );
+                                                    }}
+                                                    style={{
+                                                      background: "none",
+                                                      border: "none",
+                                                      cursor: "pointer",
+                                                    }}
+                                                  >
+                                                    <FontAwesomeIcon
+                                                      icon={
+                                                        likedReplies[
+                                                          comment._id
+                                                        ]?.[nestedReply._id]
+                                                          ? solidHeart
+                                                          : regularHeart
+                                                      }
+                                                      style={{
+                                                        color: likedReplies[
+                                                          comment._id
+                                                        ]?.[nestedReply._id]
+                                                          ? "red"
+                                                          : "gray",
+                                                        fontSize: "24px",
+                                                      }}
+                                                    />
+                                                  </button>
+                                                </Card.Body>
+                                              </Card>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
                                   </Card.Body>
                                 </Card>
                               </div>
                             ))}
                           </div>
                         )}
-                    </Card.Body>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
-  ))}
-
-
+                      </Card.Body>
+                    </Card>
+                  </div>
+                ))}
             </div>
           </Card.Text>
         </Card.Body>
