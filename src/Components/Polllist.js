@@ -498,6 +498,8 @@ function Polllist({ page, polls,setPolls,setPage, selectedCategory }) {
             key={index}
             index={index}
             pollId={poll.poll_id}
+            polluserId={poll.createdBy._id} //need to check this once
+            votingPeriod={poll.expirationTime}
             _id={poll._id}
             title={poll.title}
             category={poll.category.map((cat) => cat.category_name).join(", ")}

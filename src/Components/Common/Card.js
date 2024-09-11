@@ -2215,6 +2215,7 @@ function CardComp({
   console.log(polluserId)
   console.log(pollid);
   console.log(optionscount)
+  console.log(votingPeriod)
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
@@ -2476,38 +2477,68 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
       });
   };
 
+  // const handleFollowToggle = () => {
+  //   console.log(createdBy)
+  //   axios
+  //     .post("http://92.205.109.210:8028/api/follow", {
+  //       user_id: userId,
+  //       follow_user_id:polluserId, 
+  //     })
+  //     .then((response) => {
+  //       if (response.data.message === "Follower added successfully") {
+  //         setIsFollowing(true);
+  //         toast.success("Followed successfully", { autoClose: 1000 });
+  //         // Swal.fire({
+  //         //   position: "top-end",
+  //         //   icon: "success",
+  //         //   title: "Followed Successfully",
+  //         //   showConfirmButton: false,
+  //         //   timer: 1000
+  //         // });
+  //       } else if (response.data.message === "Follower removed successfully") {
+  //         setIsFollowing(false);
+  //         toast.info("Unfollowed successfully", { autoClose: 1000 });
+  //         // Swal.fire({
+  //         //   position: "top-end",
+  //         //   icon: "warning",
+  //         //   title: "unFollowed Successfully",
+  //         //   showConfirmButton: false,
+  //         //   timer: 1000
+  //         // });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error following/unfollowing user:", error);
+  //     });
+  // };
+
   const handleFollowToggle = () => {
-    console.log(createdBy)
+    console.log("Created By:", createdBy);
+    console.log("User ID:", userId);
+    console.log("Poll User ID:", polluserId);
+    
     axios
       .post("http://92.205.109.210:8028/api/follow", {
         user_id: userId,
-        follow_user_id:polluserId, 
+        follow_user_id: polluserId, 
       })
       .then((response) => {
+        console.log("API Response:", response); 
+        console.log("Response Data:", response.data); 
+        
         if (response.data.message === "Follower added successfully") {
           setIsFollowing(true);
           toast.success("Followed successfully", { autoClose: 1000 });
-          // Swal.fire({
-          //   position: "top-end",
-          //   icon: "success",
-          //   title: "Followed Successfully",
-          //   showConfirmButton: false,
-          //   timer: 1000
-          // });
         } else if (response.data.message === "Follower removed successfully") {
           setIsFollowing(false);
           toast.info("Unfollowed successfully", { autoClose: 1000 });
-          // Swal.fire({
-          //   position: "top-end",
-          //   icon: "warning",
-          //   title: "unFollowed Successfully",
-          //   showConfirmButton: false,
-          //   timer: 1000
-          // });
+        } else {
+          toast.warn("Unexpected response from server", { autoClose: 1000 });
         }
       })
       .catch((error) => {
         console.error("Error following/unfollowing user:", error);
+        toast.error("An error occurred. Please try again.", { autoClose: 3000 });
       });
   };
   
@@ -2530,7 +2561,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
           <Card className="mb-3">
             <Card.Body>
               <Card.Header className="d-flex justify-content-between">
-                <p>Poll Ends on {votingPeriod}</p>
+                <p>Poll Ends on : {votingPeriod}</p>
                 <p>Category: {category}</p>
               </Card.Header>
               {/* <Card.Text className="d-flex flex-column">
