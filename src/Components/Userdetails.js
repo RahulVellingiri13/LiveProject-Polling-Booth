@@ -296,11 +296,21 @@
 
 
 
-import React, { useState, useEffect } from 'react';
-import { Card, Button, Col, Row } from 'react-bootstrap';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Card, Button, Col, Row, Popover, Overlay, ToastContainer, ProgressBar } from 'react-bootstrap';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PageContext } from '../App';
+import { toast } from 'react-toastify';
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import { useLocation } from 'react-router-dom';
 
-const Userdetails = () => {
+const Userdetails = (
+  {
+   polls
+  }
+) => {
   let userId = sessionStorage.getItem("loginuserId") || sessionStorage.getItem("googleuserId");
   console.log("userId", userId);
 
@@ -310,6 +320,27 @@ const Userdetails = () => {
   const [createdpolls, setCreatedpolls] = useState([]); // State to hold created polls
   const [votedpolls, setVotedpolls] = useState([]); // State to hold voted polls
 
+
+  const [liked, setLiked] = useState(false); // New state for likes
+  const [likeCount, setLikeCount] = useState(""); // New state for likes count
+  let [totallike, setTotallike] = useState(0);
+  let [page, setPage, pollid, setPollid] = useContext(PageContext);
+  // const [liked, setLiked] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
+  const target = useRef(null); // Reference for the share button
+
+  const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
+  const [showVoteButton, setShowVoteButton] = useState(false);
+  const [hasVoted, setHasVoted] = useState(true);
+  const [voteResults, setVoteResults] = useState([]); // State to hold vote results
+const [totalVotes, setTotalVotes] = useState(0); // State for total votes
+const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
+
+const [googleuser, setgoogleuser] = useState(
+  sessionStorage.getItem("username")
+);
+let loginuser = useLocation();
+let newuser = loginuser.state;
   // Fetch user details when the component mounts
   useEffect(() => {
     axios.get('http://92.205.109.210:8028/api/getProfile')
@@ -363,6 +394,141 @@ const Userdetails = () => {
     });
   };
 
+  const toggleLike = () => {
+    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    setLiked(!liked);
+  };
+  const handleLike = () => {
+    // console.log(poll.createdBy._id);
+    axios
+      .post("http://92.205.109.210:8028/polls/likeonpoll", {
+        poll_id: polls._id,
+        user_id:polls.userId,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setTotallike(res.data.Total_likes);
+        console.log(res.data.Total_likes);
+        console.log(totallike);
+      });
+  };
+  let handleOnepoll = (_id) => {
+    console.log(_id);
+    // navigate('/onepoll/'+_id
+    setPage("CommentsComp");
+    console.log(page);
+    setPollid(_id);
+    console.log(page, pollid);
+  };
+  
+  const handleShareClick = () => {
+    setShowOverlay(!showOverlay); // Toggle the overlay visibility
+  };
+
+  const handleFollowToggle = () => {
+    // console.log(createdBy)
+    axios
+      .post("http://92.205.109.210:8028/api/follow", {
+        user_id: userId,
+        follow_user_id:polls.userId, 
+      })
+      .then((response) => {
+        if (response.data.message === "Follower added successfully") {
+          setIsFollowing(true);
+          toast.success("Followed successfully", { autoClose: 1000 });
+          // Swal.fire({
+          //   position: "top-end",
+          //   icon: "success",
+          //   title: "Followed Successfully",
+          //   showConfirmButton: false,
+          //   timer: 1000
+          // });
+        } else if (response.data.message === "Follower removed successfully") {
+          setIsFollowing(false);
+          toast.info("Unfollowed successfully", { autoClose: 1000 });
+          // Swal.fire({
+          //   position: "top-end",
+          //   icon: "warning",
+          //   title: "unFollowed Successfully",
+          //   showConfirmButton: false,
+          //   timer: 1000
+          // });
+        }
+      })
+      .catch((error) => {
+        console.error("Error following/unfollowing user:", error);
+      });
+  };
+  const fetchTotalVotes = () => {
+    axios
+      .post("http://92.205.109.210:8028/polls/totalvote", {
+        poll_id: polls._id,
+      })
+      .then((response) => {
+        const updatedVoteResults = response.data.results || [];
+        const updatedTotalVotes = response.data.totalVotes || 0;
+  
+      
+        setVoteResults(updatedVoteResults);
+        setTotalVotes(updatedTotalVotes);
+      })
+      .catch((error) => {
+        console.error("Error fetching total votes:", error);
+      });
+  };
+  const handleVoteToggle = () => {
+    setHasVoted(!hasVoted);
+    //   console.log(hasVoted)
+    console.log(selectedOption, hasVoted);
+    if (selectedOption != null) {
+      const selectedOptionValue = polls.options[selectedOption]; 
+      console.log(selectedOptionValue);
+
+      axios
+        .post("http://92.205.109.210:8028/polls/voteonpoll", {
+          poll_id: polls._id,
+          user_id: userId,
+          option: selectedOptionValue,
+        })
+        .then((response) => {
+          console.log(response.data);
+          console.log(response.data.message);
+          if (response.data.message === "Vote recorded successfully.") {
+            toast.success("Your vote is successfully registered", {
+              autoClose: 1000,
+            });
+            fetchTotalVotes();
+          } else {
+            toast.info("Your vote is removed successfully", {
+              autoClose: 1000,
+            });
+          }
+          console.log(response.data);
+          setSelectedOption("");
+        })
+        .catch((error) => {
+          console.error("Error submitting vote:", error);
+        });
+    }};
+
+  const handleOptionChange = (index) => {
+    if (selectedOption === index) {
+      unselectOption(); // Unselect the option if it's already selected
+    } else {
+      setSelectedOption(index); // Select the option
+      setShowVoteButton(true);
+    }
+  };
+
+  const unselectOption = () => {
+    setSelectedOption(null); // Unselect the currently selected option
+    setShowVoteButton(false);
+  };
+
+  const calculatePercentage = (votes) => {
+    if (totalVotes === 0) return 0;
+    return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
+  };
   return (
     <div>
       {/* Profile Section */}
@@ -381,7 +547,11 @@ const Userdetails = () => {
             />
 
             {/* Display User Name and Stats */}
-            <h5>{userId}</h5>
+            {/* <h5>{userId}</h5>*/}
+          
+            <h3>
+            {googleuser ? googleuser : newuser}{" "}
+            </h3>
             <p>{userData.posts || 0} post | {userData.followers || 0} Follower | {userData.following || 0} Following</p>
             <Button variant="primary">Edit Profile</Button>
           </div>
@@ -409,10 +579,176 @@ const Userdetails = () => {
             createdpolls.map((poll, index) => (
               <Card className="mb-4" key={index}>
                 <Card.Body>
-                  <h6>{poll.title || 'Poll Title'}</h6>
-                  <p>{poll.description || 'Poll Description'}</p>
-                  {/* Display other poll details as needed */}
-                </Card.Body>
+                <Card.Header className="d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Name:{poll.createdBy.user_name}</h6>
+            <p>Title:{poll.title}</p>
+            <p>Status:{poll.status}</p>
+          </div>
+          <Button variant="primary" onClick={handleFollowToggle}>
+            {isFollowing ? "Unfollow" : "Follow"}
+          </Button>
+        </Card.Header>
+        <Card.Text>
+          <div className="mt-3 mb-3">{poll.question}</div>
+          <Card className="mb-3">
+            <Card.Body>
+              <Card.Header className="d-flex justify-content-between">
+              <p>Poll Ends on {poll.expirationTime}</p>
+                        <p>
+                          Category:{" "}
+                          {poll.category &&
+                            poll.category.map((item) => item.category_name)}
+                        </p>
+                </Card.Header>
+                <Card.Text className="d-flex flex-column">
+    {poll.options && poll.options.length > 0 ? (
+      poll.options.map((option, index) => (
+        <div key={index}>
+          {voteResults.length > 0 ? (
+            // Display the progress bar with percentage after voting
+            <div>
+              <ProgressBar
+                now={calculatePercentage(voteResults[index]?.votes || 0)}
+                label={`${calculatePercentage(voteResults[index]?.votes || 0)}%`}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          ) : (
+            // Render radio buttons before voting
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                id={`option${index + 1}`}
+                name="options"
+                value={option.option}
+                onChange={() => handleOptionChange(index)}
+                checked={selectedOption === index}
+              />  
+              {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
+                {option.option} 
+              {/* </label> */}
+            
+            </div>
+          )}
+        </div>
+      ))
+    ) : (
+      <p>No options available</p>
+    )}
+
+    {selectedOption !== null && voteResults.length === 0 && (
+      <Button
+        variant={hasVoted ? "primary" : "danger"}
+        onClick={handleVoteToggle}
+        className="mt-3 align-self-center"
+      >
+        {hasVoted ? "Vote" : "Unvote"}
+      </Button>
+    )}
+  </Card.Text>  
+
+              <ToastContainer />
+            </Card.Body>
+          </Card>
+        </Card.Text>
+
+        <Card.Footer className="d-flex justify-content-between">
+          <p>
+            <button
+              onClick={toggleLike}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <FontAwesomeIcon
+                icon={liked ? solidHeart : regularHeart}
+                style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+                onClick={handleLike}
+              />
+            </button>
+            <span style={{ marginLeft: "8px" }}>total like: {totallike}</span>{" "}
+            {/* Display the like count */}
+            like
+          </p>
+
+          <p
+            style={{ cursor: "pointer", color: "blue" }}
+            // onClick={()=>handleViewComment(index)}
+            onClick={() => handleOnepoll(poll._id)}
+          >
+            <i className="bi bi-chat-quote-fill"></i> Comments
+          </p>
+
+          <p
+            ref={target}
+            onClick={handleShareClick}
+            style={{ cursor: "pointer" }}
+          >
+            <i className="bi bi-share"></i> Share
+          </p>
+          <Overlay
+            show={showOverlay}
+            target={target.current}
+            placement="top"
+            containerPadding={20}
+            rootClose
+            onHide={() => setShowOverlay(false)}
+          >
+            <Popover id="popover-contained">
+              <Popover.Header as="h3">Share this Poll</Popover.Header>
+              <Popover.Body>
+                <div className="d-flex justify-content-around">
+                  <a
+                    href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-facebook"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-twitter"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://www.instagram.com/?url=yourPollLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-instagram"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-whatsapp"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  {/* Add more social media links here */}
+                </div>
+              </Popover.Body>
+            </Popover>
+          </Overlay>
+        </Card.Footer>
+      </Card.Body>
+               
               </Card>
             ))
           ) : (
@@ -426,11 +762,176 @@ const Userdetails = () => {
           {votedpolls.length > 0 ? (
             votedpolls.map((poll, index) => (
               <Card className="mb-4" key={index}>
-                <Card.Body>
-                  <h6>{poll.title || 'Poll Title'}</h6>
-                  <p>{poll.description || 'Poll Description'}</p>
-                  {/* Display other poll details as needed */}
-                </Card.Body>
+              <Card.Body>
+                <Card.Header className="d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Name:{poll.createdBy.user_name}</h6>
+            <p>Title:{poll.title}</p>
+            <p>Status:{poll.status}</p>
+          </div>
+          <Button variant="primary" onClick={handleFollowToggle}>
+            {isFollowing ? "Unfollow" : "Follow"}
+          </Button>
+        </Card.Header>
+        <Card.Text>
+          <div className="mt-3 mb-3">{poll.question}</div>
+          <Card className="mb-3">
+            <Card.Body>
+              <Card.Header className="d-flex justify-content-between">
+              <p>Poll Ends on {poll.expirationTime}</p>
+                        <p>
+                          Category:{" "}
+                          {poll.category &&
+                            poll.category.map((item) => item.category_name)}
+                        </p>
+                </Card.Header>
+                <Card.Text className="d-flex flex-column">
+    {poll.options && poll.options.length > 0 ? (
+      poll.options.map((option, index) => (
+        <div key={index}>
+          {voteResults.length > 0 ? (
+            // Display the progress bar with percentage after voting
+            <div>
+              <ProgressBar
+                now={calculatePercentage(voteResults[index]?.votes || 0)}
+                label={`${calculatePercentage(voteResults[index]?.votes || 0)}%`}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          ) : (
+            // Render radio buttons before voting
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                id={`option${index + 1}`}
+                name="options"
+                value={option.option}
+                onChange={() => handleOptionChange(index)}
+                checked={selectedOption === index}
+              />  
+              {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
+                {option.option} 
+              {/* </label> */}
+            
+            </div>
+          )}
+        </div>
+      ))
+    ) : (
+      <p>No options available</p>
+    )}
+
+    {selectedOption !== null && voteResults.length === 0 && (
+      <Button
+        variant={hasVoted ? "primary" : "danger"}
+        onClick={handleVoteToggle}
+        className="mt-3 align-self-center"
+      >
+        {hasVoted ? "Vote" : "Unvote"}
+      </Button>
+    )}
+  </Card.Text>  
+
+              <ToastContainer />
+            </Card.Body>
+          </Card>
+        </Card.Text>
+
+        <Card.Footer className="d-flex justify-content-between">
+          <p>
+            <button
+              onClick={toggleLike}
+              style={{ background: "none", border: "none", cursor: "pointer" }}
+            >
+              <FontAwesomeIcon
+                icon={liked ? solidHeart : regularHeart}
+                style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+                onClick={handleLike}
+              />
+            </button>
+            <span style={{ marginLeft: "8px" }}>total like: {totallike}</span>{" "}
+            {/* Display the like count */}
+            like
+          </p>
+
+          <p
+            style={{ cursor: "pointer", color: "blue" }}
+            // onClick={()=>handleViewComment(index)}
+            onClick={() => handleOnepoll(poll._id)}
+          >
+            <i className="bi bi-chat-quote-fill"></i> Comments
+          </p>
+
+          <p
+            ref={target}
+            onClick={handleShareClick}
+            style={{ cursor: "pointer" }}
+          >
+            <i className="bi bi-share"></i> Share
+          </p>
+          <Overlay
+            show={showOverlay}
+            target={target.current}
+            placement="top"
+            containerPadding={20}
+            rootClose
+            onHide={() => setShowOverlay(false)}
+          >
+            <Popover id="popover-contained">
+              <Popover.Header as="h3">Share this Poll</Popover.Header>
+              <Popover.Body>
+                <div className="d-flex justify-content-around">
+                  <a
+                    href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-facebook"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-twitter"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://www.instagram.com/?url=yourPollLink"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-instagram"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  &nbsp;&nbsp;
+                  <a
+                    href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <i
+                      className="bi bi-whatsapp"
+                      style={{ fontSize: "35px" }}
+                    ></i>
+                  </a>
+                  {/* Add more social media links here */}
+                </div>
+              </Popover.Body>
+            </Popover>
+          </Overlay>
+        </Card.Footer>
+      </Card.Body>
               </Card>
             ))
           ) : (

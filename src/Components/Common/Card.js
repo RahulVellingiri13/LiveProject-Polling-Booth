@@ -1643,6 +1643,534 @@
 
 //updatedcode
 
+// import React, { useState, useRef, useContext } from "react";
+// import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+// import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+// import { Link, useNavigate } from "react-router-dom";
+// import Onepoll from "../Onepoll";
+// import CommentsComp from "./CommentsComp";
+// import { PageContext } from "../../App";
+// import axios from "axios";
+// import { ToastContainer, toast } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+
+// function CardComp({
+//   index,
+//   pollId,
+//   _id,
+//   createdBy,
+//   name,
+//   createdon,
+//   title,
+//   status,
+//   question,
+//   options,
+//   optionscount,
+//   votingPeriod,
+//   category,
+//   onPollSubmit,
+//   onCardClick,
+//   handleVote,
+// }) {
+  
+//   let userId =
+//     sessionStorage.getItem("loginuserId") ||
+//     sessionStorage.getItem("googleuserId");
+//   console.log("userId:", userId);
+//   console.log(userId);
+//   let [page, setPage, pollid, setPollid] = useContext(PageContext);
+  
+//   // let [pollid,setPollid]=useContext(PageContext)
+//   console.log(pollid);
+//   console.log(optionscount)
+//   let navigate = useNavigate();
+//   // let [pollid,setPollid]=useState("")
+//   console.log(index);
+//   let [totallike, setTotallike] = useState(0);
+//   const [liked, setLiked] = useState(false); // New state for likes
+//   const [likeCount, setLikeCount] = useState(""); // New state for likes count
+//   const [comments, setComments] = useState([
+//     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
+//     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
+//   ]); // New state for Comments
+
+//   const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
+//   const [showVoteButton, setShowVoteButton] = useState(false);
+//   const [hasVoted, setHasVoted] = useState(true);
+//   const [voteResults, setVoteResults] = useState([]); // State to hold vote results
+// const [totalVotes, setTotalVotes] = useState(0); // State for total votes
+
+
+//   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
+//   const target = useRef(null); // Reference for the share button
+
+//   const toggleLike = () => {
+//     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+//     setLiked(!liked);
+//   };
+
+//   // const handleLike = (id) => {
+//   //   const updateLikes = (comment) => {
+//   //     if (comment.id === id) {
+//   //       return { ...comment, likes: comment.likes + 1 };
+//   //     }
+//   //     if (comment.replies && comment.replies.length > 0) {
+//   //       return { ...comment, replies: comment.replies.map(updateLikes) };
+//   //     }
+//   //     return comment;
+//   //   };
+
+//   //   setComments(comments.map(updateLikes));
+//   // };
+
+//   const handleReply = (id, replyText) => {
+//     const addReply = (comment) => {
+//       if (comment.id === id) {
+//         return {
+//           ...comment,
+//           replies: [
+//             ...comment.replies,
+//             { id: Date.now(), text: replyText, likes: 0, replies: [] },
+//           ],
+//         };
+//       }
+//       if (comment.replies && comment.replies.length > 0) {
+//         return { ...comment, replies: comment.replies.map(addReply) };
+//       }
+//       return comment;
+//     };
+
+//     setComments(comments.map(addReply));
+//   };
+
+//   const handleOptionChange = (index) => {
+//     if (selectedOption === index) {
+//       unselectOption(); // Unselect the option if it's already selected
+//     } else {
+//       setSelectedOption(index); // Select the option
+//       setShowVoteButton(true);
+//     }
+//   };
+
+//   const unselectOption = () => {
+//     setSelectedOption(null); // Unselect the currently selected option
+//     setShowVoteButton(false);
+//   };
+
+//   //new vote Toggle after progreebar operation
+//   const fetchTotalVotes = () => {
+//     axios
+//       .post("http://92.205.109.210:8028/polls/totalvote", {
+//         poll_id: _id,
+//       })
+//       .then((response) => {
+//         const updatedVoteResults = response.data.results || [];
+//         const updatedTotalVotes = response.data.totalVotes || 0;
+  
+      
+//         setVoteResults(updatedVoteResults);
+//         setTotalVotes(updatedTotalVotes);
+//       })
+//       .catch((error) => {
+//         console.error("Error fetching total votes:", error);
+//       });
+//   };
+
+//   const handleVoteToggle = () => {
+//     setHasVoted(!hasVoted);
+//     //   console.log(hasVoted)
+//     console.log(selectedOption, hasVoted);
+//     if (selectedOption != null) {
+//       const selectedOptionValue = options[selectedOption]; 
+//       console.log(selectedOptionValue);
+
+//       axios
+//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//           poll_id: _id,
+//           user_id: userId,
+//           option: selectedOptionValue,
+//         })
+//         .then((response) => {
+//           console.log(response.data);
+//           console.log(response.data.message);
+//           if (response.data.message === "Vote recorded successfully.") {
+//             toast.success("Your vote is successfully registered", {
+//               autoClose: 1000,
+//             });
+//             fetchTotalVotes();
+//           } else {
+//             toast.info("Your vote is removed successfully", {
+//               autoClose: 1000,
+//             });
+//           }
+//           console.log(response.data);
+//           setSelectedOption("");
+//         })
+//         .catch((error) => {
+//           console.error("Error submitting vote:", error);
+//         });
+//     }};
+
+   
+
+//     // const handleVoteToggle = () => {
+//     //   setHasVoted(!hasVoted);
+//     //   if (selectedOption != null) {
+//     //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+//     //     axios
+//     //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//     //         poll_id: _id,
+//     //         user_id: userId,
+//     //         option: selectedOptionValue,
+//     //       })
+//     //       .then((response) => {
+//     //         console.log(response.data);
+//     //         if (response.data.message === "Vote recorded successfully.") {
+//     //           toast.success("Your vote is successfully registered", {
+//     //             autoClose: 1000,
+//     //           });
+    
+//     //           // Fetch updated vote results from the API
+//     //           axios
+//     //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
+//     //               poll_id: _id,
+
+//     //             })
+//     //             .then((resultsResponse) => {
+//     //               const results = resultsResponse.data.results;
+//     //               const totalVotes = resultsResponse.data.totalVotes;
+//     //               setVoteResults(results); 
+//     //               setTotalVotes(totalVotes); 
+//     //             })
+//     //             .catch((error) => {
+//     //               console.error("Error fetching vote results:", error);
+//     //             });
+//     //         } else {
+//     //           toast.info("Your vote is removed successfully", {
+//     //             autoClose: 1000,
+//     //           });
+//     //         }
+//     //         setSelectedOption("");
+//     //       })
+//     //       .catch((error) => {
+//     //         console.error("Error submitting vote:", error);
+//     //       });
+//     //   }
+//     // };
+
+//     //     else {
+
+//     //       toast.info('Your vote is removed successfully');
+//     //       setHasVoted(false);
+//     //       setSelectedOption("");
+//     // };
+
+//     // let handleVoteToggle=()=>{
+//     //   console.log(selectedOption,hasVoted)
+
+//     //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+//     // console.log(selectedOptionValue)
+
+//     // console.log(_id, createdBy._id, selectedOptionValue)
+//     //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+
+//     //       poll_id: _id,
+//     //       user_id: userId,
+//     //        option: selectedOptionValue,
+//     //       })
+//     //       .then(response => {
+//     //         // toast.success('Your vote is successfully registered');
+//     //         console.log( response.data);
+
+//     //       })
+//     //       .catch(error => {
+//     //         console.error('Error submitting vote:', error);
+//     //       });
+  
+//     const calculatePercentage = (votes) => {
+//       if (totalVotes === 0) return 0;
+//       return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
+//     };
+
+//   const handleShareClick = () => {
+//     setShowOverlay(!showOverlay); // Toggle the overlay visibility
+//   };
+
+//   // let handleViewcomment=(commentkey)=>{
+//   //   console.log(commentkey)
+//   // navigate('/viewcomment/' )
+//   // }
+
+//   const handleViewComment = () => {
+//     onCardClick({
+//       index,
+//       name,
+//       createdon,
+//       title,
+//       status,
+//       question,
+//       options,
+//       votingPeriod,
+//       category,
+//       likeCount,
+//       liked,
+//       comments,
+//     });
+//   };
+//   console.log(options);
+
+//   let handleOnepoll = (_id) => {
+//     console.log(_id);
+//     // navigate('/onepoll/'+_id
+//     setPage("CommentsComp");
+//     console.log(page);
+//     setPollid(_id);
+//     console.log(page, pollid);
+//   };
+
+//   const handleLike = () => {
+//     console.log(createdBy._id);
+//     axios
+//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//         poll_id: _id,
+//         user_id: userId,
+//       })
+//       .then((res) => {
+//         console.log(res.data);
+//         setTotallike(res.data.Total_likes);
+//         console.log(res.data.Total_likes);
+//         console.log(totallike);
+//       });
+//   };
+
+//   return (
+//     <Card style={{width:"40rem"}}>
+//       <Card.Body>
+//         <Card.Header className="d-flex justify-content-between align-items-center">
+//           <div>
+//             <h6>Name:{createdBy}</h6>
+//             <p>Title:{title}</p>
+//             <p>Status:{status}</p>
+//           </div>
+//           <Button variant="primary">Follow</Button>
+//         </Card.Header>
+
+//         <Card.Text>
+//           <div className="mt-3 mb-3">{question}</div>
+//           <Card className="mb-3">
+//             <Card.Body>
+//               <Card.Header className="d-flex justify-content-between">
+//                 <p>Poll Ends on {votingPeriod}</p>
+//                 <p>Category: {category}</p>
+//               </Card.Header>
+//               {/* <Card.Text className="d-flex flex-column">
+//                 {options.map((option, index) => (
+//                   <div key={index}>
+//                     {selectedOption === index ? (
+//                       <div>
+//                         <ProgressBar
+//                           now={100}
+//                           label={option}
+//                           // onClick={unselectOption}
+//                           onClick={() => setSelectedOption(null)}
+//                           style={{ cursor: "pointer" }}
+//                         />
+//                       </div>
+//                     ) : (
+//                       <div className="form-check">
+//                         <input
+//                           className="form-check-input"
+//                           type="radio"
+//                           id={`option${index + 1}`}
+//                           name="options"
+//                           value={option}
+//                           onChange={() => handleOptionChange(index)}
+//                           checked={selectedOption === index}
+//                         />
+//                         <label
+//                           className="form-check-label"
+//                           htmlFor={`option${index + 1}`}
+//                         >
+//                           {option}
+//                         </label>
+//                       </div>
+//                     )}
+//                   </div>
+//                 ))} */}
+
+//                 {/* Conditionally render the vote button at the end of all options */}
+               
+
+//                 {/* {selectedOption !== null && (
+//                   <Button
+//                     variant={hasVoted ? "primary" : "danger"}
+//                     onClick={() => handleVoteToggle()}
+//                     className="mt-3 align-self-center"
+//                   >
+//                     {hasVoted ? "Vote" : "Unvote"}
+//                   </Button>
+//                 )}
+//               </Card.Text> */}
+
+//               <Card.Text className="d-flex flex-column">
+//     {options && options.length > 0 ? (
+//       options.map((option, index) => (
+//         <div key={index}>
+//           {voteResults.length > 0 ? (
+//             // Display the progress bar with percentage after voting
+//             <div>
+//               <ProgressBar
+//                 now={calculatePercentage(voteResults[index]?.votes || 0)}
+//                 label={`${calculatePercentage(voteResults[index]?.votes || 0)}%`}
+//                 style={{ cursor: "pointer" }}
+//               />
+//             </div>
+//           ) : (
+//             // Render radio buttons before voting
+//             <div className="form-check">
+//               <input
+//                 className="form-check-input"
+//                 type="radio"
+//                 id={`option${index + 1}`}
+//                 name="options"
+//                 value={option}
+//                 onChange={() => handleOptionChange(index)}
+//                 checked={selectedOption === index}
+//               />  
+//               {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
+//                 {option} 
+//               {/* </label> */}
+            
+//             </div>
+//           )}
+//         </div>
+//       ))
+//     ) : (
+//       <p>No options available</p>
+//     )}
+
+//     {selectedOption !== null && voteResults.length === 0 && (
+//       <Button
+//         variant={hasVoted ? "primary" : "danger"}
+//         onClick={handleVoteToggle}
+//         className="mt-3 align-self-center"
+//       >
+//         {hasVoted ? "Vote" : "Unvote"}
+//       </Button>
+//     )}
+//   </Card.Text>  
+
+//               <ToastContainer />
+//             </Card.Body>
+//           </Card>
+//         </Card.Text>
+
+//         <Card.Footer className="d-flex justify-content-between">
+//           <p>
+//             <button
+//               onClick={toggleLike}
+//               style={{ background: "none", border: "none", cursor: "pointer" }}
+//             >
+//               <FontAwesomeIcon
+//                 icon={liked ? solidHeart : regularHeart}
+//                 style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
+//                 onClick={handleLike}
+//               />
+//             </button>
+//             <span style={{ marginLeft: "8px" }}>total like: {totallike}</span>{" "}
+//             {/* Display the like count */}
+//             like
+//           </p>
+
+//           <p
+//             style={{ cursor: "pointer", color: "blue" }}
+//             // onClick={()=>handleViewComment(index)}
+//             onClick={() => handleOnepoll(_id)}
+//           >
+//             <i className="bi bi-chat-quote-fill"></i> Comments
+//           </p>
+
+//           <p
+//             ref={target}
+//             onClick={handleShareClick}
+//             style={{ cursor: "pointer" }}
+//           >
+//             <i className="bi bi-share"></i> Share
+//           </p>
+//           <Overlay
+//             show={showOverlay}
+//             target={target.current}
+//             placement="top"
+//             containerPadding={20}
+//             rootClose
+//             onHide={() => setShowOverlay(false)}
+//           >
+//             <Popover id="popover-contained">
+//               <Popover.Header as="h3">Share this Poll</Popover.Header>
+//               <Popover.Body>
+//                 <div className="d-flex justify-content-around">
+//                   <a
+//                     href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-facebook"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-twitter"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://www.instagram.com/?url=yourPollLink"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-instagram"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   &nbsp;&nbsp;
+//                   <a
+//                     href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                   >
+//                     <i
+//                       className="bi bi-whatsapp"
+//                       style={{ fontSize: "35px" }}
+//                     ></i>
+//                   </a>
+//                   {/* Add more social media links here */}
+//                 </div>
+//               </Popover.Body>
+//             </Popover>
+//           </Overlay>
+//         </Card.Footer>
+//       </Card.Body>
+//     </Card>
+//   );
+// }
+
+// export default CardComp;
+
+//---------------
+
+//updated 11 sep
+
 import React, { useState, useRef, useContext } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -1655,9 +2183,10 @@ import { PageContext } from "../../App";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Swal from "sweetalert2";
 function CardComp({
   index,
+  polluserId,
   pollId,
   _id,
   createdBy,
@@ -1683,6 +2212,7 @@ function CardComp({
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
   
   // let [pollid,setPollid]=useContext(PageContext)
+  console.log(polluserId)
   console.log(pollid);
   console.log(optionscount)
   let navigate = useNavigate();
@@ -1701,6 +2231,7 @@ function CardComp({
   const [hasVoted, setHasVoted] = useState(true);
   const [voteResults, setVoteResults] = useState([]); // State to hold vote results
 const [totalVotes, setTotalVotes] = useState(0); // State for total votes
+const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
 
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
@@ -1759,7 +2290,7 @@ const [totalVotes, setTotalVotes] = useState(0); // State for total votes
     setShowVoteButton(false);
   };
 
-  //new vote Toggle after progreebar operation
+
   const fetchTotalVotes = () => {
     axios
       .post("http://92.205.109.210:8028/polls/totalvote", {
@@ -1945,6 +2476,41 @@ const [totalVotes, setTotalVotes] = useState(0); // State for total votes
       });
   };
 
+  const handleFollowToggle = () => {
+    console.log(createdBy)
+    axios
+      .post("http://92.205.109.210:8028/api/follow", {
+        user_id: userId,
+        follow_user_id:polluserId, 
+      })
+      .then((response) => {
+        if (response.data.message === "Follower added successfully") {
+          setIsFollowing(true);
+          toast.success("Followed successfully", { autoClose: 1000 });
+          // Swal.fire({
+          //   position: "top-end",
+          //   icon: "success",
+          //   title: "Followed Successfully",
+          //   showConfirmButton: false,
+          //   timer: 1000
+          // });
+        } else if (response.data.message === "Follower removed successfully") {
+          setIsFollowing(false);
+          toast.info("Unfollowed successfully", { autoClose: 1000 });
+          // Swal.fire({
+          //   position: "top-end",
+          //   icon: "warning",
+          //   title: "unFollowed Successfully",
+          //   showConfirmButton: false,
+          //   timer: 1000
+          // });
+        }
+      })
+      .catch((error) => {
+        console.error("Error following/unfollowing user:", error);
+      });
+  };
+  
   return (
     <Card style={{width:"40rem"}}>
       <Card.Body>
@@ -1954,7 +2520,9 @@ const [totalVotes, setTotalVotes] = useState(0); // State for total votes
             <p>Title:{title}</p>
             <p>Status:{status}</p>
           </div>
-          <Button variant="primary">Follow</Button>
+          <Button variant="primary" onClick={handleFollowToggle}>
+            {isFollowing ? "Unfollow" : "Follow"}
+          </Button>
         </Card.Header>
 
         <Card.Text>
@@ -2039,9 +2607,9 @@ const [totalVotes, setTotalVotes] = useState(0); // State for total votes
                 onChange={() => handleOptionChange(index)}
                 checked={selectedOption === index}
               />  
-              <label className="form-check-label" htmlFor={`option${index + 1}`}>
+              {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
                 {option} 
-              </label>
+              {/* </label> */}
             
             </div>
           )}

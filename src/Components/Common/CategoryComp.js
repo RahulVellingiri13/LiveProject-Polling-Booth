@@ -328,8 +328,6 @@
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
@@ -455,7 +453,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
 
   return (
     <div className="category-container">
-      <h3>Category:{polls.category_name}</h3>
+      {/* <h3>Category:{filteredPolls.category_name}</h3> */}
       {/* <h2 className="category-title text-center">{polls.category_name}</h2>` */}
       {filteredPolls && filteredPolls.length > 0 ? (
         <div>
@@ -464,10 +462,9 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
               <Card.Body>
                 <Card.Header>
                   <div>
-                    <h6>Name:{poll.createdBy.user_name }</h6>
+                    <h6>Name:{poll.createdBy.user_name}</h6>
                     <p>Title:{poll.title}</p>
                     <p>Status:{poll.status}</p>
-               
                   </div>
                   <Button variant="primary">Follow</Button>
                 </Card.Header>
@@ -476,12 +473,12 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                   <Card className="mb-3">
                     <Card.Body>
                       <Card.Header className="d-flex justify-content-between">
-                      <p>Poll Ends on {poll.expirationTime}</p>
-                  <p>
-                    Category:{" "}
-                    {poll.category &&
-                      poll.category.map((item) => item.category_name)}
-                  </p>
+                        <p>Poll Ends on {poll.expirationTime}</p>
+                        <p>
+                          Category:{" "}
+                          {poll.category &&
+                            poll.category.map((item) => item.category_name)}
+                        </p>
                       </Card.Header>
                       <Card.Text className="d-flex flex-column">
                         {poll.options.map((option, index) => (

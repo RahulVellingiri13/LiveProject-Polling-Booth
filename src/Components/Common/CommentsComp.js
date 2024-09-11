@@ -2244,34 +2244,60 @@ function CommentsComp() {
   const [showReplyModal, setShowReplyModal] = useState(false);
   const [newReply, setNewReply] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
+  const [likedComments, setLikedComments] = useState({});
+const [likedReplies, setLikedReplies] = useState({});
 
   // Added state for nested replies
   const [replyToReplyId, setReplyToReplyId] = useState(null); // New state for nested replies
   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
   const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
   console.log(pollid);
+  let userId =
+    sessionStorage.getItem("loginuserId") ||
+    sessionStorage.getItem("googleuserId");
+
+  // useEffect(() => {
+  //   axios
+  //     .post("http://92.205.109.210:8028/polls/getone", {
+  //       poll_id: pollid,
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setOnepoll(res.data);
+  //       console.log(onepoll);
+  //       setLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setError("Error fetching poll data");
+  //       setLoading(false);
+  //     });
+  // }, [pollid]);
 
   useEffect(() => {
-    axios
-      .post("http://92.205.109.210:8028/polls/getone", {
-        poll_id: pollid,
-      })
-      .then((res) => {
-        console.log(res.data);
-        setOnepoll(res.data);
-        console.log(onepoll);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError("Error fetching poll data");
-        setLoading(false);
-      });
+    if (pollid) {
+      fetchPollDataAndComments();
+    }
   }, [pollid]);
 
-  useEffect(() => {
-    fetchComments();
-  }, [pollid]);
-  
+  const fetchPollDataAndComments = async () => {
+    try {
+      const pollResponse = await axios.post(
+        "http://92.205.109.210:8028/polls/getone",
+        {
+          poll_id: pollid,
+        }
+      );
+      setOnepoll(pollResponse.data);
+      console.log(pollResponse.data);
+
+      // await fetchComments();
+    } catch (error) {
+      setError("Error fetching poll data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
@@ -2281,25 +2307,25 @@ function CommentsComp() {
         {
           comment: newComment,
           poll_id: onepoll._id,
-          user_id: onepoll.createdBy._id,
+          user_id: userId,
         }
       );
       setComments((prev) => [response.data.comment, ...prev]);
       setNewComment("");
-      fetchComments()
+      // fetchComments();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
-  };  
+  };
 
   const handleLikeComment = async (index) => {
     const updatedComments = [...comments];
-    updatedComments[index].likes += 1; // Edited code
+    updatedComments[index].likes += 1;
     setComments(updatedComments);
 
     try {
       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
-        user_id: onepoll.createdBy._id,
+        user_id: userId,
         comment_id: currentCommentId,
       });
     } catch (error) {
@@ -2321,12 +2347,13 @@ function CommentsComp() {
         {
           reply_msg: newReply,
           poll_id: onepoll._id,
-          user_id: onepoll.createdBy._id,
+          user_id: userId,
           comment_id: currentCommentId,
         }
       );
 
-      const updatedComments = comments.map((comment) =>
+      const updatedComments = comments?.map((comment) =>
+        // const updatedComments = (comments || []).map((comment) =>
         comment._id === currentCommentId
           ? {
               ...comment,
@@ -2338,7 +2365,6 @@ function CommentsComp() {
       setComments(updatedComments);
       setNewReply("");
       setShowReplyModal(false);
-      
     } catch (error) {
       console.error("Error adding reply:", error);
     }
@@ -2359,17 +2385,19 @@ function CommentsComp() {
         {
           reply_msg: newNestedReply,
           poll_id: onepoll._id,
-          user_id: onepoll.createdBy._id,
+          user_id: userId,
           comment_id: currentCommentId,
           // reply_to_reply_id: replyToReplyId,
         }
       );
 
       const updatedComments = comments.map((comment) =>
+        // const updatedComments = (comments || []).map((comment)  =>
         comment._id === currentCommentId
           ? {
               ...comment,
               replies: comment.replies.map((reply) =>
+                // replies: (comment.replies || []).map((reply)  =>
                 reply._id === replyToReplyId
                   ? {
                       ...reply,
@@ -2391,23 +2419,29 @@ function CommentsComp() {
 
   // Added function to handle likes on replies
   const handleLikeReply = async (commentId, replyId) => {
-    const updatedComments = comments.map((comment) =>
-      comment._id === commentId
-        ? {
-            ...comment,
-            replies: comment.replies.map((reply) =>
-              reply._id === replyId
-                ? { ...reply, likes: reply.likes + 1 } // Incrementing likes for the reply
-                : reply
-            ),
-          }
-        : comment
-    );
+    const updatedComments =
+      comments &&
+      comments.map((comment) =>
+        // const updatedComments = (comments || []).map((comment)  =>
+        comment._id === commentId
+          ? {
+              ...comment,
+              replies:
+                comment &&
+                comment.replies.map((reply) =>
+                  // replies: (comment.replies || []).map((reply) =>
+                  reply._id === replyId
+                    ? { ...reply, likes: reply.likes + 1 } // Incrementing likes for the reply
+                    : reply
+                ),
+            }
+          : comment
+      );
     setComments(updatedComments);
 
     try {
       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
-        user_id: onepoll.createdBy._id,
+        user_id: userId,
         comment_id: replyId,
       });
     } catch (error) {
@@ -2415,23 +2449,41 @@ function CommentsComp() {
     }
   };
 
-  
-
+  // const fetchComments = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://92.205.109.210:8028/comment/getbyid",
+  //       {
+  //         poll_id: onepoll._id,
+  //         user_id: onepoll.createdBy._id,
+  //       }
+  //     );
+  //     console.log(response.data);
+  //     setComments(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching comments:", error);
+  //   }
+  // };
   const fetchComments = async () => {
     try {
       const response = await axios.post(
         "http://92.205.109.210:8028/comment/getbyid",
         {
           poll_id: onepoll._id,
-          user_id: onepoll.createdBy._id,
+          user_id: userId,
         }
       );
-      console.log(response.data)
+      console.log(response.data);
       setComments(response.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
     }
   };
+  useEffect(() => {
+    if (onepoll) {
+      fetchComments();
+    }
+  }, [onepoll, comments]); //added dependency here
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
@@ -2457,7 +2509,7 @@ function CommentsComp() {
       axios
         .post("http://92.205.109.210:8028/polls/voteonpoll", {
           poll_id: onepoll._id,
-          user_id: onepoll.userId,
+          user_id: userId,
           option: selectedOptionValue,
         })
         .then((response) => {
@@ -2526,13 +2578,30 @@ function CommentsComp() {
     axios
       .post("http://92.205.109.210:8028/polls/likeonpoll", {
         poll_id: onepoll._id,
-        user_id: onepoll.createdBy._id,
+        user_id: userId,
       })
       .then((res) => {
         setTotallike(res.data.Total_likes);
       });
   };
   console.log(onepoll);
+
+  const toggleCommentLike = (index) => {
+    setLikedComments((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+  
+  const toggleReplyLike = (commentId, replyId) => {
+    setLikedReplies((prev) => ({
+      ...prev,
+      [commentId]: {
+        ...prev[commentId],
+        [replyId]: !prev[commentId]?.[replyId],
+      },
+    }));
+  };
 
   return (
     <>
@@ -2598,7 +2667,7 @@ function CommentsComp() {
                                 className="form-check-label"
                                 htmlFor={`option${index + 1}`}
                               >
-                                {option.option}  {option.count}
+                                {option.option} {option.count}
                               </label>
                             </div>
                           )}
@@ -2733,90 +2802,204 @@ function CommentsComp() {
               >
                 Comment
               </Button>
+{/* 
+              {comments.length > 0 &&
+                comments.map((comment, index) => (
+                  <div key={comment._id} className="mb-3">
+                    <Card>
+                      <Card.Body>
+                        <p>{comment.comment}</p>
+                        <p>Likes: {comment.likes}</p>
+                        <Button
+                          variant="link"
+                          onClick={() => handleLikeComment(index)}
+                        >
+                          Like
+                        </Button>
+                        <Button
+                          variant="link"
+                          onClick={() => handleOpenReplyModal(comment._id)}
+                        >
+                          Reply
+                        </Button>
+                        {comment.replies.length > 0 && (
+                          <div style={{ marginLeft: "20px" }}>
+                            {comment.replies.map((reply) => (
+                              <div key={reply._id} className="mb-2">
+                                <Card>
+                                  <Card.Body>
+                                    <p>{reply.reply_msg}</p>
+                                    <p>Likes: {reply.likes}</p>
+                                    <Button
+                                      variant="link"
+                                      onClick={() =>
+                                        handleLikeReply(comment._id, reply._id)
+                                      }
+                                    >
+                                      Like
+                                    </Button>
+                                    <Button
+                                      variant="link"
+                                      onClick={() =>
+                                        handleOpenNestedReplyModal(
+                                          comment._id,
+                                          reply._id
+                                        )
+                                      }
+                                    >
+                                      Reply
+                                    </Button>
+                                    {reply.replies &&
+                                      reply.replies.length > 0 && (
+                                        <div style={{ marginLeft: "20px" }}>
+                                          {reply.replies.map((nestedReply) => (
+                                            <div key={nestedReply._id}>
+                                              <Card>
+                                                <Card.Body>
+                                                  <p>{nestedReply.reply_msg}</p>
+                                                  <p>
+                                                    Likes: {nestedReply.likes}
+                                                  </p>
+                                                  <Button
+                                                    variant="link"
+                                                    onClick={() =>
+                                                      handleLikeReply(
+                                                        comment._id,
+                                                        nestedReply._id
+                                                      )
+                                                    }
+                                                  >
+                                                    Like
+                                                  </Button>
+                                                </Card.Body>
+                                              </Card>
+                                            </div>
+                                          ))}
+                                        </div>
+                                      )}
+                                  </Card.Body>
+                                </Card>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </Card.Body>
+                    </Card>
+                  </div>
+                ))} */}
 
-              {comments && comments.map((comment, index) => (
-                <div key={comment._id} className="mb-3">
+
+
+                {comments.length > 0 &&
+  comments.map((comment, index) => (
+    <div key={comment._id} className="mb-3">
+      <Card>
+        <Card.Body>
+          <p>{comment.comment}</p>
+          <p style={{fontSize:"small", color:"grey"}}>@{comment.user_id.user_name}</p>
+          
+         
+          {/* <p>Likes: {comment.likes.count}</p> */}
+          <button
+            onClick={() => {
+              handleLikeComment(index); 
+              toggleCommentLike(index);
+            }}
+            style={{ background: "none", border: "none", cursor: "pointer" }}
+          >
+            <FontAwesomeIcon
+              icon={likedComments[index] ? solidHeart : regularHeart}
+              style={{
+                color: likedComments[index] ? "red" : "gray",
+                fontSize: "24px",
+              }}
+            />
+          </button>
+          {/* <span>Likes: {comment.likes}</span> */}
+          <span>{onepoll.total_likes}</span>
+          
+          <Button
+            variant="link"
+            onClick={() => handleOpenReplyModal(comment._id)}
+          >
+            Reply
+          </Button>
+          {comment.replies.length > 0 && (
+            <div style={{ marginLeft: "20px" }}>
+              {comment.replies.map((reply) => (
+                <div key={reply._id} className="mb-2">
                   <Card>
                     <Card.Body>
-                      <p>{comment.comment}</p>
-                      <p>Likes: {comment.likes}</p>
-                      <Button
-                        variant="link"
-                        onClick={() => handleLikeComment(index)}
+                      <p>{reply.reply_msg}</p>
+                      <p style={{fontSize:"small", color:"grey"}}>@{comment.user_id.user_name}</p>
+                
+                      <button
+                        onClick={() => {
+                          handleLikeReply(comment._id, reply._id);
+                          toggleReplyLike(comment._id, reply._id);
+                        }}
+                        style={{ background: "none", border: "none", cursor: "pointer" }}
                       >
-                        Like
-                      </Button>
+                        <FontAwesomeIcon
+                          icon={likedReplies[comment._id]?.[reply._id] ? solidHeart : regularHeart}
+                          style={{
+                            color: likedReplies[comment._id]?.[reply._id] ? "red" : "gray",
+                            fontSize: "24px",
+                          }}
+                        />
+                      </button>
+                      {/* <span>Likes: {reply.likes}</span> */}
+                      <span>{onepoll.total_likes}</span>
                       <Button
                         variant="link"
-                        onClick={() => handleOpenReplyModal(comment._id)}
+                        onClick={() =>
+                          handleOpenNestedReplyModal(comment._id, reply._id)
+                        }
                       >
                         Reply
                       </Button>
-                      {comment.replies.length > 0 && (
-                        <div style={{ marginLeft: "20px" }}>
-                          {comment.replies.map((reply) => (
-                            <div key={reply._id} className="mb-2">
-                              <Card>
-                                <Card.Body>
-                                  <p>{reply.reply_msg}</p>
-                                  <p>Likes: {reply.likes}</p>
-                                  <Button
-                                    variant="link"
-                                    onClick={() =>
-                                      handleLikeReply(comment._id, reply._id)
-                                    }
-                                  >
-                                    Like
-                                  </Button>
-                                  <Button
-                                    variant="link"
-                                    onClick={() =>
-                                      handleOpenNestedReplyModal(
-                                        comment._id,
-                                        reply._id
-                                      )
-                                    }
-                                  >
-                                    Reply
-                                  </Button>
-                                  {reply.replies &&
-                                    reply.replies.length > 0 && (
-                                      <div style={{ marginLeft: "20px" }}>
-                                        {reply.replies.map((nestedReply) => (
-                                          <div key={nestedReply._id}>
-                                            <Card>
-                                              <Card.Body>
-                                                <p>{nestedReply.reply_msg}</p>
-                                                <p>
-                                                  Likes: {nestedReply.likes}
-                                                </p>
-                                                <Button
-                                                  variant="link"
-                                                  onClick={() =>
-                                                    handleLikeReply(
-                                                      comment._id,
-                                                      nestedReply._id
-                                                    )
-                                                  }
-                                                >
-                                                  Like
-                                                </Button>
-                                              </Card.Body>
-                                            </Card>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    )}
-                                </Card.Body>
-                              </Card>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      {reply.replies &&
+                        reply.replies.length > 0 && (
+                          <div style={{ marginLeft: "20px" }}>
+                            {reply.replies.map((nestedReply) => (
+                              <div key={nestedReply._id}>
+                                <Card>
+                                  <Card.Body>
+                                    <p>{nestedReply.reply_msg}</p>
+                                    <p>Likes: {nestedReply.likes}</p>
+                                    <button
+                                      onClick={() => {
+                                        handleLikeReply(comment._id, nestedReply._id);
+                                        toggleReplyLike(comment._id, nestedReply._id);
+                                      }}
+                                      style={{ background: "none", border: "none", cursor: "pointer" }}
+                                    >
+                                      <FontAwesomeIcon
+                                        icon={likedReplies[comment._id]?.[nestedReply._id] ? solidHeart : regularHeart}
+                                        style={{
+                                          color: likedReplies[comment._id]?.[nestedReply._id] ? "red" : "gray",
+                                          fontSize: "24px",
+                                        }}
+                                      />
+                                    </button>
+                                  </Card.Body>
+                                </Card>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                     </Card.Body>
                   </Card>
                 </div>
               ))}
+            </div>
+          )}
+        </Card.Body>
+      </Card>
+    </div>
+  ))}
+
+
             </div>
           </Card.Text>
         </Card.Body>
