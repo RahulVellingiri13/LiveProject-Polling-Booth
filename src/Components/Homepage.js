@@ -287,8 +287,8 @@ function Homepage() {
         />
         <div className="user-info">
           <h4>
-            Welcome! {googleuser ? googleuser : newuser}{" "}
-            <i class="bi bi-person-circle"></i>
+            Welcome... {googleuser ? googleuser : newuser}{" "}
+            <i class="bi bi-person-circle"></i> !
           </h4>
         </div>
       </header>
