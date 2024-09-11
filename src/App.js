@@ -30,6 +30,7 @@ function App() {
   <Route path="/Newpassword" element={<Newpassword />} />
   <Route path="/Loginpg" element={<Loginpg />} />
   <Route path="/Homepage" element={<Homepage />} />
+  <Route path="/newpassword/:number" element={<Newpassword />} />
   <Route path='/viewcomment' element={<CommentsComp/>}/>
   <Route path='/onepoll/:id' element={<Onepoll/>}/>
   </Routes>

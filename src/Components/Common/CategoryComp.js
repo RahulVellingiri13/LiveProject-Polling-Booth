@@ -464,9 +464,10 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
               <Card.Body>
                 <Card.Header>
                   <div>
-                    <h6>Name:{poll.createdBy.user_name}</h6>
+                    <h6>Name:{poll.createdBy.user_name }</h6>
                     <p>Title:{poll.title}</p>
                     <p>Status:{poll.status}</p>
+               
                   </div>
                   <Button variant="primary">Follow</Button>
                 </Card.Header>
@@ -475,17 +476,21 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                   <Card className="mb-3">
                     <Card.Body>
                       <Card.Header className="d-flex justify-content-between">
-                        <p>Poll Ends on {poll.votingPeriod}</p>
-                        <p>Category: {poll.category}</p>
+                      <p>Poll Ends on {poll.expirationTime}</p>
+                  <p>
+                    Category:{" "}
+                    {poll.category &&
+                      poll.category.map((item) => item.category_name)}
+                  </p>
                       </Card.Header>
                       <Card.Text className="d-flex flex-column">
                         {poll.options.map((option, index) => (
-                          <div key={index}>
+                          <div key={option._id}>
                             {selectedOption === index ? (
                               <div>
                                 <ProgressBar
                                   now={100}
-                                  label={option}
+                                  label={option.option}
                                   // onClick={unselectOption}
                                   onClick={() => setSelectedOption(null)}
                                   style={{ cursor: "pointer" }}
@@ -498,7 +503,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                                   type="radio"
                                   id={`option${index + 1}`}
                                   name="options"
-                                  value={option}
+                                  value={option.option}
                                   onChange={() => handleOptionChange(index)}
                                   checked={selectedOption === index}
                                 />
@@ -506,7 +511,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                                   className="form-check-label"
                                   htmlFor={`option${index + 1}`}
                                 >
-                                  {option}
+                                  {option.option}
                                 </label>
                               </div>
                             )}
@@ -559,7 +564,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                   <p
                     style={{ cursor: "pointer", color: "blue" }}
                     // onClick={()=>handleViewComment(index)}
-                    onClick={() => handleOnepoll(polls._id)}
+                    onClick={() => handleOnepoll(poll._id)}
                   >
                     <i className="bi bi-chat-quote-fill"></i> Comments
                   </p>

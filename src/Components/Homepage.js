@@ -46,12 +46,52 @@ function Homepage() {
     sessionStorage.getItem("username") || ""
   );
 
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [show, setShow] = useState(false);
+
+  const [step, setStep] = useState(1);
+
+
+  let userId =
+    sessionStorage.getItem("loginuserId") ||
+    sessionStorage.getItem("googleuserId");
+  console.log("userId:", userId);
+
+  useEffect(() => {
+    if (searchQuery) {
+      handleSearch();
+    } else {
+      // Retrieve polls from the API on component mount
+      fetchPolls();
+    }
+  }, [searchQuery]);
+  // Function to fetch polls data from the API
+  //   const fetchPolls = async () => {
+  //    try {
+  //      const response = await axios.post("http://92.205.109.210:8028/polls/getall", {
+  //        user_id: userId
+  //      });
+  //      setPolls(response.data); // Set the initial polls data
+  //      setFilteredPolls(response.data); // Also set the filtered polls initially
+  //      sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
+  //    } catch (error) {
+  //      console.error("Error fetching polls:", error);
+  //    }
+  //  };
+
   //getall polls
   const [filteredPolls, setFilteredPolls] = useState([]);
   const fetchPolls = async () => {
     try {
       const response = await axios.post(
-        "http://92.205.109.210:8028/polls/getall"
+        "http://92.205.109.210:8028/polls/getall",
+        {
+          user_id: userId,
+        }
       );
       console.log(response.data);
       setPolls(response.data);
@@ -61,10 +101,7 @@ function Homepage() {
     }
   };
 
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  useEffect(() => {
+  useEffect(() => { 
     if (selectedCategory) {
       console.log("fetch cagegory");
       console.log("Selected Category:", selectedCategory);
@@ -74,13 +111,9 @@ function Homepage() {
       );
       console.log("Filtered Polls:", filteredCategory);
       setFilteredPolls(filteredCategory);
-      console.log(filteredPolls)
-     
-        setPage("category");
-      
-      
-   
-    
+      console.log(filteredPolls);
+
+      setPage("category");
     } else {
       fetchPolls();
     }
@@ -104,7 +137,7 @@ function Homepage() {
   }, []);
 
   const handleCategoryPage = (category) => {
-     setPage("category");
+    setPage("category");
     console.log("Selected Category:", category);
     setSelectedCategory(category);
   };
@@ -128,12 +161,7 @@ function Homepage() {
   const [googleuser, setgoogleuser] = useState(
     sessionStorage.getItem("username")
   );
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [show, setShow] = useState(false);
-
-  const [step, setStep] = useState(1);
-
+  
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -144,20 +172,39 @@ function Homepage() {
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
   };
-
-  const onPhoneSubmit = () => {
-    // Here logic to verify the phone number
-    // After that to the OTP step
-    setStep(2);
+  const onPhoneSubmit = async () => {
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+        { number: phoneNumber }
+      );
+      if (response.status === 200) {
+        console.log("OTP sent successfully");
+        setStep(2); // Move to OTP verification step
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+    }
   };
 
   const navigate = useNavigate();
 
-  const onOtpSubmit = () => {
-    // Here logic to verify the OTP
-
-    handleClose();
-    // navigate("addPoll");
+  const handleOtpSubmit = async () => {
+    console.log(phoneNumber)
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+        { number: phoneNumber, otp: otp }
+      );
+      if (response.status === 200 ) {
+        console.log("OTP verified successfully");
+        navigate(`/newpassword/${phoneNumber}`);
+      } else {
+        console.error("OTP verification failed");
+      }
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+    }
   };
 
   // let googlegmail=sessionStorage.getItem("email")
@@ -185,25 +232,25 @@ function Homepage() {
     setPolls([...polls, newPoll]);
     setPage("Polllist"); // Navigate to Polllist after adding a poll
   };
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value); // Update search query state
+  };
 
-  const handleSearchChange = async (e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-
-    if (query.trim() === "") {
-      setPolls([]);
-    } else {
-      try {
-        const response = await axios.post(
-          "http://92.205.109.210:8028/polls/search",
-          {
-            params: { query },
-          }
-        );
-        setPolls(response.data);
-      } catch (error) {
-        console.error("Error searching polls:", error);
-      }
+  const handleSearch = async () => {
+    console.log(searchQuery);
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/polls/search",
+        {
+          query: searchQuery,
+        }
+      );
+      console.log(response);
+      setPolls(response.data.poll_ids);
+      // setFilteredPolls(response.data);
+      // Set filtered polls based on the search result
+    } catch (error) {
+      console.error("Error searching polls:", error);
     }
   };
 
@@ -234,7 +281,7 @@ function Homepage() {
         <h1>POLLING BOOTH</h1>
         <input
           type="search"
-          placeholder="Search"
+          placeholder="Search Polls"
           value={searchQuery}
           onChange={handleSearchChange}
         />
@@ -301,8 +348,13 @@ function Homepage() {
             {page === "Pollresults" && <Pollresults />}
             {page === "Userdetails" && <Userdetails />}
             {page === "CommentsComp" && <CommentsComp />}
-            {page === "category" && 
-              <CategoryComp polls={polls} setPolls={setPolls} filteredPolls={filteredPolls} />}
+            {page === "category" && (
+              <CategoryComp
+                polls={polls}
+                setPolls={setPolls}
+                filteredPolls={filteredPolls}
+              />
+            )}
           </nav>
 
           {/* Add more polls here */}
@@ -359,7 +411,7 @@ function Homepage() {
         </Button>
       </Modal.Footer>
     </Modal> */}
-
+{/* OTP VERIFICATION MODAL */}
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
@@ -398,9 +450,9 @@ function Homepage() {
           </Button>
           <Button
             variant="primary"
-            onClick={step === 1 ? onPhoneSubmit : onOtpSubmit}
+            onClick={step === 1 ? onPhoneSubmit : handleOtpSubmit}
           >
-            {step === 1 ? "Verify Phone Number" : "Verify OTP"}
+            {step === 1 ? "Send OTP" : "Verify OTP"}
           </Button>
         </Modal.Footer>
       </Modal>
