@@ -59,7 +59,7 @@ function Newpassword() {
     
       className="new-password-container"
       style={{
-        backgroundColor: '#5A8D8E',
+        backgroundColor: '#00aeac',
         height: '100vh',
         display: 'flex',
         justifyContent: 'center',

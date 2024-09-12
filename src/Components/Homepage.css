@@ -8,7 +8,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #5a8d8e;
+  background-color: #00aeac;
   color: white;
 }
 
@@ -90,7 +90,7 @@ body {
 .polling-booth .sign-out {
   margin-top: 1rem;
   padding: 0.5rem;
-  background-color: #5aafa2;
+  background-color: #00aeac;
   color: white;
   border: none;
   border-radius: 10px;

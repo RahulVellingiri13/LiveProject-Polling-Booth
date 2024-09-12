@@ -240,8 +240,10 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "./Firebase";
 import "./Frontpage.css";
 import logo from "../src/Images/Pooling logo dem.jpeg";
+import pblogo from "../src/Images/8.png";
 import { useFormik } from "formik";
 import axios from "axios";
+
 
 const Frontpg = () => {
   const formik = useFormik({
@@ -338,7 +340,8 @@ const Frontpg = () => {
     <Row className="bodyy">
       {/* Left Side - Column 6 */}
       <Col sm={6} className="text-center left-column">
-        <img src={logo} alt="Polling Logo" className="polling-logoo" />
+        {/* <img src={logo} alt="Polling Logo" className="polling-logoo" /> */}
+        <img src={pblogo} alt="Polling Logo" className="polling-logoo" />
       </Col>
 
       {/* Right Side - Column 6 */}
@@ -365,7 +368,7 @@ const Frontpg = () => {
           </div>
           <div className="login-linkk">
             <p>
-              Already have an account? <Link to="/Loginpg">Sign in</Link>
+              Already have an account? <Link to="/Loginpg" style={{color:"black"}}>Sign in</Link>
             </p>
           </div>
         </div>

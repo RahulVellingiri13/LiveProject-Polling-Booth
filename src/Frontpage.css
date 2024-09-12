@@ -6,7 +6,7 @@
     height: 100vh;
     font-family: Arial, sans-serif;
     color: #ffffff;
-    background-color: #5A8D8E; 
+    background-color: #00aeac; 
 }
 
 .containerrr {
@@ -34,13 +34,15 @@ h1 {
 .signupp-button {
     background-color:#06b4d6 ;
     color: #ffffff;
-    border: none;
+    /* border: none; */
     padding: 15px 30px;
     margin: 10px 0;
     font-size: 16px;
     cursor: pointer;
     border-radius: 25px;
     width: 100%;
+    border-color: whitesmoke;
+    
 }
 
 .signupp-button:hover {
