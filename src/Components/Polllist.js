@@ -390,35 +390,34 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import CommentsComp from "./Common/CommentsComp";
 import CategoryComp from "./Common/CategoryComp";
 
-function Polllist({ page, polls,setPolls,setPage, selectedCategory }) {
-  console.log(selectedCategory)
+function Polllist({ page, polls, setPolls, setPage, selectedCategory }) {
+  console.log(selectedCategory);
   console.log(page);
   // const [polls, setPolls] = useState([]);
   const [filteredPolls, setFilteredPolls] = useState([]);
   const [currentView, setCurrentView] = useState("cards");
   const [selectedCardData, setSelectedCardData] = useState(null);
 
-//   console.log(selectedCategory._id)
-// console.log(selectedCategory)
-    // const fetchPolls = async () => {
-    //   try {
-    //     const response = await axios.post(
-    //       "http://92.205.109.210:8028/polls/getall"
-    //     );
-    //     console.log(response.data);
-    //     setPolls(response.data);
-    //     sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
-    //   } catch (error) {
-    //     console.error("Error fetching polls:", error);
-    //   }
-    // };
+  //   console.log(selectedCategory._id)
+  // console.log(selectedCategory)
+  // const fetchPolls = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://92.205.109.210:8028/polls/getall"
+  //     );
+  //     console.log(response.data);
+  //     setPolls(response.data);
+  //     sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
+  //   } catch (error) {
+  //     console.error("Error fetching polls:", error);
+  //   }
+  // };
 
-  
   // useEffect(()=>{
   //   fetchPolls();
   // },[])
 
-// let fetselectedcategory=async()=>{
+  // let fetselectedcategory=async()=>{
   // if (selectedCategory ) {
   // console.log("fetch cagegory")
   //   console.log("Selected Category:", selectedCategory);
@@ -429,49 +428,47 @@ function Polllist({ page, polls,setPolls,setPage, selectedCategory }) {
   //   console.log("Filtered Polls:", filteredCategory);
   // setFilteredPolls(filteredCategory);
   // setPolls(filteredCategory)
-    // setPolls(filteredCategory)
+  // setPolls(filteredCategory)
   // } else {
   //   fetchPolls()
   // }
-// }
+  // }
 
   // useEffect(() => {
-    // if (selectedCategory && polls.length > 0) {
-      // if (selectedCategory ) {
-      // console.log("Selected Category:", selectedCategory);
+  // if (selectedCategory && polls.length > 0) {
+  // if (selectedCategory ) {
+  // console.log("Selected Category:", selectedCategory);
 
-      // const filteredCategory = polls.filter((poll) =>
-      //   poll.category.some((cat) => cat._id === selectedCategory._id)
-      // );
-      // console.log("Filtered Polls:", filteredCategory);
-    // setFilteredPolls(filteredCategory);
-    // setPolls(filteredCategory)
-      // setPolls(filteredCategory)
-    // } else {
-    //   fetchPolls()
-    // }
-//     if(selectedCategory){
-//       console.log("fetch cagegory")
-//       console.log("Selected Category:", selectedCategory);
-  
-//       const filteredCategory =  polls.filter((poll) =>
-//         poll.category.some((cat) => cat._id === selectedCategory._id)
-//       );
-//       console.log("Filtered Polls:", filteredCategory);
-//       setPolls(filteredCategory)
-     
-      
-//     }
-//     else if(page=="pollist" || !selectedCategory){
-// fetchPolls()
-//     }
-    
-    
-//     else{
-//       fetchPolls();
-//     }
+  // const filteredCategory = polls.filter((poll) =>
+  //   poll.category.some((cat) => cat._id === selectedCategory._id)
+  // );
+  // console.log("Filtered Polls:", filteredCategory);
+  // setFilteredPolls(filteredCategory);
+  // setPolls(filteredCategory)
+  // setPolls(filteredCategory)
+  // } else {
+  //   fetchPolls()
+  // }
+  //     if(selectedCategory){
+  //       console.log("fetch cagegory")
+  //       console.log("Selected Category:", selectedCategory);
 
-//   }, [selectedCategory]);
+  //       const filteredCategory =  polls.filter((poll) =>
+  //         poll.category.some((cat) => cat._id === selectedCategory._id)
+  //       );
+  //       console.log("Filtered Polls:", filteredCategory);
+  //       setPolls(filteredCategory)
+
+  //     }
+  //     else if(page=="pollist" || !selectedCategory){
+  // fetchPolls()
+  //     }
+
+  //     else{
+  //       fetchPolls();
+  //     }
+
+  //   }, [selectedCategory]);
 
   const handlePollSubmit = (newPoll) => {
     setPolls((prevPolls) => [newPoll, ...prevPolls]);
@@ -489,9 +486,8 @@ function Polllist({ page, polls,setPolls,setPage, selectedCategory }) {
 
   return (
     <>
-
-    
       {currentView === "cards" ? (
+        polls.length > 0 &&
         polls.map((poll, index) => (
           <CardComp
             userId={poll.createdBy._id}

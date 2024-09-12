@@ -2209,6 +2209,8 @@ function CardComp({
     sessionStorage.getItem("googleuserId");
   console.log("userId:", userId);
   console.log(userId);
+  console.log("loginuserid",sessionStorage.getItem("loginuserId") )
+console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
   
   // let [pollid,setPollid]=useContext(PageContext)
@@ -2553,7 +2555,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
         <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
             <h6>Name:{createdBy}</h6>
-            <p>Title:{title}</p>
+            {/* <p>Title:{title}</p> */}
             <p>Status:{status}</p>
           </div>
           <Button variant="primary" onClick={handleFollowToggle}>
@@ -2562,7 +2564,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
         </Card.Header>
 
         <Card.Text>
-          <div className="mt-3 mb-3">{question}</div>
+          <div className="mt-3 mb-3">Question:  {question}</div>
           <Card className="mb-3">
             <Card.Body>
               <Card.Header className="d-flex justify-content-between">

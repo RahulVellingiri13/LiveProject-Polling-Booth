@@ -60,7 +60,8 @@ function Homepage() {
     sessionStorage.getItem("loginuserId") ||
     sessionStorage.getItem("googleuserId");
   console.log("userId:", userId);
-
+console.log("loginuserid",sessionStorage.getItem("loginuserId") )
+console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   useEffect(() => {
     if (searchQuery) {
       handleSearch();
@@ -322,7 +323,7 @@ function Homepage() {
                 </button>
               ))}
             </nav>
-            <button className="sign-out" onClick={handleSignOut}>
+            <button className="sign-out" onClick={handleSignOut} >
               Sign Out <i className="bi bi-box-arrow-right"></i>
             </button>
           </div>

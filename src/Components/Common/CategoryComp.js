@@ -463,13 +463,13 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                 <Card.Header>
                   <div>
                     <h6>Name:{poll.createdBy.user_name}</h6>
-                    <p>Title:{poll.title}</p>
+                    {/* <p>Title:{poll.title}</p> */}
                     <p>Status:{poll.status}</p>
                   </div>
                   <Button variant="primary">Follow</Button>
                 </Card.Header>
                 <Card.Text>
-                  <div className="mt-3 mb-3">{poll.question}</div>
+                  <div className="mt-3 mb-3">Question:  {poll.question}</div>
                   <Card className="mb-3">
                     <Card.Body>
                       <Card.Header className="d-flex justify-content-between">

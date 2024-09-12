@@ -582,7 +582,7 @@ let newuser = loginuser.state;
                 <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
             <h6>Name:{poll.createdBy.user_name}</h6>
-            <p>Title:{poll.title}</p>
+            {/* <p>Title:{poll.title}</p> */}
             <p>Status:{poll.status}</p>
           </div>
           <Button variant="primary" onClick={handleFollowToggle}>
@@ -766,7 +766,7 @@ let newuser = loginuser.state;
                 <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
             <h6>Name:{poll.createdBy.user_name}</h6>
-            <p>Title:{poll.title}</p>
+            {/* <p>Title:{poll.title}</p> */}
             <p>Status:{poll.status}</p>
           </div>
           <Button variant="primary" onClick={handleFollowToggle}>

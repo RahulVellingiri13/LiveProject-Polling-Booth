@@ -857,9 +857,10 @@ console.log(UserId)
       category: category,
       createdBy: UserId,
     };
+    console.log(pollData)
     console.log(typeof pollData.duration);
     console.log("Preparing to submit Poll Data:", pollData);
-    axios.post("http://92.205.109.210:8028/polls/create", pollData);
+    // axios.post("http://92.205.109.210:8028/polls/create", pollData);
     // alert("poll added")
     setSnackbarMessage("Your Poll is Successfully created");
 
@@ -918,14 +919,14 @@ console.log(UserId)
         Create Your Polls here!
       </Card.Header>
       <Form>
-        <Form.Group controlId="pollTitle" className="mb-3">
+        {/* <Form.Group controlId="pollTitle" className="mb-3">
           <Form.Control
             type="text"
             placeholder="Title"
             value={pollTitle}
             onChange={(e) => setPollTitle(e.target.value)}
           />
-        </Form.Group>
+        </Form.Group> */}
 
         <Form.Group controlId="pollQuestion" className="mb-3">
           <Form.Control
