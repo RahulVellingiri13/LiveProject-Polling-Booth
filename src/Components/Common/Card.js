@@ -2311,7 +2311,8 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
   };
 
   const handleVoteToggle = () => {
-    setHasVoted(!hasVoted);
+    console.log(userId)
+    // setHasVoted(!hasVoted);
     //   console.log(hasVoted)
     console.log(selectedOption, hasVoted);
     if (selectedOption != null) {
@@ -2328,14 +2329,18 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
           console.log(response.data);
           console.log(response.data.message);
           if (response.data.message === "Vote recorded successfully.") {
-            toast.success("Your vote is successfully registered", {
-              autoClose: 1000,
-            });
+            // toast.success("Your vote is successfully registered", {
+            //   autoClose: 1000,
+            // });
+            alert("voted")
+            setHasVoted(false)
             fetchTotalVotes();
           } else {
-            toast.info("Your vote is removed successfully", {
-              autoClose: 1000,
-            });
+            // toast.info("Your vote is removed successfully", {
+            //   autoClose: 1000,
+            // });
+            alert("vote removed")
+            setHasVoted(true)
           }
           console.log(response.data);
           setSelectedOption("");

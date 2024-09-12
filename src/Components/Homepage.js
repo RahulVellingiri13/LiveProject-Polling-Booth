@@ -302,9 +302,9 @@ function Homepage() {
               <li onClick={handleAddPoll}>
                 <i class="bi bi-plus-circle"> </i> Add Poll
               </li>
-              <li onClick={() => handlePageClick("Pollresults")}>
+              {/* <li onClick={() => handlePageClick("Pollresults")}>
                 <i class="bi bi-check2-circle"></i> Voted Polls
-              </li>
+              </li> */}
               <li onClick={() => handlePageClick("Userdetails")}>
                 <i class="bi bi-person-circle"></i> User Details
               </li>
