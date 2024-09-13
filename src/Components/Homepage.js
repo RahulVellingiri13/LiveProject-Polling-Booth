@@ -6,6 +6,7 @@ import "./Homepage.css";
 import axios from "axios";
 import { Modal } from "react-bootstrap";
 // /Users/rahul/Desktop/pollingbooth/src/CssComponents
+
 import {
   Card,
   Button,
@@ -55,13 +56,12 @@ function Homepage() {
 
   const [step, setStep] = useState(1);
 
-
   let userId =
     sessionStorage.getItem("loginuserId") ||
     sessionStorage.getItem("googleuserId");
   console.log("userId:", userId);
-console.log("loginuserid",sessionStorage.getItem("loginuserId") )
-console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
+  console.log("loginuserid", sessionStorage.getItem("loginuserId"));
+  console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
   useEffect(() => {
     if (searchQuery) {
       handleSearch();
@@ -102,7 +102,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
     }
   };
 
-  useEffect(() => { 
+  useEffect(() => {
     if (selectedCategory) {
       console.log("fetch cagegory");
       console.log("Selected Category:", selectedCategory);
@@ -162,7 +162,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   const [googleuser, setgoogleuser] = useState(
     sessionStorage.getItem("username")
   );
-  
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -191,13 +191,13 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   const navigate = useNavigate();
 
   const handleOtpSubmit = async () => {
-    console.log(phoneNumber)
+    console.log(phoneNumber);
     try {
       const response = await axios.post(
         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
         { number: phoneNumber, otp: otp }
       );
-      if (response.status === 200 ) {
+      if (response.status === 200) {
         console.log("OTP verified successfully");
         navigate(`/newpassword/${phoneNumber}`);
       } else {
@@ -258,6 +258,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   const handleAddPoll = () => {
     if (googlegmail && googleusername) {
       handleShow();
+
       // return <OTPVerificationModal />;
     } else {
       setPage("AddPoll");
@@ -289,7 +290,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
         <div className="user-info">
           <h4>
             Welcome... {googleuser ? googleuser : newuser}{" "}
-            <i class="bi bi-person-circle"></i> ! 
+            <i class="bi bi-person-circle"></i> !
           </h4>
         </div>
       </header>
@@ -323,7 +324,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
                 </button>
               ))}
             </nav>
-            <button className="sign-out" onClick={handleSignOut} >
+            <button className="sign-out" onClick={handleSignOut}>
               Sign Out <i className="bi bi-box-arrow-right"></i>
             </button>
           </div>
@@ -412,7 +413,7 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
         </Button>
       </Modal.Footer>
     </Modal> */}
-{/* OTP VERIFICATION MODAL */}
+      {/* OTP VERIFICATION MODAL */}
       <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
           <Modal.Title>
