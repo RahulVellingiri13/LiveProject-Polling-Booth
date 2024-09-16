@@ -2303,6 +2303,12 @@ function CardComp({
       });
   };
 
+  const calculatePercentage = (optionIndex) => {
+    if (totalVotes === 0) return 0;
+    const votesForOption = voteResults[optionIndex] || 0;
+    return ((votesForOption / totalVotes) * 100).toFixed(1);
+  };
+
   const handleVoteToggle = () => {
     console.log(userId);
     // setHasVoted(!hasVoted);
@@ -2341,6 +2347,14 @@ function CardComp({
         .catch((error) => {
           console.error("Error submitting vote:", error);
         });
+    }
+  };
+
+  const getProgressBarColor = (index) => {
+    if (selectedOption === index) {
+      return "#28a745"; // Selected option will have a green color (or choose any variant)
+    } else {
+      return "#17a2b8"; // Other options will have a different color
     }
   };
 
@@ -2418,13 +2432,8 @@ function CardComp({
   //         console.error('Error submitting vote:', error);
   //       });
 
-  const calculatePercentage = (votes) => {
-    if (totalVotes === 0) return 0;
-    return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
-  };
-
   const handleShareClick = () => {
-    setShowOverlay(!showOverlay); // Toggle the overlay visibility
+    setShowOverlay(!showOverlay);
   };
 
   // let handleViewcomment=(commentkey)=>{
@@ -2575,6 +2584,7 @@ function CardComp({
                 <p>Poll Ends on : {votingPeriod}</p>
                 <p>Category: {category}</p>
               </Card.Header>
+
               {/* <Card.Text className="d-flex flex-column">
                 {options.map((option, index) => (
                   <div key={index}>
@@ -2623,56 +2633,120 @@ function CardComp({
                 )}
               </Card.Text> */}
 
-              <Card.Text className="d-flex flex-column">
-                {options && options.length > 0 ? (
-                  options.map((option, index) => (
-                    <div key={index}>
-                      {voteResults.length > 0 ? (
-                        // Display the progress bar with percentage after voting
-                        <div>
-                          <ProgressBar
-                            now={calculatePercentage(
-                              voteResults[index]?.votes || 0
-                            )}
-                            label={`${calculatePercentage(
-                              voteResults[index]?.votes || 0
-                            )}%`}
-                            style={{ cursor: "pointer" }}
-                          />
-                        </div>
-                      ) : (
-                        // Render radio buttons before voting
-                        <div className="form-check">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            id={`option${index + 1}`}
-                            name="options"
-                            value={option}
-                            onChange={() => handleOptionChange(index)}
-                            checked={selectedOption === index}
-                          />
-                          {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
-                          {option}
-                          {/* </label> */}
-                        </div>
-                      )}
-                    </div>
-                  ))
-                ) : (
-                  <p>No options available</p>
-                )}
 
-                {selectedOption !== null && voteResults.length === 0 && (
-                  <Button
-                    variant={hasVoted ? "primary" : "danger"}
-                    onClick={handleVoteToggle}
-                    className="mt-3 align-self-center"
-                  >
-                    {hasVoted ? "Vote" : "Unvote"}
-                  </Button>
-                )}
-              </Card.Text>
+              <Card.Text className="d-flex flex-column">
+  {options.map((option, index) => (
+    <div key={index} style={{ marginBottom: "10px" }}> {/* Add space between progress bars */}
+      {hasVoted ? (
+        // Show radio buttons when hasn't voted
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="radio"
+            id={`option${index + 1}`}
+            name="options"
+            value={option}
+            onChange={() => handleOptionChange(index)}
+            checked={selectedOption === index}
+          />
+          <label className="form-check-label" htmlFor={`option${index + 1}`}>
+            {option}
+          </label>
+        </div>
+      ) : (
+        // Show progress bar with percentage after vote
+        <div style={{ position: "relative" }}>
+          <ProgressBar
+            now={calculatePercentage(index)} // Set progress bar percentage
+            style={{
+              height: "20px",
+              cursor: "pointer",
+            }}
+            variant={selectedOption === index ? "success" : "info"} // Selected option is green, others are blue
+            label={`${calculatePercentage(index)}%`} // Show percentage on the progress bar
+          />
+          {/* Custom label to display percentage */}
+          <span
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: "50%",
+              transform: "translate(-50%, -50%)",
+              color: "black", // Make label visible
+              fontWeight: "bold", // Bold font for better visibility
+            }}
+          >
+            {`${calculatePercentage(index)}%`} {/* Percentage displayed */}
+          </span>
+        </div>
+      )}
+    </div>
+  ))}
+
+  {/* Conditionally render the vote/unvote button */}
+  {selectedOption !== null && (
+    <Button
+      variant={hasVoted ? "primary" : "danger"}
+      onClick={handleVoteToggle}
+      className="mt-3 align-self-center"
+    >
+      {hasVoted ? "Vote" : "Unvote"}
+    </Button>
+  )}
+</Card.Text>
+
+
+              {/* 
+              <Card.Text className="d-flex flex-column">
+    {options && options.length > 0 ? (
+      options.map((option, index) => (
+        <div key={index}>
+          {voteResults.length > 0 ? (
+            // Display the progress bar with percentage after voting
+            <div>
+              <ProgressBar
+                now={calculatePercentage(voteResults[index]?.votes || 0)}
+                label={`${calculatePercentage(voteResults[index]?.votes || 0)}%`}
+                style={{ cursor: "pointer" }}
+              />
+            </div>
+          ) : (
+            // Render radio buttons before voting
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="radio"
+                id={`option${index + 1}`}
+                name="options"
+                value={option}
+                onChange={() => handleOptionChange(index)}
+                checked={selectedOption === index}
+              />   */}
+              {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
+              {/* {option}  */}
+              {/* </label> */}
+
+              {/* </div>
+          )}
+        </div>
+      ))
+    ) : (
+      <p>No options available</p>
+    )}
+
+    {selectedOption !== null && voteResults.length === 0 && (
+      <Button
+        variant={hasVoted ? "primary" : "danger"}
+        // onClick={handleVoteToggle}
+        onClick={() => {
+          handleVoteToggle();
+        }}
+        className="mt-3 align-self-center"
+      >
+        {hasVoted ? "Vote" : "Unvote"}
+      </Button>
+    )}
+  </Card.Text>   */}
 
               <ToastContainer />
             </Card.Body>

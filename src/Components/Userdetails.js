@@ -553,7 +553,7 @@ let newuser = loginuser.state;
             {googleuser ? googleuser : newuser}{" "}
             </h3>
             <p>{userData.posts || 0} post | {userData.followers || 0} Follower | {userData.following || 0} Following</p>
-            <Button variant="primary">Edit Profile</Button>
+            {/* <Button variant="primary">Edit Profile</Button> */}
           </div>
         </Card.Body>
       </Card>
