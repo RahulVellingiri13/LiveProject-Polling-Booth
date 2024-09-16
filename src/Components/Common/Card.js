@@ -1674,14 +1674,14 @@
 //   onCardClick,
 //   handleVote,
 // }) {
-  
+
 //   let userId =
 //     sessionStorage.getItem("loginuserId") ||
 //     sessionStorage.getItem("googleuserId");
 //   console.log("userId:", userId);
 //   console.log(userId);
 //   let [page, setPage, pollid, setPollid] = useContext(PageContext);
-  
+
 //   // let [pollid,setPollid]=useContext(PageContext)
 //   console.log(pollid);
 //   console.log(optionscount)
@@ -1701,7 +1701,6 @@
 //   const [hasVoted, setHasVoted] = useState(true);
 //   const [voteResults, setVoteResults] = useState([]); // State to hold vote results
 // const [totalVotes, setTotalVotes] = useState(0); // State for total votes
-
 
 //   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
 //   const target = useRef(null); // Reference for the share button
@@ -1768,8 +1767,7 @@
 //       .then((response) => {
 //         const updatedVoteResults = response.data.results || [];
 //         const updatedTotalVotes = response.data.totalVotes || 0;
-  
-      
+
 //         setVoteResults(updatedVoteResults);
 //         setTotalVotes(updatedTotalVotes);
 //       })
@@ -1783,7 +1781,7 @@
 //     //   console.log(hasVoted)
 //     console.log(selectedOption, hasVoted);
 //     if (selectedOption != null) {
-//       const selectedOptionValue = options[selectedOption]; 
+//       const selectedOptionValue = options[selectedOption];
 //       console.log(selectedOptionValue);
 
 //       axios
@@ -1813,8 +1811,6 @@
 //         });
 //     }};
 
-   
-
 //     // const handleVoteToggle = () => {
 //     //   setHasVoted(!hasVoted);
 //     //   if (selectedOption != null) {
@@ -1831,7 +1827,7 @@
 //     //           toast.success("Your vote is successfully registered", {
 //     //             autoClose: 1000,
 //     //           });
-    
+
 //     //           // Fetch updated vote results from the API
 //     //           axios
 //     //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
@@ -1841,8 +1837,8 @@
 //     //             .then((resultsResponse) => {
 //     //               const results = resultsResponse.data.results;
 //     //               const totalVotes = resultsResponse.data.totalVotes;
-//     //               setVoteResults(results); 
-//     //               setTotalVotes(totalVotes); 
+//     //               setVoteResults(results);
+//     //               setTotalVotes(totalVotes);
 //     //             })
 //     //             .catch((error) => {
 //     //               console.error("Error fetching vote results:", error);
@@ -1888,7 +1884,7 @@
 //     //       .catch(error => {
 //     //         console.error('Error submitting vote:', error);
 //     //       });
-  
+
 //     const calculatePercentage = (votes) => {
 //       if (totalVotes === 0) return 0;
 //       return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
@@ -2001,7 +1997,6 @@
 //                 ))} */}
 
 //                 {/* Conditionally render the vote button at the end of all options */}
-               
 
 //                 {/* {selectedOption !== null && (
 //                   <Button
@@ -2038,11 +2033,11 @@
 //                 value={option}
 //                 onChange={() => handleOptionChange(index)}
 //                 checked={selectedOption === index}
-//               />  
+//               />
 //               {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
-//                 {option} 
+//                 {option}
 //               {/* </label> */}
-            
+
 //             </div>
 //           )}
 //         </div>
@@ -2060,7 +2055,7 @@
 //         {hasVoted ? "Vote" : "Unvote"}
 //       </Button>
 //     )}
-//   </Card.Text>  
+//   </Card.Text>
 
 //               <ToastContainer />
 //             </Card.Body>
@@ -2203,21 +2198,20 @@ function CardComp({
   onCardClick,
   handleVote,
 }) {
-  
   let userId =
     sessionStorage.getItem("loginuserId") ||
     sessionStorage.getItem("googleuserId");
   console.log("userId:", userId);
   console.log(userId);
-  console.log("loginuserid",sessionStorage.getItem("loginuserId") )
-console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
+  console.log("loginuserid", sessionStorage.getItem("loginuserId"));
+  console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
   let [page, setPage, pollid, setPollid] = useContext(PageContext);
-  
+
   // let [pollid,setPollid]=useContext(PageContext)
-  console.log(polluserId)
+  console.log(polluserId);
   console.log(pollid);
-  console.log(optionscount)
-  console.log(votingPeriod)
+  console.log(optionscount);
+  console.log(votingPeriod);
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
@@ -2233,9 +2227,8 @@ console.log("googleuseriod",sessionStorage.getItem("googleuserId") )
   const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(true);
   const [voteResults, setVoteResults] = useState([]); // State to hold vote results
-const [totalVotes, setTotalVotes] = useState(0); // State for total votes
-const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
-
+  const [totalVotes, setTotalVotes] = useState(0); // State for total votes
+  const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null); // Reference for the share button
@@ -2293,7 +2286,6 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
     setShowVoteButton(false);
   };
 
-
   const fetchTotalVotes = () => {
     axios
       .post("http://92.205.109.210:8028/polls/totalvote", {
@@ -2302,8 +2294,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
       .then((response) => {
         const updatedVoteResults = response.data.results || [];
         const updatedTotalVotes = response.data.totalVotes || 0;
-  
-      
+
         setVoteResults(updatedVoteResults);
         setTotalVotes(updatedTotalVotes);
       })
@@ -2313,12 +2304,12 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
   };
 
   const handleVoteToggle = () => {
-    console.log(userId)
+    console.log(userId);
     // setHasVoted(!hasVoted);
     //   console.log(hasVoted)
     console.log(selectedOption, hasVoted);
     if (selectedOption != null) {
-      const selectedOptionValue = options[selectedOption]; 
+      const selectedOptionValue = options[selectedOption];
       console.log(selectedOptionValue);
 
       axios
@@ -2334,15 +2325,15 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
             // toast.success("Your vote is successfully registered", {
             //   autoClose: 1000,
             // });
-            alert("voted")
-            setHasVoted(false)
+            alert("voted");
+            setHasVoted(false);
             fetchTotalVotes();
           } else {
             // toast.info("Your vote is removed successfully", {
             //   autoClose: 1000,
             // });
-            alert("vote removed")
-            setHasVoted(true)
+            alert("vote removed");
+            setHasVoted(true);
           }
           console.log(response.data);
           setSelectedOption("");
@@ -2350,88 +2341,87 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
         .catch((error) => {
           console.error("Error submitting vote:", error);
         });
-    }};
+    }
+  };
 
-   
+  // const handleVoteToggle = () => {
+  //   setHasVoted(!hasVoted);
+  //   if (selectedOption != null) {
+  //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+  //     axios
+  //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
+  //         poll_id: _id,
+  //         user_id: userId,
+  //         option: selectedOptionValue,
+  //       })
+  //       .then((response) => {
+  //         console.log(response.data);
+  //         if (response.data.message === "Vote recorded successfully.") {
+  //           toast.success("Your vote is successfully registered", {
+  //             autoClose: 1000,
+  //           });
 
-    // const handleVoteToggle = () => {
-    //   setHasVoted(!hasVoted);
-    //   if (selectedOption != null) {
-    //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
-    //     axios
-    //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
-    //         poll_id: _id,
-    //         user_id: userId,
-    //         option: selectedOptionValue,
-    //       })
-    //       .then((response) => {
-    //         console.log(response.data);
-    //         if (response.data.message === "Vote recorded successfully.") {
-    //           toast.success("Your vote is successfully registered", {
-    //             autoClose: 1000,
-    //           });
-    
-    //           // Fetch updated vote results from the API
-    //           axios
-    //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
-    //               poll_id: _id,
+  //           // Fetch updated vote results from the API
+  //           axios
+  //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
+  //               poll_id: _id,
 
-    //             })
-    //             .then((resultsResponse) => {
-    //               const results = resultsResponse.data.results;
-    //               const totalVotes = resultsResponse.data.totalVotes;
-    //               setVoteResults(results); 
-    //               setTotalVotes(totalVotes); 
-    //             })
-    //             .catch((error) => {
-    //               console.error("Error fetching vote results:", error);
-    //             });
-    //         } else {
-    //           toast.info("Your vote is removed successfully", {
-    //             autoClose: 1000,
-    //           });
-    //         }
-    //         setSelectedOption("");
-    //       })
-    //       .catch((error) => {
-    //         console.error("Error submitting vote:", error);
-    //       });
-    //   }
-    // };
+  //             })
+  //             .then((resultsResponse) => {
+  //               const results = resultsResponse.data.results;
+  //               const totalVotes = resultsResponse.data.totalVotes;
+  //               setVoteResults(results);
+  //               setTotalVotes(totalVotes);
+  //             })
+  //             .catch((error) => {
+  //               console.error("Error fetching vote results:", error);
+  //             });
+  //         } else {
+  //           toast.info("Your vote is removed successfully", {
+  //             autoClose: 1000,
+  //           });
+  //         }
+  //         setSelectedOption("");
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error submitting vote:", error);
+  //       });
+  //   }
+  // };
 
-    //     else {
+  //     else {
 
-    //       toast.info('Your vote is removed successfully');
-    //       setHasVoted(false);
-    //       setSelectedOption("");
-    // };
+  //       toast.info('Your vote is removed successfully');
+  //       setHasVoted(false);
+  //       setSelectedOption("");
+  // };
 
-    // let handleVoteToggle=()=>{
-    //   console.log(selectedOption,hasVoted)
+  // let handleVoteToggle=()=>{
+  //   console.log(selectedOption,hasVoted)
 
-    //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
-    // console.log(selectedOptionValue)
+  //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+  // console.log(selectedOptionValue)
 
-    // console.log(_id, createdBy._id, selectedOptionValue)
-    //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+  // console.log(_id, createdBy._id, selectedOptionValue)
+  //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
 
-    //       poll_id: _id,
-    //       user_id: userId,
-    //        option: selectedOptionValue,
-    //       })
-    //       .then(response => {
-    //         // toast.success('Your vote is successfully registered');
-    //         console.log( response.data);
+  //       poll_id: _id,
+  //       user_id: userId,
+  //        option: selectedOptionValue,
+  //       })
+  //       .then(response => {
+  //         // toast.success('Your vote is successfully registered');
+  //         console.log( response.data);
 
-    //       })
-    //       .catch(error => {
-    //         console.error('Error submitting vote:', error);
-    //       });
-  
-    const calculatePercentage = (votes) => {
-      if (totalVotes === 0) return 0;
-      return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
-    };
+  //       })
+  //       .catch(error => {
+  //         console.error('Error submitting vote:', error);
+  //       });
+
+  const calculatePercentage = (votes) => {
+    if (totalVotes === 0) return 0;
+    return ((votes / totalVotes) * 100).toFixed(2); // Return percentage with 2 decimal places
+  };
 
   const handleShareClick = () => {
     setShowOverlay(!showOverlay); // Toggle the overlay visibility
@@ -2489,7 +2479,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
   //   axios
   //     .post("http://92.205.109.210:8028/api/follow", {
   //       user_id: userId,
-  //       follow_user_id:polluserId, 
+  //       follow_user_id:polluserId,
   //     })
   //     .then((response) => {
   //       if (response.data.message === "Follower added successfully") {
@@ -2523,16 +2513,16 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
     console.log("Created By:", createdBy);
     console.log("User ID:", userId);
     console.log("Poll User ID:", polluserId);
-    
+
     axios
       .post("http://92.205.109.210:8028/api/follow", {
         user_id: userId,
-        follow_user_id: polluserId, 
+        follow_user_id: polluserId,
       })
       .then((response) => {
-        console.log("API Response:", response); 
-        console.log("Response Data:", response.data); 
-        
+        console.log("API Response:", response);
+        console.log("Response Data:", response.data);
+
         if (response.data.message === "Follower added successfully") {
           setIsFollowing(true);
           toast.success("Followed successfully", { autoClose: 1000 });
@@ -2545,18 +2535,32 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
       })
       .catch((error) => {
         console.error("Error following/unfollowing user:", error);
-        toast.error("An error occurred. Please try again.", { autoClose: 3000 });
+        toast.error("An error occurred. Please try again.", {
+          autoClose: 3000,
+        });
       });
   };
-  
+
   return (
-    <Card style={{width:"40rem"}}>
+    <Card style={{ width: "40rem" }}>
       <Card.Body>
         <Card.Header className="d-flex justify-content-between align-items-center">
           <div>
             <h6>Name:{createdBy}</h6>
             {/* <p>Title:{title}</p> */}
-            <p>Status:{status}</p>
+            {/* <p>Status:{status}</p> */}
+            <p
+              style={{
+                color:
+                  status === "open"
+                    ? "green"
+                    : status === "closed"
+                    ? "red"
+                    : "black",
+              }}
+            >
+              Status: {status}
+            </p>
           </div>
           <Button variant="primary" onClick={handleFollowToggle}>
             {isFollowing ? "Unfollow" : "Follow"}
@@ -2564,7 +2568,7 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
         </Card.Header>
 
         <Card.Text>
-          <div className="mt-3 mb-3">Question:  {question}</div>
+          <div className="mt-3 mb-3">Question: {question}</div>
           <Card className="mb-3">
             <Card.Body>
               <Card.Header className="d-flex justify-content-between">
@@ -2606,10 +2610,9 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
                   </div>
                 ))} */}
 
-                {/* Conditionally render the vote button at the end of all options */}
-               
+              {/* Conditionally render the vote button at the end of all options */}
 
-                {/* {selectedOption !== null && (
+              {/* {selectedOption !== null && (
                   <Button
                     variant={hasVoted ? "primary" : "danger"}
                     onClick={() => handleVoteToggle()}
@@ -2621,52 +2624,55 @@ const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfol
               </Card.Text> */}
 
               <Card.Text className="d-flex flex-column">
-    {options && options.length > 0 ? (
-      options.map((option, index) => (
-        <div key={index}>
-          {voteResults.length > 0 ? (
-            // Display the progress bar with percentage after voting
-            <div>
-              <ProgressBar
-                now={calculatePercentage(voteResults[index]?.votes || 0)}
-                label={`${calculatePercentage(voteResults[index]?.votes || 0)}%`}
-                style={{ cursor: "pointer" }}
-              />
-            </div>
-          ) : (
-            // Render radio buttons before voting
-            <div className="form-check">
-              <input
-                className="form-check-input"
-                type="radio"
-                id={`option${index + 1}`}
-                name="options"
-                value={option}
-                onChange={() => handleOptionChange(index)}
-                checked={selectedOption === index}
-              />  
-              {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
-                {option} 
-              {/* </label> */}
-            
-            </div>
-          )}
-        </div>
-      ))
-    ) : (
-      <p>No options available</p>
-    )}
+                {options && options.length > 0 ? (
+                  options.map((option, index) => (
+                    <div key={index}>
+                      {voteResults.length > 0 ? (
+                        // Display the progress bar with percentage after voting
+                        <div>
+                          <ProgressBar
+                            now={calculatePercentage(
+                              voteResults[index]?.votes || 0
+                            )}
+                            label={`${calculatePercentage(
+                              voteResults[index]?.votes || 0
+                            )}%`}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
+                      ) : (
+                        // Render radio buttons before voting
+                        <div className="form-check">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            id={`option${index + 1}`}
+                            name="options"
+                            value={option}
+                            onChange={() => handleOptionChange(index)}
+                            checked={selectedOption === index}
+                          />
+                          {/* <label className="form-check-label" htmlFor={`option${index + 1}`}> */}
+                          {option}
+                          {/* </label> */}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p>No options available</p>
+                )}
 
-    {selectedOption !== null && voteResults.length === 0 && (
-      <Button
-        variant={hasVoted ? "primary" : "danger"}
-        onClick={handleVoteToggle}
-        className="mt-3 align-self-center"
-      >
-        {hasVoted ? "Vote" : "Unvote"}
-      </Button>
-    )}
-  </Card.Text>  
+                {selectedOption !== null && voteResults.length === 0 && (
+                  <Button
+                    variant={hasVoted ? "primary" : "danger"}
+                    onClick={handleVoteToggle}
+                    className="mt-3 align-self-center"
+                  >
+                    {hasVoted ? "Vote" : "Unvote"}
+                  </Button>
+                )}
+              </Card.Text>
 
               <ToastContainer />
             </Card.Body>

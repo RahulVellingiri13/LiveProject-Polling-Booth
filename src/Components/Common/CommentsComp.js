@@ -2318,15 +2318,16 @@ function CommentsComp() {
     }
   };
 
-  const handleLikeComment = async (index) => {
+  const handleLikeComment = async (index, commentId) => {
     const updatedComments = [...comments];
-    updatedComments[index].likes += 1;
+    updatedComments[index].likers.push(userId);
     setComments(updatedComments);
 
     try {
       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
         user_id: userId,
-        comment_id: currentCommentId,
+        // comment_id: currentCommentId,
+        comment_id: commentId,
       });
     } catch (error) {
       console.error("Error liking comment:", error);
@@ -2353,7 +2354,6 @@ function CommentsComp() {
       );
 
       const updatedComments = comments?.map((comment) =>
-        // const updatedComments = (comments || []).map((comment) =>
         comment._id === currentCommentId
           ? {
               ...comment,
@@ -2392,12 +2392,10 @@ function CommentsComp() {
       );
 
       const updatedComments = comments.map((comment) =>
-        // const updatedComments = (comments || []).map((comment)  =>
         comment._id === currentCommentId
           ? {
               ...comment,
               replies: comment.replies.map((reply) =>
-                // replies: (comment.replies || []).map((reply)  =>
                 reply._id === replyToReplyId
                   ? {
                       ...reply,
@@ -2409,9 +2407,9 @@ function CommentsComp() {
           : comment
       );
 
-      setComments(updatedComments); // Edited code
-      setNewNestedReply(""); // Edited code
-      setShowNestedReplyModal(false); // Edited code
+      setComments(updatedComments);
+      setNewNestedReply("");
+      setShowNestedReplyModal(false);
     } catch (error) {
       console.error("Error adding nested reply:", error);
     }
@@ -2422,16 +2420,18 @@ function CommentsComp() {
     const updatedComments =
       comments &&
       comments.map((comment) =>
-        // const updatedComments = (comments || []).map((comment)  =>
         comment._id === commentId
           ? {
               ...comment,
               replies:
                 comment &&
                 comment.replies.map((reply) =>
-                  // replies: (comment.replies || []).map((reply) =>
                   reply._id === replyId
-                    ? { ...reply, likes: reply.likes + 1 } // Incrementing likes for the reply
+                    ? {
+                        ...reply,
+
+                        likers: [...reply.likers, userId],
+                      }
                     : reply
                 ),
             }
@@ -2440,9 +2440,10 @@ function CommentsComp() {
     setComments(updatedComments);
 
     try {
-      await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+      await axios.post("http://92.205.109.210:8028/comment/likereply", {
         user_id: userId,
-        comment_id: replyId,
+        comment_id: commentId,
+        reply_id: replyId,
       });
     } catch (error) {
       console.error("Error liking reply:", error);
@@ -2917,7 +2918,7 @@ function CommentsComp() {
                         {/* <p>Likes: {comment.likes.count}</p> */}
                         <button
                           onClick={() => {
-                            handleLikeComment(index);
+                            handleLikeComment(index, comment._id);
                             toggleCommentLike(index);
                           }}
                           style={{
@@ -2936,8 +2937,7 @@ function CommentsComp() {
                             }}
                           />
                         </button>
-                        {/* <span>Likes: {comment.likes}</span> */}
-                        <span>{onepoll.total_likes}</span>
+                        <span>Likes: {comment.likers.length}</span>
 
                         <Button
                           variant="link"
@@ -2958,7 +2958,7 @@ function CommentsComp() {
                                         color: "grey",
                                       }}
                                     >
-                                      @{comment.user_id.user_name}
+                                      @{reply.user_id.user_name}
                                     </p>
 
                                     <button
@@ -2988,8 +2988,8 @@ function CommentsComp() {
                                         }}
                                       />
                                     </button>
-                                    {/* <span>Likes: {reply.likes}</span> */}
-                                    <span>{onepoll.total_likes}</span>
+                                    <span>Likes: {reply.likers.length}</span>
+
                                     <Button
                                       variant="link"
                                       onClick={() =>
@@ -3008,7 +3008,11 @@ function CommentsComp() {
                                             <div key={nestedReply._id}>
                                               <Card>
                                                 <Card.Body>
-                                                  <p>{nestedReply.reply_msg}</p>
+                                                  <p>
+                                                    {" "}
+                                                    Nested Reply :{" "}
+                                                    {nestedReply.reply_msg}
+                                                  </p>
                                                   <p>
                                                     Likes: {nestedReply.likes}
                                                   </p>
