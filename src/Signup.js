@@ -1132,7 +1132,7 @@
 //           otp: otp,
 //         }
 //       );
-      
+
 //       if (response.status == 200) {
 //         setOtpVerified(true);
 //         setOtpError("");
@@ -2317,11 +2317,9 @@
 
 // export default Signup;
 
-
 //-----------------------------------------------------
 
 //signup2222
-
 
 // import React, { useState, useEffect, useRef } from "react";
 // import { Row, Col, Card, Form, Alert, Modal, Button, InputGroup } from "react-bootstrap";
@@ -2422,8 +2420,6 @@
 //     },
 //   });
 
-
-
 //   const handleSignup = (values) => {
 //     values.preventDefault();
 
@@ -2443,7 +2439,7 @@
 //     let formattedDob = dob.toISOString().split("T")[1];
 //     console.log(formattedDob)
 
-//     ////////////////////////////////////  
+//     ////////////////////////////////////
 //     // values.preventDefault();
 //     // if (isNaN(Date.parse(dob))) {
 //     //   console.error("Invalid date of birth");
@@ -2545,12 +2541,10 @@
 //     newPassword[index] = e.target.value;
 //     setPassword(newPassword);
 
-
 //     if (e.target.value && index < password.length - 1) {
 //       document.getElementById(`digit-${index + 1}`).focus();
 //     }
 //   };
-
 
 //   const handleKeyDown = (e, index) => {
 //     if (e.key === 'Backspace' && !password[index] && index > 0) {
@@ -2560,10 +2554,9 @@
 
 //   const handleSubmit = (e) => {
 //     e.preventDefault();
-//     // const passwordString = password.join(''); 
-//     // console.log(passwordString); 
+//     // const passwordString = password.join('');
+//     // console.log(passwordString);
 //   };
-
 
 //   const toggleVisibility = () => {
 //     setIsPasswordVisible(!isPasswordVisible);
@@ -2645,7 +2638,6 @@
 //                 <Form.Control.Feedback type="invalid">
 //                   {formik.errors.email}
 //                 </Form.Control.Feedback>
-
 
 //                 {/* Phone */}
 //                 <div className="phone-input-container">
@@ -2774,7 +2766,6 @@
 //                     {otpSent ? "Verify OTP" : "Send OTP"}
 //                   </button>
 //                 )} */}
-
 
 //                 {/* Date of Birth */}
 //                 <h6>Date of Birth</h6>
@@ -2952,8 +2943,6 @@
 //                   </Form.Control.Feedback>
 //                 </InputGroup> */}
 
-
-          
 //                 {/* Password */}
 //                 <InputGroup>
 //                   {password.map((digit, index) => (
@@ -3023,7 +3012,7 @@
 //           </Card>
 //         </Col>
 //         <Col sm={4}></Col>
-        
+
 //       </Row>
 //       <br/>
 //       <br/>
@@ -3071,13 +3060,9 @@
 //   );
 // }
 
-
 // export default Signup;
 
-
 //updated on monday
-
-
 
 // import React, { useState, useEffect } from "react";
 // import {Row, Col, Card, Form, Alert, Modal, Button,InputGroup} from "react-bootstrap";
@@ -3175,7 +3160,7 @@
 //   });
 
 //   const handleSignup = (values) => {
-   
+
 //     console.log("signup")
 //     let dob = new Date(
 //       formik.values.year,
@@ -3737,7 +3722,6 @@
 
 // export default Signup;
 
-
 // tuesday updated one
 
 // import React, { useState, useEffect } from "react";
@@ -3836,7 +3820,7 @@
 //   });
 
 //   const handleSignup = (values) => {
-   
+
 //     console.log("signup")
 //     let dob = new Date(
 //       formik.values.year,
@@ -4036,7 +4020,7 @@
 //                         onBlur={formik.handleBlur}
 //                         maxLength={10}
 //                         disabled={otpVerified && !isPhoneEditable} // Enable editing only when "Edit" is clicked
-                        
+
 //                       />
 //                       <Form.Control.Feedback type="invalid">
 //                         {formik.errors.phone}
@@ -4056,7 +4040,7 @@
 //                     </div>
 //                   )}</Col>
 //                   </Row>
-                
+
 //                 </div>
 //                 {/* OTP Verification */}
 //                 {!otpVerified && (
@@ -4369,7 +4353,7 @@
 //             />
 //             {otpError && <p style={{ color: "red" }}>{otpError}</p>}
 //           </Form.Group>
-//           <button className="verifyotpbut" 
+//           <button className="verifyotpbut"
 //           variant="primary" onClick={verifyOtp}>
 //             Verify OTP
 //           </button>
@@ -4410,7 +4394,16 @@
 // 9 sep monday
 
 import React, { useState, useEffect } from "react";
-import {Row, Col, Card, Form, Alert, Modal, Button,InputGroup} from "react-bootstrap";
+import {
+  Row,
+  Col,
+  Card,
+  Form,
+  Alert,
+  Modal,
+  Button,
+  InputGroup,
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useFormik } from "formik";
@@ -4495,7 +4488,7 @@ function Signup() {
     }),
     validateOnBlur: true,
     onSubmit: (values) => {
-      console.log(otpVerified)
+      console.log(otpVerified);
       if (otpVerified) {
         handleSignup(values);
       } else {
@@ -4505,8 +4498,7 @@ function Signup() {
   });
 
   const handleSignup = (values) => {
-   
-    console.log("signup")
+    console.log("signup");
     let dob = new Date(
       formik.values.year,
       formik.values.month - 1,
@@ -4521,7 +4513,7 @@ function Signup() {
     let currentdate = new Date();
     let age1 = currentdate.getFullYear() - dob.getFullYear();
     let formattedDob = dob.toISOString().split("T")[1];
-    console.log(formattedDob)
+    console.log(formattedDob);
     ////////////////////////////////////
     // values.preventDefault();
     // if (isNaN(Date.parse(dob))) {
@@ -4539,7 +4531,7 @@ function Signup() {
     // console.log(password)
     // let newpassword = password.join("")
     // console.log(newpassword)
-    let newphone = parseInt(formik.values.phone)
+    let newphone = parseInt(formik.values.phone);
     let signupdata = {
       user_name: formik.values.name,
       email: formik.values.email,
@@ -4549,7 +4541,7 @@ function Signup() {
       password: formik.values.password,
       // dob: formattedDob,
     };
-    console.log(signupdata)
+    console.log(signupdata);
 
     axios
       .post("http://92.205.109.210:8028/api/createuser", signupdata)
@@ -4705,27 +4697,28 @@ function Signup() {
                         onBlur={formik.handleBlur}
                         maxLength={10}
                         disabled={otpVerified && !isPhoneEditable} // Enable editing only when "Edit" is clicked
-                        
                       />
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.phone}
                       </Form.Control.Feedback>
                     </Col>
-                    <Col sm={2}> {otpVerified && (
-                    <div>
-                      <span
-                        style={{ color: "green" }}
-                        className="verified-label"
-                      >
-                        Verified
-                      </span>
-                      {/* <span>
+                    <Col sm={2}>
+                      {" "}
+                      {otpVerified && (
+                        <div>
+                          <span
+                            style={{ color: "green" }}
+                            className="verified-label"
+                          >
+                            Verified
+                          </span>
+                          {/* <span>
                         <button>edit</button>
                       </span> */}
-                    </div>
-                  )}</Col>
+                        </div>
+                      )}
+                    </Col>
                   </Row>
-                
                 </div>
                 {/* OTP Verification */}
                 {!otpVerified && (
@@ -4933,7 +4926,7 @@ function Signup() {
                 )}
                 <p></p>
                 {/* Password */}
-              <InputGroup style={{ width: "450px" }} className="mb-3">
+                <InputGroup className="mb-3 password-input-group">
                   <Form.Control
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter 6 digits password"
@@ -4946,15 +4939,16 @@ function Signup() {
                     onBlur={formik.handleBlur}
                   />
                   <Button
+                    className="toggle-password-btn"
+                    variant="outline-secondary"
+                    onClick={() => setShowPassword(!showPassword)}
                     style={{
                       border: "none",
                       backgroundColor: "white",
-                      color: "grey",
                       marginLeft: "5px",
                       marginTop: "-10px",
+                      color: "grey",
                     }}
-                    variant="outline-secondary"
-                    onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </Button>
@@ -4962,9 +4956,8 @@ function Signup() {
                     {formik.errors.password}
                   </Form.Control.Feedback>
                 </InputGroup>
-
                 {/* Confirm Password */}
-                <InputGroup style={{ width: "450px" }} className="mb-3">
+                <InputGroup className="mb-3 password-input-group">
                   <Form.Control
                     type={showConfirmPassword ? "text" : "password"}
                     placeholder="Confirm 6 digits password"
@@ -4978,15 +4971,16 @@ function Signup() {
                     onBlur={formik.handleBlur}
                   />
                   <Button
+                    className="toggle-password-btn"
+                    variant="outline-secondary"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     style={{
                       border: "none",
                       backgroundColor: "white",
-                      color: "grey",
                       marginLeft: "5px",
                       marginTop: "-10px",
+                      color: "grey",
                     }}
-                    variant="outline-secondary"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </Button>
@@ -4995,7 +4989,7 @@ function Signup() {
                   </Form.Control.Feedback>
                 </InputGroup>
                 {/* Submit Button */}
-                <button className="z10" type="submit" >
+                <button className="z10" type="submit">
                   Sign Up
                 </button>
                 <br />
@@ -5018,9 +5012,9 @@ function Signup() {
         </Col>
         <Col sm={4}></Col>
       </Row>
-      <br/>
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <br />
 
       {/* OTP Modal */}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -5038,8 +5032,11 @@ function Signup() {
             />
             {otpError && <p style={{ color: "red" }}>{otpError}</p>}
           </Form.Group>
-          <button className="verifyotpbut" 
-          variant="primary" onClick={verifyOtp}>
+          <button
+            className="verifyotpbut"
+            variant="primary"
+            onClick={verifyOtp}
+          >
             Verify OTP
           </button>
           <div>

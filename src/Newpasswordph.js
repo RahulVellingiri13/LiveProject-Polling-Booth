@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, Form } from "react-bootstrap";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -7,9 +8,9 @@ import * as Yup from "yup";
 import axios from "axios";
 import "./Newpassword.css";
 
-function Newpassword() {
+function Newpasswordph() {
   let { number } = useParams();
-  let email = sessionStorage.getItem("email");
+  // let email = sessionStorage.getItem("email");
   console.log(number);
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [showSuccess, setShowSuccess] = useState(false);
@@ -35,10 +36,10 @@ function Newpassword() {
       const response = await axios.post(
         "http://92.205.109.210:8028/api/updateuser",
         {
-          identifier: email,
-          phone_number:number,
+          // identifier: email,
+          // phone_number:number,
+          identifier: number,
           password: values.newPassword,
-
         }
       );
 console.log(response.data)
@@ -156,4 +157,4 @@ console.log(response.data)
   );
 }
 
-export default Newpassword;
+export default Newpasswordph;

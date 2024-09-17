@@ -1093,6 +1093,248 @@
 
 //updated one
 
+// import React, { useEffect, useState } from "react";
+// import { Card, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap-icons/font/bootstrap-icons.css";
+// import Snackbar from "@mui/material/Snackbar";
+// import Alert from "@mui/material/Alert";
+// import axios from "axios";
+
+// function AddPoll() {
+//   const [pollTitle, setPollTitle] = useState("");
+//   const [pollQuestion, setPollQuestion] = useState("");
+//   const [pollOptions, setPollOptions] = useState(["", ""]);
+//   const [votingDate, setVotingDate] = useState("");
+//   const [endTime, setEndTime] = useState("");
+//   const [category, setCategory] = useState("");
+//   const [categories, setCategories] = useState([]);
+
+//   const [openSnackbar, setOpenSnackbar] = useState(false);
+//   const [snackbarMessage, setSnackbarMessage] = useState("");
+//   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+//   useEffect(() => {
+//     const fetchCategories = async () => {
+//       try {
+//         const response = await axios.get("http://92.205.109.210:8028/category/getall");
+//         setCategories(response.data);
+//       } catch (error) {
+//         console.error("Error fetching categories:", error);
+//       }
+//     };
+
+//     fetchCategories();
+//   }, []);
+
+//   let UserId = sessionStorage.getItem("googleuserId") || sessionStorage.getItem("loginuserId");
+
+//   const handleAddOption = () => {
+//     if (pollOptions.length < 4) {
+//       setPollOptions([...pollOptions, ""]);
+//     }
+//   };
+
+//   const handleOptionChange = (index, value) => {
+//     const newOptions = [...pollOptions];
+//     newOptions[index] = value;
+//     setPollOptions(newOptions);
+//   };
+
+//   const handleRemoveOption = (index) => {
+//     if (pollOptions.length > 2) {
+//       const newOptions = pollOptions.filter((_, i) => i !== index);
+//       setPollOptions(newOptions);
+//     }
+//   };
+
+//   const handleSubmit = async () => {
+//     const currentDateTime = new Date();
+//     const votingEnd = `${votingDate}T${endTime}`;
+
+//     const durationInMilliseconds = new Date(votingEnd) - currentDateTime;
+//     const durationInHours = durationInMilliseconds / (1000 * 60 * 60);
+
+//     const formattedOptions = pollOptions.map((option) => ({ option }));
+
+//     const pollData = {
+//       title: pollTitle,
+//       question: pollQuestion,
+//       options: formattedOptions,
+//       duration: durationInHours.toFixed(2),
+//       category: category,
+//       createdBy: UserId,
+//     };
+
+//     console.log("Preparing to submit Poll Data:", pollData);
+
+//     try {
+//       const response = await axios.post("http://92.205.109.210:8028/polls/create", pollData);
+//       console.log("Received response:", response);
+
+//       if (response.status === 200 || response.status === 201) {
+//         setSnackbarMessage("Your Poll is Successfully created");
+//         setSnackbarSeverity("success");
+//       } else {
+//         setSnackbarMessage("Failed to create poll");
+//         setSnackbarSeverity("error");
+//       }
+//     } catch (error) {
+//       console.error("Error occurred while creating poll:", error);
+//       if (error.response) {
+//         setSnackbarMessage(`Error: ${error.response.data.message || "An error occurred"}`);
+//       } else if (error.request) {
+//         setSnackbarMessage("No response received from the server.");
+//       } else {
+//         setSnackbarMessage("Error in setting up the request.");
+//       }
+//       setSnackbarSeverity("error");
+//     }
+
+//     setPollTitle("");
+//     setPollQuestion("");
+//     setPollOptions(["", ""]);
+//     setVotingDate("");
+//     setEndTime("");
+//     setCategory("");
+
+//     setOpenSnackbar(true);
+//   };
+
+//   const handleCloseSnackbar = () => {
+//     setOpenSnackbar(false);
+//   };
+
+//   return (
+//     <Card
+//       style={{
+//         padding: "20px",
+//         borderRadius: "10px",
+//         boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
+//       }}
+//     >
+//       <Card.Header style={{ textAlign: "center" }}>Create Your Polls here!</Card.Header>
+//       <Form>
+//         <Form.Group controlId="pollQuestion" className="mb-3">
+//           <Form.Control
+//             as="textarea"
+//             rows={2}
+//             placeholder="Question"
+//             value={pollQuestion}
+//             onChange={(e) => setPollQuestion(e.target.value)}
+//           />
+//         </Form.Group>
+
+//         <Row>
+//           <Col md={6}>
+//             {pollOptions.map((option, index) => (
+//               <Form.Group controlId={`option${index}`} className="mb-3" key={index}>
+//                 <InputGroup>
+//                   <InputGroup.Text>
+//                     <i className="bi bi-list"></i>
+//                   </InputGroup.Text>
+//                   <Form.Control
+//                     type="text"
+//                     placeholder={`Option ${index + 1}`}
+//                     value={option}
+//                     onChange={(e) => handleOptionChange(index, e.target.value)}
+//                   />
+//                   {pollOptions.length > 2 && (
+//                     <Button variant="danger" onClick={() => handleRemoveOption(index)}>
+//                       -
+//                     </Button>
+//                   )}
+//                 </InputGroup>
+//               </Form.Group>
+//             ))}
+
+//             {pollOptions.length < 4 && (
+//               <Button variant="success" className="mb-3" onClick={handleAddOption}>
+//                 Add Option
+//               </Button>
+//             )}
+//           </Col>
+
+//           <Col md={6}>
+//             <Card className="mb-3">
+//               <Card.Body>
+//                 <Card.Title>Tips On Better Polls</Card.Title>
+//                 <Card.Text>
+//                   <ul>
+//                     <li>Suggest short clear options</li>
+//                     <li>The more options, the better</li>
+//                     <li>Choose the poll duration</li>
+//                     <li>Options can't be edited after post creation</li>
+//                   </ul>
+//                 </Card.Text>
+//               </Card.Body>
+//             </Card>
+//           </Col>
+//         </Row>
+
+//         <Row>
+//           <Col md={6}>
+//             <Form.Group controlId="votingPeriodDate">
+//               <Form.Label>Voting Period Date</Form.Label>
+//               <Form.Control
+//                 type="date"
+//                 value={votingDate}
+//                 onChange={(e) => setVotingDate(e.target.value)}
+//               />
+//             </Form.Group>
+//           </Col>
+//           <Col md={6}>
+//             <Form.Group controlId="endTime">
+//               <Form.Label>End Time</Form.Label>
+//               <Form.Control
+//                 type="time"
+//                 value={endTime}
+//                 onChange={(e) => setEndTime(e.target.value)}
+//               />
+//             </Form.Group>
+//           </Col>
+//         </Row>
+
+//         <Form.Group controlId="categorySelect" className="mb-3">
+//           <Form.Label>Select Category:</Form.Label>
+//           <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
+//             <option value="">Select Category</option>
+//             {categories.map((cat) => (
+//               <option key={cat._id} value={cat._id}>
+//                 {cat.category_name}
+//               </option>
+//             ))}
+//           </Form.Select>
+//         </Form.Group>
+
+//         <Button variant="secondary" className="me-2">
+//           Cancel
+//         </Button>
+//         <Button variant="primary" onClick={handleSubmit}>
+//           Post
+//         </Button>
+
+//         <Snackbar
+//           open={openSnackbar}
+//           autoHideDuration={3000}
+//           onClose={handleCloseSnackbar}
+//           anchorOrigin={{ vertical: "top", horizontal: "center" }}
+//         >
+//           <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
+//             {snackbarMessage}
+//           </Alert>
+//         </Snackbar>
+//       </Form>
+//     </Card>
+//   );
+// }
+
+// export default AddPoll;
+
+
+//updated one with VALIDATION
+
+
 import React, { useEffect, useState } from "react";
 import { Card, Button, Form, Row, Col, InputGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -1100,16 +1342,23 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import axios from "axios";
+import { Formik } from "formik";
+import * as Yup from "yup";
+
+// Validation schema using Yup
+const validationSchema = Yup.object().shape({
+  pollQuestion: Yup.string().required("Poll question is required"),
+  pollOptions: Yup.array()
+    .of(Yup.string().required("Option cannot be empty"))
+    .min(2, "Minimum 2 options required")
+    .max(4, "Maximum 4 options allowed"),
+  votingDate: Yup.string().required("Voting date is required"),
+  endTime: Yup.string().required("End time is required"),
+  category: Yup.string().required("Please select a category"),
+});
 
 function AddPoll() {
-  const [pollTitle, setPollTitle] = useState("");
-  const [pollQuestion, setPollQuestion] = useState("");
-  const [pollOptions, setPollOptions] = useState(["", ""]);
-  const [votingDate, setVotingDate] = useState("");
-  const [endTime, setEndTime] = useState("");
-  const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
-
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
@@ -1127,28 +1376,25 @@ function AddPoll() {
     fetchCategories();
   }, []);
 
-  let UserId = sessionStorage.getItem("googleuserId") || sessionStorage.getItem("loginuserId");
+  const UserId = sessionStorage.getItem("googleuserId") || sessionStorage.getItem("loginuserId");
 
-  const handleAddOption = () => {
+  // Define handleAddOption function
+  const handleAddOption = (setFieldValue, pollOptions) => {
     if (pollOptions.length < 4) {
-      setPollOptions([...pollOptions, ""]);
+      setFieldValue("pollOptions", [...pollOptions, ""]);
     }
   };
 
-  const handleOptionChange = (index, value) => {
-    const newOptions = [...pollOptions];
-    newOptions[index] = value;
-    setPollOptions(newOptions);
-  };
-
-  const handleRemoveOption = (index) => {
+  // Define handleRemoveOption function
+  const handleRemoveOption = (index, setFieldValue, pollOptions) => {
     if (pollOptions.length > 2) {
       const newOptions = pollOptions.filter((_, i) => i !== index);
-      setPollOptions(newOptions);
+      setFieldValue("pollOptions", newOptions);
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values, { resetForm }) => {
+    const { pollQuestion, pollOptions, votingDate, endTime, category } = values;
     const currentDateTime = new Date();
     const votingEnd = `${votingDate}T${endTime}`;
 
@@ -1158,7 +1404,7 @@ function AddPoll() {
     const formattedOptions = pollOptions.map((option) => ({ option }));
 
     const pollData = {
-      title: pollTitle,
+      title: pollQuestion,
       question: pollQuestion,
       options: formattedOptions,
       duration: durationInHours.toFixed(2),
@@ -1166,12 +1412,8 @@ function AddPoll() {
       createdBy: UserId,
     };
 
-    console.log("Preparing to submit Poll Data:", pollData);
-
     try {
       const response = await axios.post("http://92.205.109.210:8028/polls/create", pollData);
-      console.log("Received response:", response);
-
       if (response.status === 200 || response.status === 201) {
         setSnackbarMessage("Your Poll is Successfully created");
         setSnackbarSeverity("success");
@@ -1180,25 +1422,12 @@ function AddPoll() {
         setSnackbarSeverity("error");
       }
     } catch (error) {
-      console.error("Error occurred while creating poll:", error);
-      if (error.response) {
-        setSnackbarMessage(`Error: ${error.response.data.message || "An error occurred"}`);
-      } else if (error.request) {
-        setSnackbarMessage("No response received from the server.");
-      } else {
-        setSnackbarMessage("Error in setting up the request.");
-      }
+      setSnackbarMessage("Error occurred while creating poll");
       setSnackbarSeverity("error");
     }
 
-    setPollTitle("");
-    setPollQuestion("");
-    setPollOptions(["", ""]);
-    setVotingDate("");
-    setEndTime("");
-    setCategory("");
-
     setOpenSnackbar(true);
+    resetForm();
   };
 
   const handleCloseSnackbar = () => {
@@ -1214,117 +1443,185 @@ function AddPoll() {
       }}
     >
       <Card.Header style={{ textAlign: "center" }}>Create Your Polls here!</Card.Header>
-      <Form>
-        <Form.Group controlId="pollQuestion" className="mb-3">
-          <Form.Control
-            as="textarea"
-            rows={2}
-            placeholder="Question"
-            value={pollQuestion}
-            onChange={(e) => setPollQuestion(e.target.value)}
-          />
-        </Form.Group>
 
-        <Row>
-          <Col md={6}>
-            {pollOptions.map((option, index) => (
-              <Form.Group controlId={`option${index}`} className="mb-3" key={index}>
-                <InputGroup>
-                  <InputGroup.Text>
-                    <i className="bi bi-list"></i>
-                  </InputGroup.Text>
+      <Formik
+        initialValues={{
+          pollQuestion: "",
+          pollOptions: ["", ""],
+          votingDate: "",
+          endTime: "",
+          category: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({
+          values,
+          handleChange,
+          handleSubmit,
+          errors,
+          touched,
+          handleBlur,
+          isValid,
+          dirty,
+          setFieldValue,
+        }) => (
+          <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="pollQuestion" className="mb-3">
+              <Form.Control
+                as="textarea"
+                rows={2}
+                placeholder="Question"
+                name="pollQuestion"
+                value={values.pollQuestion}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isInvalid={touched.pollQuestion && errors.pollQuestion}
+              />
+              <Form.Control.Feedback type="invalid">{errors.pollQuestion}</Form.Control.Feedback>
+            </Form.Group>
+
+            <Row>
+              <Col md={6}>
+                {values.pollOptions.map((option, index) => (
+                  <Form.Group controlId={`option${index}`} className="mb-3" key={index}>
+                    <InputGroup>
+                      <InputGroup.Text>
+                        <i className="bi bi-list"></i>
+                      </InputGroup.Text>
+                      <Form.Control
+                        type="text"
+                        placeholder={`Option ${index + 1}`}
+                        name={`pollOptions[${index}]`}
+                        value={option}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        isInvalid={
+                          touched.pollOptions &&
+                          touched.pollOptions[index] &&
+                          errors.pollOptions &&
+                          errors.pollOptions[index]
+                        }
+                      />
+                      {values.pollOptions.length > 2 && (
+                        <Button
+                          variant="danger"
+                          onClick={() =>
+                            handleRemoveOption(index, setFieldValue, values.pollOptions)
+                          }
+                        >
+                          -
+                        </Button>
+                      )}
+                    </InputGroup>
+                    <Form.Control.Feedback type="invalid">
+                      {errors.pollOptions && errors.pollOptions[index]}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                ))}
+                {values.pollOptions.length < 4 && (
+                  <Button
+                    variant="success"
+                    className="mb-3"
+                    onClick={() => handleAddOption(setFieldValue, values.pollOptions)}
+                  >
+                    Add Option
+                  </Button>
+                )}
+              </Col>
+
+              <Col md={6}>
+                <Card className="mb-3">
+                  <Card.Body>
+                    <Card.Title>Tips On Better Polls</Card.Title>
+                    <Card.Text>
+                      <ul>
+                        <li>Suggest short, clear options</li>
+                        <li>The more options, the better</li>
+                        <li>Choose the poll duration</li>
+                      </ul>
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={6}>
+                <Form.Group controlId="votingPeriodDate">
+                  <Form.Label>Voting Period Date</Form.Label>
                   <Form.Control
-                    type="text"
-                    placeholder={`Option ${index + 1}`}
-                    value={option}
-                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                    type="date"
+                    name="votingDate"
+                    value={values.votingDate}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.votingDate && errors.votingDate}
                   />
-                  {pollOptions.length > 2 && (
-                    <Button variant="danger" onClick={() => handleRemoveOption(index)}>
-                      -
-                    </Button>
-                  )}
-                </InputGroup>
-              </Form.Group>
-            ))}
+                  <Form.Control.Feedback type="invalid">
+                    {errors.votingDate}
+                  </Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group controlId="endTime">
+                  <Form.Label>End Time</Form.Label>
+                  <Form.Control
+                    type="time"
+                    name="endTime"
+                    value={values.endTime}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.endTime && errors.endTime}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.endTime}</Form.Control.Feedback>
+                </Form.Group>
+              </Col>
+            </Row>
 
-            {pollOptions.length < 4 && (
-              <Button variant="success" className="mb-3" onClick={handleAddOption}>
-                Add Option
-              </Button>
-            )}
-          </Col>
-
-          <Col md={6}>
-            <Card className="mb-3">
-              <Card.Body>
-                <Card.Title>Tips On Better Polls</Card.Title>
-                <Card.Text>
-                  <ul>
-                    <li>Suggest short clear options</li>
-                    <li>The more options, the better</li>
-                    <li>Choose the poll duration</li>
-                    <li>Options can't be edited after post creation</li>
-                  </ul>
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group controlId="votingPeriodDate">
-              <Form.Label>Voting Period Date</Form.Label>
-              <Form.Control
-                type="date"
-                value={votingDate}
-                onChange={(e) => setVotingDate(e.target.value)}
-              />
+            <Form.Group controlId="categorySelect" className="mb-3">
+              <Form.Label>Select Category</Form.Label>
+              <Form.Select
+                name="category"
+                value={values.category}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                isInvalid={touched.category && errors.category}
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat) => (
+                  <option key={cat._id} value={cat._id}>
+                    {cat.category_name}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
             </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group controlId="endTime">
-              <Form.Label>End Time</Form.Label>
-              <Form.Control
-                type="time"
-                value={endTime}
-                onChange={(e) => setEndTime(e.target.value)}
-              />
-            </Form.Group>
-          </Col>
-        </Row>
 
-        <Form.Group controlId="categorySelect" className="mb-3">
-          <Form.Label>Select Category:</Form.Label>
-          <Form.Select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.category_name}
-              </option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+            <Button variant="secondary" className="me-2">
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" disabled={!(isValid && dirty)}>
+              Post
+            </Button>
 
-        <Button variant="secondary" className="me-2">
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Post
-        </Button>
-
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={handleCloseSnackbar}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: "100%" }}>
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
-      </Form>
+            <Snackbar
+              open={openSnackbar}
+              autoHideDuration={3000}
+              onClose={handleCloseSnackbar}
+              anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+              <Alert
+                onClose={handleCloseSnackbar}
+                severity={snackbarSeverity}
+                sx={{ width: "100%" }}
+              >
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
+          </Form>
+        )}
+      </Formik>
     </Card>
   );
 }

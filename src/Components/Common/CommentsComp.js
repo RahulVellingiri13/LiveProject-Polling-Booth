@@ -2684,7 +2684,7 @@ function CommentsComp() {
                                 className="form-check-label"
                                 htmlFor={`option${index + 1}`}
                               >
-                                {option.option} {option.count}
+                                {option.option} ({option.count})
                               </label>
                             </div>
                           )}
@@ -2819,91 +2819,7 @@ function CommentsComp() {
               >
                 Comment
               </Button>
-              {/* 
-              {comments.length > 0 &&
-                comments.map((comment, index) => (
-                  <div key={comment._id} className="mb-3">
-                    <Card>
-                      <Card.Body>
-                        <p>{comment.comment}</p>
-                        <p>Likes: {comment.likes}</p>
-                        <Button
-                          variant="link"
-                          onClick={() => handleLikeComment(index)}
-                        >
-                          Like
-                        </Button>
-                        <Button
-                          variant="link"
-                          onClick={() => handleOpenReplyModal(comment._id)}
-                        >
-                          Reply
-                        </Button>
-                        {comment.replies.length > 0 && (
-                          <div style={{ marginLeft: "20px" }}>
-                            {comment.replies.map((reply) => (
-                              <div key={reply._id} className="mb-2">
-                                <Card>
-                                  <Card.Body>
-                                    <p>{reply.reply_msg}</p>
-                                    <p>Likes: {reply.likes}</p>
-                                    <Button
-                                      variant="link"
-                                      onClick={() =>
-                                        handleLikeReply(comment._id, reply._id)
-                                      }
-                                    >
-                                      Like
-                                    </Button>
-                                    <Button
-                                      variant="link"
-                                      onClick={() =>
-                                        handleOpenNestedReplyModal(
-                                          comment._id,
-                                          reply._id
-                                        )
-                                      }
-                                    >
-                                      Reply
-                                    </Button>
-                                    {reply.replies &&
-                                      reply.replies.length > 0 && (
-                                        <div style={{ marginLeft: "20px" }}>
-                                          {reply.replies.map((nestedReply) => (
-                                            <div key={nestedReply._id}>
-                                              <Card>
-                                                <Card.Body>
-                                                  <p>{nestedReply.reply_msg}</p>
-                                                  <p>
-                                                    Likes: {nestedReply.likes}
-                                                  </p>
-                                                  <Button
-                                                    variant="link"
-                                                    onClick={() =>
-                                                      handleLikeReply(
-                                                        comment._id,
-                                                        nestedReply._id
-                                                      )
-                                                    }
-                                                  >
-                                                    Like
-                                                  </Button>
-                                                </Card.Body>
-                                              </Card>
-                                            </div>
-                                          ))}
-                                        </div>
-                                      )}
-                                  </Card.Body>
-                                </Card>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </Card.Body>
-                    </Card>
-                  </div>
-                ))} */}
+         
 
               {comments.length > 0 &&
                 comments.map((comment, index) => (

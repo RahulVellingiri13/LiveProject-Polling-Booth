@@ -2227,7 +2227,7 @@ function CardComp({
   const [showVoteButton, setShowVoteButton] = useState(false);
   const [hasVoted, setHasVoted] = useState(true);
   const [voteResults, setVoteResults] = useState([]); // State to hold vote results
-  const [totalVotes, setTotalVotes] = useState(0); // State for total votes
+  const [totalVotes, setTotalVotes] = useState(""); // State for total votes
   const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
@@ -2292,21 +2292,37 @@ function CardComp({
         poll_id: _id,
       })
       .then((response) => {
+        console.log(response.data);
         const updatedVoteResults = response.data.results || [];
         const updatedTotalVotes = response.data.totalVotes || 0;
 
         setVoteResults(updatedVoteResults);
         setTotalVotes(updatedTotalVotes);
+        console.log(totalVotes);
+        console.log(updatedTotalVotes);
+        console.log(updatedVoteResults);
       })
       .catch((error) => {
         console.error("Error fetching total votes:", error);
       });
   };
 
-  const calculatePercentage = (optionIndex) => {
+  const calculatePercentage = (index) => {
+    console.log("option Index", index);
+    console.log(optionscount)
+    console.log("total Votes", totalVotes);
+
     if (totalVotes === 0) return 0;
-    const votesForOption = voteResults[optionIndex] || 0;
-    return ((votesForOption / totalVotes) * 100).toFixed(1);
+    // const votesForOption = voteResults[optionIndex] || 0;
+    const votesForOption =
+      optionscount && optionscount[index] ? optionscount[index] : 0;
+    console.log("votesForOption", votesForOption);
+
+    // return ((votesForOption / totalVotes) * 100).toFixed(1);
+
+    const percentage = ((votesForOption / totalVotes) * 100).toFixed(1);
+console.log("percentage",percentage)
+    return percentage;
   };
 
   const handleVoteToggle = () => {
@@ -2483,41 +2499,6 @@ function CardComp({
       });
   };
 
-  // const handleFollowToggle = () => {
-  //   console.log(createdBy)
-  //   axios
-  //     .post("http://92.205.109.210:8028/api/follow", {
-  //       user_id: userId,
-  //       follow_user_id:polluserId,
-  //     })
-  //     .then((response) => {
-  //       if (response.data.message === "Follower added successfully") {
-  //         setIsFollowing(true);
-  //         toast.success("Followed successfully", { autoClose: 1000 });
-  //         // Swal.fire({
-  //         //   position: "top-end",
-  //         //   icon: "success",
-  //         //   title: "Followed Successfully",
-  //         //   showConfirmButton: false,
-  //         //   timer: 1000
-  //         // });
-  //       } else if (response.data.message === "Follower removed successfully") {
-  //         setIsFollowing(false);
-  //         toast.info("Unfollowed successfully", { autoClose: 1000 });
-  //         // Swal.fire({
-  //         //   position: "top-end",
-  //         //   icon: "warning",
-  //         //   title: "unFollowed Successfully",
-  //         //   showConfirmButton: false,
-  //         //   timer: 1000
-  //         // });
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error following/unfollowing user:", error);
-  //     });
-  // };
-
   const handleFollowToggle = () => {
     console.log("Created By:", createdBy);
     console.log("User ID:", userId);
@@ -2633,68 +2614,77 @@ function CardComp({
                 )}
               </Card.Text> */}
 
-
               <Card.Text className="d-flex flex-column">
-  {options.map((option, index) => (
-    <div key={index} style={{ marginBottom: "10px" }}> {/* Add space between progress bars */}
-      {hasVoted ? (
-        // Show radio buttons when hasn't voted
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="radio"
-            id={`option${index + 1}`}
-            name="options"
-            value={option}
-            onChange={() => handleOptionChange(index)}
-            checked={selectedOption === index}
-          />
-          <label className="form-check-label" htmlFor={`option${index + 1}`}>
-            {option}
-          </label>
-        </div>
-      ) : (
-        // Show progress bar with percentage after vote
-        <div style={{ position: "relative" }}>
-          <ProgressBar
-            now={calculatePercentage(index)} // Set progress bar percentage
-            style={{
-              height: "20px",
-              cursor: "pointer",
-            }}
-            variant={selectedOption === index ? "success" : "info"} // Selected option is green, others are blue
-            label={`${calculatePercentage(index)}%`} // Show percentage on the progress bar
-          />
-          {/* Custom label to display percentage */}
-          <span
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              color: "black", // Make label visible
-              fontWeight: "bold", // Bold font for better visibility
-            }}
-          >
-            {`${calculatePercentage(index)}%`} {/* Percentage displayed */}
-          </span>
-        </div>
-      )}
-    </div>
-  ))}
+                {options.map((option, index) => (
+                  <div key={index} style={{ marginBottom: "10px" }}>
+                    {" "}
+                    {/* Add space between progress bars */}
+                    {hasVoted ? (
+                      // Show radio buttons when hasn't voted
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          id={`option${index + 1}`}
+                          name="options"
+                          value={option}
+                          onChange={() => handleOptionChange(index)}
+                          checked={selectedOption === index}
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor={`option${index + 1}`}
+                        >
+                          {option} ({optionscount[index]})
+                        </label>
+                      </div>
+                    ) : (
+                      // Show progress bar with percentage after vote
+                      <div style={{ position: "relative" }}>
+                        <ProgressBar
+                          now={calculatePercentage(index)}
+                          style={{
+                            height: "20px",
+                            cursor: "pointer",
+                          }}
+                          variant={
+                            selectedOption === index ? "success" : "info"
+                          } // Selected option is green, others are blue
+                          label={`${calculatePercentage(index)}%`}
+                        />
+                        {/* Custom label to display percentage */}
+                        <span
+                          style={{
+                            position: "absolute",
+                            left: "50%",
+                            top: "50%",
+                            transform: "translate(-50%, -50%)",
+                            color: "black",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {`${calculatePercentage(index)}%`}{" "}
+                          {/* Percentage displayed */}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
 
-  {/* Conditionally render the vote/unvote button */}
-  {selectedOption !== null && (
-    <Button
-      variant={hasVoted ? "primary" : "danger"}
-      onClick={handleVoteToggle}
-      className="mt-3 align-self-center"
-    >
-      {hasVoted ? "Vote" : "Unvote"}
-    </Button>
-  )}
-</Card.Text>
-
+                {/* Conditionally render the vote/unvote button */}
+                {selectedOption !== null && (
+                  <Button
+                    variant={hasVoted ? "primary" : "danger"}
+                    // onClick={handleVoteToggle}
+                    onClick={() => {
+                      handleVoteToggle();
+                    }}
+                    className="mt-3 align-self-center"
+                  >
+                    {hasVoted ? "Vote" : "Unvote"}
+                  </Button>
+                )}
+              </Card.Text>
 
               {/* 
               <Card.Text className="d-flex flex-column">

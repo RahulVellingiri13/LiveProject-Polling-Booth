@@ -197,8 +197,6 @@
 // export default VerifyPg;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 import React, { useState } from "react";
 import { Row, Col, Card, Form, FormLabel, Button, Modal } from "react-bootstrap";
 import { Formik, Field, ErrorMessage } from "formik";
@@ -265,7 +263,7 @@ function VerifyPg() {
       if (data.message === "User verified") {
         alert("Code confirmed successfully!");
         handleClose();
-        navigate("/Newpassword"); // Navigate to Newpassword page
+        navigate("/Newpasswordph/"+ number); // Navigate to Newpassword page
       } else {
         alert(data.message || "Incorrect code. Please try again.");
       }
