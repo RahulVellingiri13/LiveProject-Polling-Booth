@@ -2179,9 +2179,12 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+
+
 function CardComp({
   index,
   polluserId,
+  poll,
   pollId,
   _id,
   createdBy,
@@ -2216,28 +2219,31 @@ function CardComp({
   // let [pollid,setPollid]=useState("")
   console.log(index);
   let [totallike, setTotallike] = useState(0);
-  const [liked, setLiked] = useState(false); // New state for likes
+  const [liked, setLiked] = useState(poll.createdBy.isLiked); // New state for likes
   const [likeCount, setLikeCount] = useState(""); // New state for likes count
   const [comments, setComments] = useState([
     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
   ]); // New state for Comments
 
-  const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
+  const [selectedOption, setSelectedOption] = useState(poll.options.option);
   const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(true);
-  const [voteResults, setVoteResults] = useState([]); // State to hold vote results
-  const [totalVotes, setTotalVotes] = useState(""); // State for total votes
-  const [isFollowing, setIsFollowing] = useState(false); // State for follow/unfollow
+  const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
+  const [voteResults, setVoteResults] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(poll.total_votes);
 
-  const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
-  const target = useRef(null); // Reference for the share button
+  const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing); 
+
+  const [showOverlay, setShowOverlay] = useState(false); 
+  const target = useRef(null);
 
   const toggleLike = () => {
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     setLiked(!liked);
   };
 
+  console.log("isUserFollowing",poll)
+  
   // const handleLike = (id) => {
   //   const updateLikes = (comment) => {
   //     if (comment.id === id) {
@@ -2271,6 +2277,10 @@ function CardComp({
 
     setComments(comments.map(addReply));
   };
+
+  //  useEffect(() => {
+  //   fetchTotalVotes();
+  // }, []);
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
@@ -2309,7 +2319,7 @@ function CardComp({
 
   const calculatePercentage = (index) => {
     console.log("option Index", index);
-    console.log(optionscount)
+    console.log(optionscount);
     console.log("total Votes", totalVotes);
 
     if (totalVotes === 0) return 0;
@@ -2321,7 +2331,7 @@ function CardComp({
     // return ((votesForOption / totalVotes) * 100).toFixed(1);
 
     const percentage = ((votesForOption / totalVotes) * 100).toFixed(1);
-console.log("percentage",percentage)
+    console.log("percentage", percentage);
     return percentage;
   };
 
@@ -2374,89 +2384,12 @@ console.log("percentage",percentage)
     }
   };
 
-  // const handleVoteToggle = () => {
-  //   setHasVoted(!hasVoted);
-  //   if (selectedOption != null) {
-  //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
-  //     axios
-  //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
-  //         poll_id: _id,
-  //         user_id: userId,
-  //         option: selectedOptionValue,
-  //       })
-  //       .then((response) => {
-  //         console.log(response.data);
-  //         if (response.data.message === "Vote recorded successfully.") {
-  //           toast.success("Your vote is successfully registered", {
-  //             autoClose: 1000,
-  //           });
-
-  //           // Fetch updated vote results from the API
-  //           axios
-  //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
-  //               poll_id: _id,
-
-  //             })
-  //             .then((resultsResponse) => {
-  //               const results = resultsResponse.data.results;
-  //               const totalVotes = resultsResponse.data.totalVotes;
-  //               setVoteResults(results);
-  //               setTotalVotes(totalVotes);
-  //             })
-  //             .catch((error) => {
-  //               console.error("Error fetching vote results:", error);
-  //             });
-  //         } else {
-  //           toast.info("Your vote is removed successfully", {
-  //             autoClose: 1000,
-  //           });
-  //         }
-  //         setSelectedOption("");
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error submitting vote:", error);
-  //       });
-  //   }
-  // };
-
-  //     else {
-
-  //       toast.info('Your vote is removed successfully');
-  //       setHasVoted(false);
-  //       setSelectedOption("");
-  // };
-
-  // let handleVoteToggle=()=>{
-  //   console.log(selectedOption,hasVoted)
-
-  //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
-  // console.log(selectedOptionValue)
-
-  // console.log(_id, createdBy._id, selectedOptionValue)
-  //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
-
-  //       poll_id: _id,
-  //       user_id: userId,
-  //        option: selectedOptionValue,
-  //       })
-  //       .then(response => {
-  //         // toast.success('Your vote is successfully registered');
-  //         console.log( response.data);
-
-  //       })
-  //       .catch(error => {
-  //         console.error('Error submitting vote:', error);
-  //       });
 
   const handleShareClick = () => {
     setShowOverlay(!showOverlay);
   };
 
-  // let handleViewcomment=(commentkey)=>{
-  //   console.log(commentkey)
-  // navigate('/viewcomment/' )
-  // }
-
+  
   const handleViewComment = () => {
     onCardClick({
       index,

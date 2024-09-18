@@ -506,7 +506,7 @@ function Homepage() {
   let newuser = loginuser.state;
   console.log(newuser);
   console.log(loginuser.state);
-  let [page, setPage] = useContext(PageContext);
+  let [page, setPage, hasLiked,setHasLiked,hasVoted,setHasVoted,isFollowing,setIsFollowing] = useContext(PageContext);
   let [polls, setPolls] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -528,6 +528,10 @@ function Homepage() {
 
   const [step, setStep] = useState(1);
 
+  // const [hasLiked, setHasLiked] = useState("");
+  // const [hasVoted, setHasVoted] = useState(false);
+  // const [isFollowing, setIsFollowing] = useState(true); 
+
   let userId =
     sessionStorage.getItem("loginuserId") ||
     sessionStorage.getItem("googleuserId");
@@ -541,7 +545,7 @@ function Homepage() {
       // Retrieve polls from the API on component mount
       fetchPolls();
     }
-  }, [searchQuery]);
+  }, [searchQuery,userId]);
   // Function to fetch polls data from the API
   //   const fetchPolls = async () => {
   //    try {
@@ -557,6 +561,7 @@ function Homepage() {
   //  };
 
   //getall polls
+  
   const [filteredPolls, setFilteredPolls] = useState([]);
   const fetchPolls = async () => {
     try {
@@ -573,6 +578,42 @@ function Homepage() {
       console.error("Error fetching polls:", error);
     }
   };
+
+  // useEffect(() => {
+   
+  //   polls.forEach((poll) => {
+    
+  //     const userVoted = poll.options.some(option => option.voters.includes(userId));
+
+     
+  //     const userLiked = poll.likers.some(liker => liker._id === userId);
+
+  //     const userFollow = poll.createdBy.isFollowing;
+
+    
+  //     if (userVoted) 
+  //       {
+  //         setHasVoted(true);
+  //       }
+  //       else{
+  //         setHasVoted(false);
+  //       }
+  //     if (userLiked) 
+  //       {
+  //         setHasLiked(true);
+          
+  //   }else{
+  //     setHasLiked(false);
+  //   }
+  //   if (userFollow) 
+  //     {
+  //       setIsFollowing(true);
+        
+  // }else{
+  //   setIsFollowing(false);
+  // }
+  // });
+  // }, [polls, userId]);
 
   useEffect(() => {
     if (selectedCategory) {
@@ -824,7 +865,7 @@ function Homepage() {
             {page === "CommentsComp" && <CommentsComp />}
             {page === "category" && (
               <CategoryComp
-                polls={polls}
+                polls={polls} 
                 setPolls={setPolls}
                 filteredPolls={filteredPolls}
               />

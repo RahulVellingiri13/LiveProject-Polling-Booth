@@ -489,8 +489,13 @@ function Polllist({ page, polls, setPolls, setPage, selectedCategory }) {
       {currentView === "cards" ? (
         polls.length > 0 &&
         polls.map((poll, index) => (
-          <CardComp
+          <CardComp 
+            poll={poll}
             userId={poll.createdBy._id}
+            isUserFollowing={poll.createdBy.isFollowing}
+            isVoted={poll.createdBy.isVoted}
+            selectedOption={poll.options.option}
+            totalVotes={poll.total_votes}
             key={index}
             index={index}
             pollId={poll.poll_id}
