@@ -2180,7 +2180,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
-
 function CardComp({
   index,
   polluserId,
@@ -2218,23 +2217,31 @@ function CardComp({
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
-  let [totallike, setTotallike] = useState(0);
-  const [liked, setLiked] = useState(poll.createdBy.isLiked); // New state for likes
-  const [likeCount, setLikeCount] = useState(""); // New state for likes count
+  let [totallike, setTotallike] = useState(poll.total_likes);
+  const [liked, setLiked] = useState(poll.createdBy.isLiked);
+  const [likeCount, setLikeCount] = useState("");
   const [comments, setComments] = useState([
     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
   ]); // New state for Comments
 
-  const [selectedOption, setSelectedOption] = useState(poll.options.option);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
-  const [voteResults, setVoteResults] = useState([]);
-  const [totalVotes, setTotalVotes] = useState(poll.total_votes);
+  const [hasVoted, setHasVoted] = useState(true);
+  const [voteResults, setVoteResults] = useState([]); 
+const [totalVotes, setTotalVotes] = useState(0); 
 
-  const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing); 
 
-  const [showOverlay, setShowOverlay] = useState(false); 
+  // const [selectedOption, setSelectedOption] = useState(poll.options.option);
+  // const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
+  // const [voteResults, setVoteResults] = useState([]);
+  // const [totalVotes, setTotalVotes] = useState(poll.total_votes);
+
+  const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing);
+
+  const [showOverlay, setShowOverlay] = useState(false);
+
   const target = useRef(null);
 
   const toggleLike = () => {
@@ -2242,8 +2249,9 @@ function CardComp({
     setLiked(!liked);
   };
 
-  console.log("isUserFollowing",poll)
-  
+  console.log("isUserFollowing", poll);
+
+
   // const handleLike = (id) => {
   //   const updateLikes = (comment) => {
   //     if (comment.id === id) {
@@ -2384,12 +2392,10 @@ function CardComp({
     }
   };
 
-
   const handleShareClick = () => {
     setShowOverlay(!showOverlay);
   };
 
-  
   const handleViewComment = () => {
     onCardClick({
       index,
@@ -2688,7 +2694,7 @@ function CardComp({
                 onClick={handleLike}
               />
             </button>
-            <span style={{ marginLeft: "8px" }}>total like: {totallike}</span>{" "}
+            <span style={{ marginLeft: "8px" }}> total like:{totallike}</span>{" "}
             {/* Display the like count */}
             like
           </p>
