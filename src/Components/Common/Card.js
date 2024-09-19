@@ -2219,7 +2219,8 @@ function CardComp({
   console.log(index);
   let [totallike, setTotallike] = useState(poll.total_likes);
   const [liked, setLiked] = useState(poll.createdBy.isLiked);
-  const [likeCount, setLikeCount] = useState("");
+  const [likeCount, setLikeCount] = useState(poll.total_likes);
+ 
   const [comments, setComments] = useState([
     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
