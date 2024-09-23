@@ -346,7 +346,7 @@ import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { PageContext } from "../../App";
 
-function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
+function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls,poll,createdBy,userId,polluserId }) {
   console.log(filteredPolls);
   // let [filterpoll,setfilterpoll]=useState([])
   // const {categoryId} = useParams();
@@ -365,10 +365,11 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null);
 
-  let [totallike, setTotallike] = useState("");
+  const [totallike, setTotallike] = useState("");
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState("");
 
+  const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing);
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
       unselectOption(); // Unselect the option if it's already selected
@@ -451,6 +452,37 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
     setShowOverlay(!showOverlay);
   };
 
+  const handleFollowToggle = () => {
+    console.log("Created By:", createdBy);
+    console.log("User ID:", userId);
+    console.log("Poll User ID:", polluserId);
+
+    axios
+      .post("http://92.205.109.210:8028/api/follow", {
+        user_id: userId,
+        follow_user_id: polluserId,
+      })
+      .then((response) => {
+        console.log("API Response:", response);
+        console.log("Response Data:", response.data);
+
+        if (response.data.message === "Follower added successfully") {
+          setIsFollowing(true);
+          toast.success("Followed successfully", { autoClose: 1000 });
+        } else if (response.data.message === "Follower removed successfully") {
+          setIsFollowing(false);
+          toast.info("Unfollowed successfully", { autoClose: 1000 });
+        } else {
+          toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+        }
+      })
+      .catch((error) => {
+        console.error("Error following/unfollowing user:", error);
+        toast.error("An error occurred. Please try again.", {
+          autoClose: 3000,
+        });
+      });
+  };
   return (
     <div className="category-container">
       {/* <h3>Category:{filteredPolls.category_name}</h3> */}
@@ -466,7 +498,11 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                     {/* <p>Title:{poll.title}</p> */}
                     <p>Status:{poll.status}</p>
                   </div>
-                  <Button variant="primary">Follow</Button>
+                  {userId !== polluserId && (
+            <Button variant="primary" onClick={handleFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+          )}
                 </Card.Header>
                 <Card.Text>
                   <div className="mt-3 mb-3">Question:  {poll.question}</div>
@@ -640,7 +676,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
         </div>
       ) : (
         <p className="no-polls-message text-center">
-          No polls available for this category.
+          No polls available for this category    
         </p>
       )}
     </div>

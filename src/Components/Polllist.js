@@ -397,25 +397,13 @@ function Polllist({ page, polls, setPolls, setPage, selectedCategory }) {
   const [filteredPolls, setFilteredPolls] = useState([]);
   const [currentView, setCurrentView] = useState("cards");
   const [selectedCardData, setSelectedCardData] = useState(null);
-
+  let userId =
+  sessionStorage.getItem("loginuserId") ||
+  sessionStorage.getItem("googleuserId");
+console.log("userId:", userId);
   //   console.log(selectedCategory._id)
   // console.log(selectedCategory)
-  // const fetchPolls = async () => {
-  //   try {
-  //     const response = await axios.post(
-  //       "http://92.205.109.210:8028/polls/getall"
-  //     );
-  //     console.log(response.data);
-  //     setPolls(response.data);
-  //     sessionStorage.setItem("polls", JSON.stringify(response.data)); // Save the polls to sessionStorage
-  //   } catch (error) {
-  //     console.error("Error fetching polls:", error);
-  //   }
-  // };
-
-  // useEffect(()=>{
-  //   fetchPolls();
-  // },[])
+ 
 
   // let fetselectedcategory=async()=>{
   // if (selectedCategory ) {
@@ -491,10 +479,12 @@ function Polllist({ page, polls, setPolls, setPage, selectedCategory }) {
         polls.map((poll, index) => (
           <CardComp 
             poll={poll}
+            setPolls={setPolls}
             userId={poll.createdBy._id}
             isUserFollowing={poll.createdBy.isFollowing}
             isVoted={poll.createdBy.isVoted}
-            selectedOption={poll.options.option}
+            // selectedOption={poll.options.option}
+            selectedOption={poll.options.map(option => option.option)}
             totalVotes={poll.total_votes}
             key={index}
             index={index}
@@ -515,10 +505,19 @@ function Polllist({ page, polls, setPolls, setPage, selectedCategory }) {
           />
         ))
       ) : (
+        polls.map((onepoll,index)=>(
         <CommentsComp
+
+         key={index}
+         index={index}
+          isUserFollowing={onepoll.createdBy.isFollowing}
+          userId={onepoll.createdBy._id}
+          createdBy={onepoll.createdBy.user_name}
+          polluserId={onepoll.createdBy._id}
           cardData={selectedCardData}
           onBackClick={handleBackClick}
         />
+        ))
       )}
     </>
   );

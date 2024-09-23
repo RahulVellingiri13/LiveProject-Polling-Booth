@@ -331,7 +331,7 @@
 //         </aside>
 //         <main>
 //           <nav>
-//             {/* 
+//             {/*
 //           {page === 'Polllist' && <Polllist />}
 //       {page === 'AddPoll' && <AddPoll />}
 //       {page === 'Pollresults' && <Pollresults />}
@@ -464,11 +464,9 @@
 
 // export default Homepage;
 
-
 //----
 
 //updatedone
-
 
 import React, { useContext, useEffect, useState } from "react";
 
@@ -506,7 +504,16 @@ function Homepage() {
   let newuser = loginuser.state;
   console.log(newuser);
   console.log(loginuser.state);
-  let [page, setPage, hasLiked,setHasLiked,hasVoted,setHasVoted,isFollowing,setIsFollowing] = useContext(PageContext);
+  let [
+    page,
+    setPage,
+    hasLiked,
+    setHasLiked,
+    hasVoted,
+    setHasVoted,
+    isFollowing,
+    setIsFollowing,
+  ] = useContext(PageContext);
   let [polls, setPolls] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -530,7 +537,7 @@ function Homepage() {
 
   // const [hasLiked, setHasLiked] = useState("");
   // const [hasVoted, setHasVoted] = useState(false);
-  // const [isFollowing, setIsFollowing] = useState(true); 
+  // const [isFollowing, setIsFollowing] = useState(true);
 
   let userId =
     sessionStorage.getItem("loginuserId") ||
@@ -545,7 +552,7 @@ function Homepage() {
       // Retrieve polls from the API on component mount
       fetchPolls();
     }
-  }, [searchQuery,userId]);
+  }, [searchQuery, userId]);
   // Function to fetch polls data from the API
   //   const fetchPolls = async () => {
   //    try {
@@ -561,7 +568,7 @@ function Homepage() {
   //  };
 
   //getall polls
-  
+
   const [filteredPolls, setFilteredPolls] = useState([]);
   const fetchPolls = async () => {
     try {
@@ -580,35 +587,33 @@ function Homepage() {
   };
 
   // useEffect(() => {
-   
+
   //   polls.forEach((poll) => {
-    
+
   //     const userVoted = poll.options.some(option => option.voters.includes(userId));
 
-     
   //     const userLiked = poll.likers.some(liker => liker._id === userId);
 
   //     const userFollow = poll.createdBy.isFollowing;
 
-    
-  //     if (userVoted) 
+  //     if (userVoted)
   //       {
   //         setHasVoted(true);
   //       }
   //       else{
   //         setHasVoted(false);
   //       }
-  //     if (userLiked) 
+  //     if (userLiked)
   //       {
   //         setHasLiked(true);
-          
+
   //   }else{
   //     setHasLiked(false);
   //   }
-  //   if (userFollow) 
+  //   if (userFollow)
   //     {
   //       setIsFollowing(true);
-        
+
   // }else{
   //   setIsFollowing(false);
   // }
@@ -712,6 +717,8 @@ function Homepage() {
       );
       if (response.status === 200) {
         console.log("OTP verified successfully");
+        sessionStorage.setItem("verifiedPhoneNumber", phoneNumber);
+        sessionStorage.setItem("isVerified", true);
         navigate(`/newpassword/${phoneNumber}`);
       } else {
         console.error("OTP verification failed");
@@ -769,14 +776,22 @@ function Homepage() {
   };
 
   const handleAddPoll = () => {
+    const verifiedPhoneNumber = sessionStorage.getItem("verifiedPhoneNumber");
+    const isVerified = sessionStorage.getItem("isVerified");
+  
     if (googlegmail && googleusername) {
-      handleShow();
-
-      // return <OTPVerificationModal />;
+      if (isVerified && verifiedPhoneNumber) {
+        
+        setPage("AddPoll");
+      } else {
+       
+        handleShow();
+      }
     } else {
       setPage("AddPoll");
     }
   };
+
   const handleSignOut = async () => {
     const auth = getAuth(); // Initialize Firebase Auth
     try {
@@ -865,7 +880,7 @@ function Homepage() {
             {page === "CommentsComp" && <CommentsComp />}
             {page === "category" && (
               <CategoryComp
-                polls={polls} 
+                polls={polls}
                 setPolls={setPolls}
                 filteredPolls={filteredPolls}
               />

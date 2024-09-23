@@ -2166,7 +2166,7 @@
 
 //updated 11 sep
 
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext,useEffect } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -2199,6 +2199,7 @@ function CardComp({
   onPollSubmit,
   onCardClick,
   handleVote,
+  polls,setPolls,
 }) {
   let userId =
     sessionStorage.getItem("loginuserId") ||
@@ -2213,45 +2214,64 @@ function CardComp({
   console.log(polluserId);
   console.log(pollid);
   console.log(optionscount);
-  console.log(votingPeriod);
+  // console.log(votingPeriod);
+
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
   let [totallike, setTotallike] = useState(poll.total_likes);
   const [liked, setLiked] = useState(poll.createdBy.isLiked);
   const [likeCount, setLikeCount] = useState(poll.total_likes);
- 
+
   const [comments, setComments] = useState([
     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
   ]); // New state for Comments
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(true);
-  const [voteResults, setVoteResults] = useState([]); 
-const [totalVotes, setTotalVotes] = useState(0); 
-
+    // const [selectedOption, setSelectedOption] = useState(null);
+   const [showVoteButton, setShowVoteButton] = useState(false);
+  //   const [hasVoted, setHasVoted] = useState();
+  //   const [voteResults, setVoteResults] = useState([]);
+  // const [totalVotes, setTotalVotes] = useState(0);
 
   // const [selectedOption, setSelectedOption] = useState(poll.options.option);
-  // const [showVoteButton, setShowVoteButton] = useState(false);
-  // const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
-  // const [voteResults, setVoteResults] = useState([]);
-  // const [totalVotes, setTotalVotes] = useState(poll.total_votes);
+   const [selectedOption, setSelectedOption] = useState(poll.options.map(option => option.option));
+  // const [showVoteButton, setShowVoteButton] = useState(poll.createdBy.isVoted);
+  const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
+  let [hasVotedbutton,setHasvotedbutton]=useState(poll.createdBy.isVoted?"unvote":"vote")
+  const [voteResults, setVoteResults] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(poll.total_votes);
 
   const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing);
 
   const [showOverlay, setShowOverlay] = useState(false);
 
   const target = useRef(null);
-
+  
+  const fetchPolls = async () => {
+    try {
+      const response = await axios.post(
+        "http://92.205.109.210:8028/polls/getall",
+        {
+          user_id: userId,
+        }
+      );
+      console.log(response.data);
+      setPolls(response.data);
+      
+    } catch (error) {
+      console.error("Error fetching polls:", error);
+    }
+  };
+useEffect(()=>{
+  fetchPolls()
+},[polls])
   const toggleLike = () => {
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     setLiked(!liked);
   };
 
   console.log("isUserFollowing", poll);
-
 
   // const handleLike = (id) => {
   //   const updateLikes = (comment) => {
@@ -2296,7 +2316,7 @@ const [totalVotes, setTotalVotes] = useState(0);
       unselectOption(); // Unselect the option if it's already selected
     } else {
       setSelectedOption(index); // Select the option
-      setShowVoteButton(true);
+       setShowVoteButton(true);
     }
   };
 
@@ -2347,42 +2367,59 @@ const [totalVotes, setTotalVotes] = useState(0);
   const handleVoteToggle = () => {
     console.log(userId);
     // setHasVoted(!hasVoted);
-    //   console.log(hasVoted)
+    console.log(hasVoted);
     console.log(selectedOption, hasVoted);
-    if (selectedOption != null) {
-      const selectedOptionValue = options[selectedOption];
-      console.log(selectedOptionValue);
+    // if (selectedOption != null) {
+    const selectedOptionValue = options[selectedOption];
+    console.log(selectedOptionValue);
 
-      axios
-        .post("http://92.205.109.210:8028/polls/voteonpoll", {
-          poll_id: _id,
-          user_id: userId,
-          option: selectedOptionValue,
-        })
-        .then((response) => {
-          console.log(response.data);
-          console.log(response.data.message);
-          if (response.data.message === "Vote recorded successfully.") {
-            // toast.success("Your vote is successfully registered", {
-            //   autoClose: 1000,
-            // });
-            alert("voted");
-            setHasVoted(false);
-            fetchTotalVotes();
-          } else {
-            // toast.info("Your vote is removed successfully", {
-            //   autoClose: 1000,
-            // });
-            alert("vote removed");
-            setHasVoted(true);
+    axios
+      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+        poll_id: _id,
+        user_id: userId,
+        option: selectedOptionValue,
+      })
+      .then((response) => {
+        console.log(response.data);
+        console.log(response.data.message);
+        if (response.data.message === "Vote recorded successfully.") {
+          // toast.success("Your vote is successfully registered", {
+          //   autoClose: 1000,
+          // });
+          alert("voted");
+          setHasVoted(true);
+          setHasvotedbutton("unvote")
+          fetchTotalVotes();
+     
+        } else if(response.data.message === "Vote removed successfully. Please vote again."){
+
+        
+          // toast.info("Your vote is removed successfully", {
+          //   autoClose: 1000,
+          // });
+          alert("vote removed");
+          setHasVoted(false);
+          setHasvotedbutton("vote")
+          
+        }
+        else{
+          setHasVoted(polls.createdBy.isVoted)
+          if(hasVoted){
+            setHasvotedbutton("unvote")
           }
-          console.log(response.data);
-          setSelectedOption("");
-        })
-        .catch((error) => {
-          console.error("Error submitting vote:", error);
-        });
-    }
+          else{
+            setHasvotedbutton("vote")
+          }
+          
+        }
+        console.log(response.data);
+        setSelectedOption("");
+      })
+      .catch((error) => {
+        console.error("Error submitting vote:", error);
+      });
+    // }
+   
   };
 
   const getProgressBarColor = (index) => {
@@ -2460,7 +2497,7 @@ const [totalVotes, setTotalVotes] = useState(0);
           setIsFollowing(false);
           toast.info("Unfollowed successfully", { autoClose: 1000 });
         } else {
-          toast.warn("Unexpected response from server", { autoClose: 1000 });
+          toast.warn("Unable to follow Yourself", { autoClose: 1000 });
         }
       })
       .catch((error) => {
@@ -2492,9 +2529,11 @@ const [totalVotes, setTotalVotes] = useState(0);
               Status: {status}
             </p>
           </div>
-          <Button variant="primary" onClick={handleFollowToggle}>
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+          {userId !== polluserId && (
+            <Button variant="primary" onClick={handleFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </Button>
+          )}
         </Card.Header>
 
         <Card.Text>
@@ -2555,11 +2594,11 @@ const [totalVotes, setTotalVotes] = useState(0);
               </Card.Text> */}
 
               <Card.Text className="d-flex flex-column">
-                {options.map((option, index) => (
+                {options?.map((option, index) => (
                   <div key={index} style={{ marginBottom: "10px" }}>
                     {" "}
                     {/* Add space between progress bars */}
-                    {hasVoted ? (
+                    {!hasVoted ? (
                       // Show radio buttons when hasn't voted
                       <div className="form-check">
                         <input
@@ -2612,16 +2651,17 @@ const [totalVotes, setTotalVotes] = useState(0);
                 ))}
 
                 {/* Conditionally render the vote/unvote button */}
-                {selectedOption !== null && (
+                {selectedOption !== null   && showVoteButton &&(
                   <Button
-                    variant={hasVoted ? "primary" : "danger"}
+                    variant={!hasVoted? "primary" : "danger"}
                     // onClick={handleVoteToggle}
                     onClick={() => {
                       handleVoteToggle();
                     }}
                     className="mt-3 align-self-center"
                   >
-                    {hasVoted ? "Vote" : "Unvote"}
+                    {/* {hasVoted? "Vote" : "Unvote"} */}
+                    {hasVotedbutton}
                   </Button>
                 )}
               </Card.Text>
@@ -2782,3 +2822,5 @@ const [totalVotes, setTotalVotes] = useState(0);
 }
 
 export default CardComp;
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------------

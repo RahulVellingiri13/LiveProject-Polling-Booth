@@ -2217,13 +2217,38 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
-import { BsBack } from "react-icons/bs";
 import axios from "axios";
 import { useContext } from "react";
 import { PageContext } from "../../App";
 import { toast } from "react-toastify";
 
-function CommentsComp() {
+function CommentsComp({
+  poll,
+
+  polluserId,
+  createdBy,
+  index,
+  pollId,
+  _id,
+  name,
+  createdon,
+  title,
+  status,
+  question,
+  options,
+  optionscount,
+  votingPeriod,
+  category,
+  onPollSubmit,
+  onCardClick,
+  handleVote,
+  polls,
+  setPolls,
+}) {
+  // const [totallike, setTotallike] = useState(0);
+  // const [liked, setLiked] = useState(false);
+  // const [likeCount, setLikeCount] = useState("");
+
   const [totallike, setTotallike] = useState(0);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState("");
@@ -2252,8 +2277,8 @@ function CommentsComp() {
   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
   const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
 
-
-  
+  const [isFollowing, setIsFollowing] = useState(false);
+  console.log(polluserId);
   console.log(pollid);
   let userId =
     sessionStorage.getItem("loginuserId") ||
@@ -2588,7 +2613,7 @@ function CommentsComp() {
         setTotallike(res.data.Total_likes);
       });
   };
-  console.log(onepoll);
+  // console.log(onepoll);
 
   const toggleCommentLike = (index) => {
     setLikedComments((prev) => ({
@@ -2605,6 +2630,38 @@ function CommentsComp() {
         [replyId]: !prev[commentId]?.[replyId],
       },
     }));
+  };
+
+  const handleFollowToggle = () => {
+    console.log("Created By:", createdBy);
+    console.log("User ID:", userId);
+    console.log("Poll User ID:", pollid);
+
+    axios
+      .post("http://92.205.109.210:8028/api/follow", {
+        user_id: userId,
+        follow_user_id: pollid,
+      })
+      .then((response) => {
+        console.log("API Response:", response);
+        console.log("Response Data:", response.data);
+
+        if (response.data.message === "Follower added successfully") {
+          setIsFollowing(true);
+          toast.success("Followed successfully", { autoClose: 1000 });
+        } else if (response.data.message === "Follower removed successfully") {
+          setIsFollowing(false);
+          toast.info("Unfollowed successfully", { autoClose: 1000 });
+        } else {
+          toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+        }
+      })
+      .catch((error) => {
+        console.error("Error following/unfollowing user:", error);
+        toast.error("An error occurred. Please try again.", {
+          autoClose: 3000,
+        });
+      });
   };
 
   return (
@@ -2639,7 +2696,11 @@ function CommentsComp() {
               <p>Question: {onepoll.question}</p>
               <p>Status: {onepoll.status}</p>
             </div>
-            <Button variant="primary">Follow</Button>
+            {userId !== polluserId && (
+              <Button variant="primary" onClick={handleFollowToggle}>
+                {isFollowing ? "Unfollow" : "Follow"}
+              </Button>
+            )}
           </Card.Header>
           <Card.Text>
             <div className="mt-3 mb-3"></div>
@@ -2822,7 +2883,6 @@ function CommentsComp() {
               >
                 Comment
               </Button>
-         
 
               {comments.length > 0 &&
                 comments.map((comment, index) => (
