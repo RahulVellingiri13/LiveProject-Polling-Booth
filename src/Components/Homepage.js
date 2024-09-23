@@ -553,6 +553,7 @@ function Homepage() {
       fetchPolls();
     }
   }, [searchQuery, userId]);
+  
   // Function to fetch polls data from the API
   //   const fetchPolls = async () => {
   //    try {
