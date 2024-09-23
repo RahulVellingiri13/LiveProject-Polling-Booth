@@ -340,7 +340,8 @@ import {
   ToastContainer,
   Popover,
   Overlay,
-} from "react-bootstrap";
+} 
+from "react-bootstrap";
 import { toast } from "react-toastify";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
