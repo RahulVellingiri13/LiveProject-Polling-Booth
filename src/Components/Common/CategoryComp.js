@@ -330,7 +330,7 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Card,
   Row,
@@ -340,14 +340,36 @@ import {
   ToastContainer,
   Popover,
   Overlay,
-} 
-from "react-bootstrap";
+} from "react-bootstrap";
 import { toast } from "react-toastify";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
-import { PageContext } from "../../App";
+import { PageContext } from "../Homepage";
 
-function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
+function CategoryComp({
+  selectedCategory,
+  polls,
+  setPolls,
+  filteredPolls,
+  index,
+  polluserId,
+  poll,
+  pollId,
+  _id,
+  createdBy,
+  name,
+  createdon,
+  title,
+  status,
+  question,
+  options,
+  optionscount,
+  votingPeriod,
+  category,
+  onPollSubmit,
+  onCardClick,
+  handleVote,
+}) {
   console.log(filteredPolls);
   // let [filterpoll,setfilterpoll]=useState([])
   // const {categoryId} = useParams();
@@ -357,18 +379,52 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
   // console.log(filterpoll)
   // const newfilteredPolls = polls.filter(poll => poll.categoryId === categoryId);
   // console.log(newfilteredPolls)
-  let [page, setPage, pollid, setPollid] = useContext(PageContext);
+  let [
+    page,
+    setPage,
+    pollid,
+    setPollid,
+    isFollowing,
+    setIsFollowing,
+    followStatus, setFollowStatus,
+    totallike,
+    setTotallike,
+    liked,
+    setLiked,
+    likeCount,
+    setLikeCount,
+    likedPolls, setLikedPolls,
+    selectedOption,
+    setSelectedOption,
+    showVoteButton,
+    setShowVoteButton,
+    hasVoted,
+    setHasVoted,
+    voteResults,
+    setVoteResults,
+    totalVotes,
+    setTotalVotes,
+    hasVotedbutton, setHasvotedbutton,
+  ] = useContext(PageContext);
 
-  const [selectedOption, setSelectedOption] = useState(null); // New state for selected option
-  const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(true);
+  // const [selectedOption, setSelectedOption] = useState(null); 
+  // const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [hasVoted, setHasVoted] = useState(true);
 
   const [showOverlay, setShowOverlay] = useState(false); // State for showing the share overlay
   const target = useRef(null);
 
-  const [totallike, setTotallike] = useState("");
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState("");
+  // const [totallike, setTotallike] = useState("");
+  // const [liked, setLiked] = useState(false);
+  // const [likeCount, setLikeCount] = useState("");
+
+  let userId =
+    sessionStorage.getItem("loginuserId") ||
+    sessionStorage.getItem("googleuserId");
+  console.log("userId:", userId);
+  console.log(userId);
+  console.log("loginuserid", sessionStorage.getItem("loginuserId"));
+  console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
@@ -384,40 +440,57 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
     setShowVoteButton(false);
   };
 
-  const handleVoteToggle = () => {
-    setHasVoted(!hasVoted);
-    //   console.log(hasVoted)
-    console.log(selectedOption, hasVoted);
-    if (selectedOption != null) {
-      const selectedOptionValue = polls.options[selectedOption];
-      console.log(selectedOptionValue);
-
-      axios
-        .post("http://92.205.109.210:8028/polls/voteonpoll", {
-          poll_id: polls._id,
-          user_id: polls.user_id,
-          option: selectedOptionValue,
-        })
-        .then((response) => {
-          console.log(response.data);
-          console.log(response.data.message);
-          if (response.data.message == "Vote recorded successfully.") {
-            toast.success("Your vote is successfully registered", {
-              autoClose: 1000,
-            });
-          } else {
-            toast.info("Your vote is removed successfully", {
-              autoClose: 1000,
-            });
-          }
-          console.log(response.data);
-          setSelectedOption("");
-        })
-        .catch((error) => {
-          console.error("Error submitting vote:", error);
-        });
-    }
+  const calculatePercentage = (count, totalVotes) => {
+    if (totalVotes === 0) return 0;
+    return ((count / totalVotes) * 100).toFixed(2);
   };
+
+  const handleVoteToggle = (poll_id, option) => {
+    console.log(poll_id, userId, option);
+    const selectedOptionValue = polls.options[selectedOption];
+
+    axios
+      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+        poll_id: polls._id,
+        user_id: userId,
+        option: selectedOptionValue,
+      })
+      .then((res) => {
+        console.log(res.data.message);
+
+        if (res.data.message === "Vote recorded successfully.") {
+          alert("Voted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: true,
+          }));
+        } else if (
+          res.data.message === "Vote removed successfully. Please vote again."
+        ) {
+          alert("Unvoted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
+        } else {
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
+        }
+
+        // handleOnepoll(poll_id);
+      });
+  };
+
+  useEffect(() => {
+    if (polls && polls.voters) {
+      setHasVoted((prevState) => ({
+        ...prevState,
+        [polls._id]: polls.voters.some((voter) => voter._id === userId),
+      }));
+    }
+  }, [polls, userId]);
 
   const toggleLike = () => {
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
@@ -452,6 +525,35 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
     setShowOverlay(!showOverlay);
   };
 
+  
+
+  
+
+  const handleFollowToggle = (polluserId) => {
+
+  const isFollowing = followStatus[polluserId] || false;
+
+  axios.post("http://92.205.109.210:8028/api/follow", {
+    follow_user_id: polluserId,
+    user_id: userId
+  }).then(res => {
+    console.log(res.data);
+    if (res.data.message === "Follower added successfully") {
+      setFollowStatus(prevState => ({
+        ...prevState,
+        [polluserId]: true  
+      }));
+    } else if (res.data.message === "Follower removed successfully") {
+      setFollowStatus(prevState => ({
+        ...prevState,
+        [polluserId]: false  
+      }));
+    }
+  }).catch(err => {
+    console.error("Error in follow/unfollow request:", err);
+  });
+};
+
   return (
     <div className="category-container">
       {/* <h3>Category:{filteredPolls.category_name}</h3> */}
@@ -464,13 +566,19 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                 <Card.Header>
                   <div>
                     <h6>Name:{poll.createdBy.user_name}</h6>
-                    {/* <p>Title:{poll.title}</p> */}
                     <p>Status:{poll.status}</p>
                   </div>
-                  <Button variant="primary">Follow</Button>
+                  {userId !== poll.createdBy._id && (
+                    poll &&
+                    <Button variant="primary" onClick={()=>handleFollowToggle(poll.createdBy._id)}>
+                      {/* {isFollowing ? "Unfollow" : "Follow"} */}
+                      {followStatus[poll.createdBy._id] ? "Unfollow" : "Follow"}
+                    </Button>
+                  )}
                 </Card.Header>
                 <Card.Text>
-                  <div className="mt-3 mb-3">Question:  {poll.question}</div>
+                
+                  <div className="mt-3 mb-3">Question: {poll.question}</div>
                   <Card className="mb-3">
                     <Card.Body>
                       <Card.Header className="d-flex justify-content-between">
@@ -481,53 +589,86 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
                             poll.category.map((item) => item.category_name)}
                         </p>
                       </Card.Header>
-                      <Card.Text className="d-flex flex-column">
-                        {poll.options.map((option, index) => (
-                          <div key={option._id}>
-                            {selectedOption === index ? (
-                              <div>
-                                <ProgressBar
-                                  now={100}
-                                  label={option.option}
-                                  // onClick={unselectOption}
-                                  onClick={() => setSelectedOption(null)}
-                                  style={{ cursor: "pointer" }}
-                                />
-                              </div>
-                            ) : (
-                              <div className="form-check">
-                                <input
-                                  className="form-check-input"
-                                  type="radio"
-                                  id={`option${index + 1}`}
-                                  name="options"
-                                  value={option.option}
-                                  onChange={() => handleOptionChange(index)}
-                                  checked={selectedOption === index}
-                                />
-                                <label
-                                  className="form-check-label"
-                                  htmlFor={`option${index + 1}`}
-                                >
-                                  {option.option}
-                                </label>
-                              </div>
-                            )}
+                      <Card.Text>
+                      <div>
+                    
+                    {polls && !hasVoted[polls._id]
+                      ? polls.options?.map((item, index) => (
+                          <div key={index}>
+                            <input
+                              type="radio"
+                              id={`option-${index}`}
+                              name="poll-option"
+                              value={item.option}
+                              onChange={() => handleOptionChange(item.option)}
+                            />
+                            <label htmlFor={`option-${index}`}>
+                              {item.option}
+                            </label>
+                            <span>{item.count}</span>
+                          </div>
+                        ))
+                      : polls.options?.map((item, index) => (
+                          <div key={index} style={{ position: "relative" }}>
+                            <ProgressBar
+                              now={calculatePercentage(item.count, totalVotes)}
+                              style={{
+                                height: "20px",
+                                cursor: "pointer",
+                              }}
+                              variant={
+                                selectedOption === index ? "success" : "info"
+                              }
+                              label={`${calculatePercentage(
+                                item.count,
+                                totalVotes
+                              )}%`}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                                color: "black",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {calculatePercentage(item.count, totalVotes)}%
+                            </span>
                           </div>
                         ))}
 
-                        {/* Conditionally render the vote button at the end of all options */}
+                    {/* {hasVoted[onepoll._id] && (
+                        <button
+                          onClick={() =>
+                            handleVoteToggle(onepoll._id, selectedOption)
+                          }
+                        >
+                          Unvote
+                        </button>
+                      )}
 
-                        {selectedOption !== null && (
-                          <Button
-                            variant={hasVoted ? "primary" : "danger"}
-                            onClick={() => handleVoteToggle()}
-                            className="mt-3 align-self-center"
-                          >
-                            {hasVoted ? "Vote" : "Unvote"}
-                          </Button>
-                        )}
-                      </Card.Text>
+                      <p>{selectedOption}</p>
+                      <p>{onepoll.createdAt}</p>
+                      <button
+                        onClick={() =>
+                          handleVoteToggle(onepoll._id, selectedOption)
+                        }
+                      >
+                        Vote
+                      </button> */}
+                    <button
+                      onClick={() =>
+                        handleVoteToggle(polls._id, selectedOption)
+                      }
+                    >
+                      {hasVoted[polls._id] ? "Unvote" : "Vote"}
+                    </button>
+
+                    <p>{selectedOption}</p>
+                  </div>
+                  </Card.Text>
                       <ToastContainer />
                     </Card.Body>
                   </Card>
@@ -641,7 +782,7 @@ function CategoryComp({ selectedCategory, polls, setPolls, filteredPolls }) {
         </div>
       ) : (
         <p className="no-polls-message text-center">
-          No polls available for this category    
+          No polls available for this category
         </p>
       )}
     </div>

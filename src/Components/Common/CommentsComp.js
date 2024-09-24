@@ -2219,50 +2219,70 @@ import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import axios from "axios";
 import { useContext } from "react";
-import { PageContext } from "../../App";
+import { PageContext } from "../Homepage";
 import { toast } from "react-toastify";
 
-function CommentsComp({
-  poll,
+function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
+  const [
+    page,
+    setPage,
+    pollid,
+    setPollid,
+    isFollowing,
+    setIsFollowing,
+    followStatus,
+    setFollowStatus,
+    totallike,
+    setTotallike,
+    liked,
+    setLiked,
+    likeCount,
+    setLikeCount,
+    likedPolls, setLikedPolls,
+    selectedOption,
+    setSelectedOption,
+    showVoteButton,
+    setShowVoteButton,
+    hasVoted,
+    setHasVoted,
+    voteResults,
+    setVoteResults,
+    totalVotes,
+    setTotalVotes,
+    hasVotedbutton,
+    setHasvotedbutton,
+  ] = useContext(PageContext);
 
-  polluserId,
-  createdBy,
-  index,
-  pollId,
-  _id,
-  name,
-  createdon,
-  title,
-  status,
-  question,
-  options,
-  optionscount,
-  votingPeriod,
-  category,
-  onPollSubmit,
-  onCardClick,
-  handleVote,
-  polls,
-  setPolls,
-}) {
   // const [totallike, setTotallike] = useState(0);
   // const [liked, setLiked] = useState(false);
   // const [likeCount, setLikeCount] = useState("");
 
-  const [totallike, setTotallike] = useState(0);
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState("");
+  // const [totallike, setTotallike] = useState(0);
+  // const [liked, setLiked] = useState(false);
+  // const [likeCount, setLikeCount] = useState("");
 
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [showVoteButton, setShowVoteButton] = useState(false);
-  const [hasVoted, setHasVoted] = useState(false);
+  // const [selectedOption, setSelectedOption] = useState(null);
+  // const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [hasVoted, setHasVoted] = useState(false);
+
+  let [onepoll, setOnepoll] = useState("");
+
+  // const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [selectedOption, setSelectedOption] = useState(
+  //   onepoll.options.map((option) => option.option)
+  // );
+  // const [hasVoted, setHasVoted] = useState(onepoll.createdBy.isVoted);
+  // let [hasVotedbutton, setHasvotedbutton] = useState(
+  //   onepoll.createdBy.isVoted ? "unvote" : "vote"
+  // );
+  // const [voteResults, setVoteResults] = useState([]);
+  // const [totalVotes, setTotalVotes] = useState(onepoll.total_votes);
 
   const [showOverlay, setShowOverlay] = useState(false);
   const target = useRef(null);
-  let [onepoll, setOnepoll] = useState("");
+
   let [error, setError] = useState("");
   let [loading, setLoading] = useState(true);
-  let [page, setPage, pollid, setPollid] = useContext(PageContext);
 
   const [newComment, setNewComment] = useState("");
   const [comments, setComments] = useState([]);
@@ -2277,7 +2297,8 @@ function CommentsComp({
   const [showNestedReplyModal, setShowNestedReplyModal] = useState(false); // State for nested reply modal
   const [newNestedReply, setNewNestedReply] = useState(""); // State for nested reply
 
-  const [isFollowing, setIsFollowing] = useState(false);
+  // const [isFollowing, setIsFollowing] = useState(false);
+
   console.log(polluserId);
   console.log(pollid);
   let userId =
@@ -2325,7 +2346,7 @@ function CommentsComp({
       setLoading(false);
     }
   };
-
+  console.log(onepoll);
   const handleAddComment = async () => {
     if (newComment.trim() === "") return;
 
@@ -2527,68 +2548,124 @@ function CommentsComp({
     setShowVoteButton(false);
   };
 
-  const handleVoteToggle = () => {
-    setHasVoted(!hasVoted);
-    //   console.log(hasVoted)
-    console.log(selectedOption, hasVoted);
-    if (selectedOption != null) {
-      const selectedOptionValue = onepoll.options[selectedOption]; // Get the value of the selected option
-      console.log(selectedOptionValue);
+  const fetchTotalVotes = () => {
+    axios
+      .post("http://92.205.109.210:8028/polls/totalvote", {
+        poll_id: onepoll._id,
+      })
+      .then((response) => {
+        console.log(response.data);
+        const updatedVoteResults = response.data.results || [];
+        const updatedTotalVotes = response.data.totalVotes || 0;
 
-      axios
-        .post("http://92.205.109.210:8028/polls/voteonpoll", {
-          poll_id: onepoll._id,
-          user_id: userId,
-          option: selectedOptionValue,
-        })
-        .then((response) => {
-          console.log(response.data);
-          console.log(response.data.message);
-          if (response.data.message == "Vote recorded successfully.") {
-            toast.success("Your vote is successfully registered", {
-              autoClose: 1000,
-            });
-          } else {
-            toast.info("Your vote is removed successfully", {
-              autoClose: 1000,
-            });
-          }
-          console.log(response.data);
-          setSelectedOption("");
-        })
-        .catch((error) => {
-          console.error("Error submitting vote:", error);
-        });
-    }
-    //     else {
-
-    //       toast.info('Your vote is removed successfully');
-    //       setHasVoted(false);
-    //       setSelectedOption("");
-    // };
-
-    // let handleVoteToggle=()=>{
-    //   console.log(selectedOption,hasVoted)
-
-    //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
-    // console.log(selectedOptionValue)
-
-    // console.log(_id, createdBy._id, selectedOptionValue)
-    //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
-
-    //       poll_id: _id,
-    //       user_id: userId,
-    //        option: selectedOptionValue,
-    //       })
-    //       .then(response => {
-    //         // toast.success('Your vote is successfully registered');
-    //         console.log( response.data);
-
-    //       })
-    //       .catch(error => {
-    //         console.error('Error submitting vote:', error);
-    //       });
+        setVoteResults(updatedVoteResults);
+        setTotalVotes(updatedTotalVotes);
+        console.log(totalVotes);
+        console.log(updatedTotalVotes);
+        console.log(updatedVoteResults);
+      })
+      .catch((error) => {
+        console.error("Error fetching total votes:", error);
+      });
   };
+  // const calculatePercentage = (index) => {
+  //   console.log("option Index", index);
+  //   console.log(optionscount);
+  //   console.log("total Votes", totalVotes);
+
+  //   if (totalVotes === 0) return 0;
+  //   // const votesForOption = voteResults[optionIndex] || 0;
+  //   const votesForOption =
+  //     optionscount && optionscount[index] ? optionscount[index] : 0;
+  //   console.log("votesForOption", votesForOption);
+
+  //   // return ((votesForOption / totalVotes) * 100).toFixed(1);
+
+  //   const percentage = ((votesForOption / totalVotes) * 100).toFixed(1);
+  //   console.log("percentage", percentage);
+  //   return percentage;
+  // };
+  const calculatePercentage = (count, totalVotes) => {
+    if (totalVotes === 0) return 0;
+    return ((count / totalVotes) * 100).toFixed(2);
+  };
+
+  const handleVoteToggle = (poll_id, option) => {
+    console.log(poll_id, userId, option);
+    const selectedOptionValue = onepoll.options[selectedOption];
+
+    axios
+      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+        poll_id: onepoll._id,
+        user_id: userId,
+        option: selectedOptionValue,
+      })
+      .then((res) => {
+        console.log(res.data.message);
+
+        if (res.data.message === "Vote recorded successfully.") {
+          alert("Voted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: true,
+          }));
+        } else if (
+          res.data.message === "Vote removed successfully. Please vote again."
+        ) {
+          alert("Unvoted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
+        } else {
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
+        }
+
+        // handleOnepoll(poll_id);
+      });
+  };
+
+  useEffect(() => {
+    if (onepoll) {
+      setHasVoted((prevState) => ({
+        ...prevState,
+        [onepoll._id]: onepoll.voters.some((voter) => voter._id === userId),
+      }));
+    }
+  }, [onepoll, userId]);
+
+  //     else {
+
+  //       toast.info('Your vote is removed successfully');
+  //       setHasVoted(false);
+  //       setSelectedOption("");
+  // };
+
+  // let handleVoteToggle=()=>{
+  //   console.log(selectedOption,hasVoted)
+
+  //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
+  // console.log(selectedOptionValue)
+
+  // console.log(_id, createdBy._id, selectedOptionValue)
+  //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+
+  //       poll_id: _id,
+  //       user_id: userId,
+  //        option: selectedOptionValue,
+  //       })
+  //       .then(response => {
+  //         // toast.success('Your vote is successfully registered');
+  //         console.log( response.data);
+
+  //       })
+  //       .catch(error => {
+  //         console.error('Error submitting vote:', error);
+  //       });
+  // };
 
   const handleShareClick = () => {
     setShowOverlay(!showOverlay);
@@ -2632,38 +2709,64 @@ function CommentsComp({
     }));
   };
 
-  const handleFollowToggle = () => {
-    console.log("Created By:", createdBy);
-    console.log("User ID:", userId);
-    console.log("Poll User ID:", pollid);
+  // const handleFollowToggle = () => {
+  //   console.log("Created By:", createdBy);
+  //   console.log("User ID:", userId);
+  //   console.log("Poll User ID:", pollid);
+
+  //   axios
+  //     .post("http://92.205.109.210:8028/api/follow", {
+  //       user_id: userId,
+  //       follow_user_id: onepoll.createdBy._id,
+  //     })
+  //     .then((response) => {
+  //       console.log("API Response:", response);
+  //       console.log("Response Data:", response.data);
+
+  //       if (response.data.message === "Follower added successfully") {
+  //         setIsFollowing(true);
+  //         toast.success("Followed successfully", { autoClose: 1000 });
+  //       } else if (response.data.message === "Follower removed successfully") {
+  //         setIsFollowing(false);
+  //         toast.info("Unfollowed successfully", { autoClose: 1000 });
+  //       } else {
+  //         toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error following/unfollowing user:", error);
+  //       toast.error("An error occurred. Please try again.", {
+  //         autoClose: 3000,
+  //       });
+  //     });
+  // };
+
+  const handleFollowToggle = (polluserId) => {
+    const isFollowing = followStatus[polluserId] || false;
 
     axios
       .post("http://92.205.109.210:8028/api/follow", {
+        follow_user_id: polluserId,
         user_id: userId,
-        follow_user_id: pollid,
       })
-      .then((response) => {
-        console.log("API Response:", response);
-        console.log("Response Data:", response.data);
-
-        if (response.data.message === "Follower added successfully") {
-          setIsFollowing(true);
-          toast.success("Followed successfully", { autoClose: 1000 });
-        } else if (response.data.message === "Follower removed successfully") {
-          setIsFollowing(false);
-          toast.info("Unfollowed successfully", { autoClose: 1000 });
-        } else {
-          toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.message === "Follower added successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: true,
+          }));
+        } else if (res.data.message === "Follower removed successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: false,
+          }));
         }
       })
-      .catch((error) => {
-        console.error("Error following/unfollowing user:", error);
-        toast.error("An error occurred. Please try again.", {
-          autoClose: 3000,
-        });
+      .catch((err) => {
+        console.error("Error in follow/unfollow request:", err);
       });
   };
-
   return (
     <>
       <nav
@@ -2696,9 +2799,13 @@ function CommentsComp({
               <p>Question: {onepoll.question}</p>
               <p>Status: {onepoll.status}</p>
             </div>
-            {userId !== polluserId && (
-              <Button variant="primary" onClick={handleFollowToggle}>
-                {isFollowing ? "Unfollow" : "Follow"}
+            {userId !== polluserId && onepoll && (
+              <Button
+                variant="primary"
+                onClick={() => handleFollowToggle(onepoll.createdBy._id)}
+              >
+                {/* {isFollowing ? "Unfollow" : "Follow"} */}
+                {followStatus[onepoll.createdBy._id] ? "Unfollow" : "Follow"}
               </Button>
             )}
           </Card.Header>
@@ -2714,59 +2821,91 @@ function CommentsComp({
                       onepoll.category.map((item) => item.category_name)}
                   </p>
                 </Card.Header>
-                {onepoll.options && (
-                  <Card.Body>
-                    <div>
-                      {onepoll.options.map((option, index) => (
-                        <div key={index}>
-                          {selectedOption === index ? (
-                            <div>
-                              <ProgressBar
-                                now={100}
-                                label={option.option}
-                                name="options"
-                                onClick={() => setSelectedOption(null)}
-                                style={{ cursor: "pointer" }}
-                                // onChange={() => {
-                                //   setSelectedOption(option.option);
-                                //   setShowVoteButton(true);
-                                // }}
-                              />
-                            </div>
-                          ) : (
-                            <div className="form-check">
-                              <input
-                                className="form-check-input"
-                                type="radio"
-                                id={`option${index + 1}`}
-                                name="options"
-                                value={option.option}
-                                onChange={() => handleOptionChange(index)}
-                                checked={selectedOption === index}
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor={`option${index + 1}`}
-                              >
-                                {option.option} ({option.count})
-                              </label>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                      {selectedOption !== null && (
-                        <Button
-                          variant={hasVoted ? "primary" : "danger"}
-                          onClick={() => handleVoteToggle()}
-                          className="mt-3 align-self-center"
+
+                <Card.Body>
+                <Card.Text>
+                  <div>
+
+                    {onepoll && !hasVoted[onepoll._id]
+                      ? onepoll.options?.map((item, index) => (
+                          <div key={index}>
+                            <input
+                              type="radio"
+                              id={`option-${index}`}
+                              name="poll-option"
+                              value={item.option}
+                              onChange={() => handleOptionChange(item.option)}
+                            />
+                            <label htmlFor={`option-${index}`}>
+                              {item.option}
+                            </label>
+                            <span>{item.count}</span>
+                          </div>
+                        ))
+                      : onepoll.options?.map((item, index) => (
+                          <div key={index} style={{ position: "relative" }}>
+                            <ProgressBar
+                              now={calculatePercentage(item.count, totalVotes)}
+                              style={{
+                                height: "20px",
+                                cursor: "pointer",
+                              }}
+                              variant={
+                                selectedOption === index ? "success" : "info"
+                              }
+                              label={`${calculatePercentage(
+                                item.count,
+                                totalVotes
+                              )}%`}
+                            />
+                            <span
+                              style={{
+                                position: "absolute",
+                                left: "50%",
+                                top: "50%",
+                                transform: "translate(-50%, -50%)",
+                                color: "black",
+                                fontWeight: "bold",
+                              }}
+                            >
+                              {calculatePercentage(item.count, totalVotes)}%
+                            </span>
+                          </div>
+                        ))}
+
+                    {/* {hasVoted[onepoll._id] && (
+                        <button
+                          onClick={() =>
+                            handleVoteToggle(onepoll._id, selectedOption)
+                          }
                         >
-                          {hasVoted ? "Vote" : "Unvote"}
-                        </Button>
+                          Unvote
+                        </button>
                       )}
-                    </div>
-                    <ToastContainer />
-                  </Card.Body>
-                )}
+
+                      <p>{selectedOption}</p>
+                      <p>{onepoll.createdAt}</p>
+                      <button
+                        onClick={() =>
+                          handleVoteToggle(onepoll._id, selectedOption)
+                        }
+                      >
+                        Vote
+                      </button> */}
+                    <button
+                      onClick={() =>
+                        handleVoteToggle(onepoll._id, selectedOption)
+                      }
+                    >
+                      {hasVoted[onepoll._id] ? "Unvote" : "Vote"}
+                    </button>
+
+                    <p>{selectedOption}</p>
+                  </div>
+                  </Card.Text>
+                  <ToastContainer />
+                </Card.Body>
+
                 <div>
                   <Card.Footer className="d-flex justify-content-between">
                     <p>

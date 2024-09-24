@@ -2166,7 +2166,7 @@
 
 //updated 11 sep
 
-import React, { useState, useRef, useContext,useEffect } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
@@ -2174,7 +2174,7 @@ import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import Onepoll from "../Onepoll";
 import CommentsComp from "./CommentsComp";
-import { PageContext } from "../../App";
+import { PageContext } from "../Homepage";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -2199,7 +2199,8 @@ function CardComp({
   onPollSubmit,
   onCardClick,
   handleVote,
-  polls,setPolls,
+  polls,
+  setPolls,
 }) {
   let userId =
     sessionStorage.getItem("loginuserId") ||
@@ -2208,7 +2209,36 @@ function CardComp({
   console.log(userId);
   console.log("loginuserid", sessionStorage.getItem("loginuserId"));
   console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
-  let [page, setPage, pollid, setPollid] = useContext(PageContext);
+
+  const [
+    page,
+    setPage,
+    pollid,
+    setPollid,
+    isFollowing,
+    setIsFollowing,
+    followStatus,
+    setFollowStatus,
+    totallike,
+    setTotallike,
+    liked,
+    setLiked,
+    likeCount,
+    setLikeCount,
+    likedPolls, setLikedPolls,
+    selectedOption,
+    setSelectedOption,
+    showVoteButton,
+    setShowVoteButton,
+    hasVoted,
+    setHasVoted,
+    voteResults,
+    setVoteResults,
+    totalVotes,
+    setTotalVotes,
+    hasVotedbutton,
+    setHasvotedbutton,
+  ] = useContext(PageContext);
 
   // let [pollid,setPollid]=useContext(PageContext)
   console.log(polluserId);
@@ -2219,53 +2249,82 @@ function CardComp({
   let navigate = useNavigate();
   // let [pollid,setPollid]=useState("")
   console.log(index);
-  let [totallike, setTotallike] = useState(poll.total_likes);
-  const [liked, setLiked] = useState(poll.createdBy.isLiked);
-  const [likeCount, setLikeCount] = useState(poll.total_likes);
+  // let [totallike, setTotallike] = useState(poll.total_likes);
+  // const [liked, setLiked] = useState(poll.createdBy.isLiked);
+  // const [likeCount, setLikeCount] = useState(poll.total_likes);
 
   const [comments, setComments] = useState([
     { id: 1, text: "This is the first comment.", likes: 0, replies: [] },
     { id: 2, text: "This is the second comment.", likes: 0, replies: [] },
   ]); // New state for Comments
 
-    // const [selectedOption, setSelectedOption] = useState(null);
-   const [showVoteButton, setShowVoteButton] = useState(false);
+  //the following states are used while the vote section is working
+
+  // const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [selectedOption, setSelectedOption] = useState(
+  //   poll.options.map((option) => option.option)
+  // );
+  // const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
+  //   let [hasVotedbutton, setHasvotedbutton] = useState(
+  //     poll.createdBy.isVoted ? "unvote" : "vote"
+  //   );
+  //   const [voteResults, setVoteResults] = useState([]);
+  //   const [totalVotes, setTotalVotes] = useState(poll.total_votes);
+
+  //-----till this
+
+  // const [selectedOption, setSelectedOption] = useState(null);
+  // const [showVoteButton, setShowVoteButton] = useState(false);
   //   const [hasVoted, setHasVoted] = useState();
   //   const [voteResults, setVoteResults] = useState([]);
   // const [totalVotes, setTotalVotes] = useState(0);
 
   // const [selectedOption, setSelectedOption] = useState(poll.options.option);
-   const [selectedOption, setSelectedOption] = useState(poll.options.map(option => option.option));
+  // const [selectedOption, setSelectedOption] = useState(
+  //   poll.options.map((option) => option.option)
+  // );
   // const [showVoteButton, setShowVoteButton] = useState(poll.createdBy.isVoted);
-  const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
-  let [hasVotedbutton,setHasvotedbutton]=useState(poll.createdBy.isVoted?"unvote":"vote")
-  const [voteResults, setVoteResults] = useState([]);
-  const [totalVotes, setTotalVotes] = useState(poll.total_votes);
+  // const [hasVoted, setHasVoted] = useState(poll.createdBy.isVoted);
+  // let [hasVotedbutton, setHasvotedbutton] = useState(
+  //   poll.createdBy.isVoted ? "unvote" : "vote"
+  // );
+  // const [voteResults, setVoteResults] = useState([]);
+  // const [totalVotes, setTotalVotes] = useState(poll.total_votes);
 
-  const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing);
+  // const [isFollowing, setIsFollowing] = useState(poll.createdBy.isFollowing);
 
   const [showOverlay, setShowOverlay] = useState(false);
 
   const target = useRef(null);
-  
-  const fetchPolls = async () => {
-    try {
-      const response = await axios.post(
-        "http://92.205.109.210:8028/polls/getall",
-        {
-          user_id: userId,
-        }
-      );
-      console.log(response.data);
-      setPolls(response.data);
-      
-    } catch (error) {
-      console.error("Error fetching polls:", error);
+
+  // const fetchPolls = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       "http://92.205.109.210:8028/polls/getall",
+  //       {  
+  //         user_id: userId,
+  //       }
+  //     );
+  //     console.log(response.data);
+  //     setPolls(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching polls:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPolls();
+  // }, [polls]);
+
+  useEffect(() => {
+    if (poll && poll.createdBy) {
+      setFollowStatus((prevState) => ({
+        ...prevState,
+        [poll.createdBy._id]: poll.createdBy.isFollowing,
+      }));
     }
-  };
-useEffect(()=>{
-  fetchPolls()
-},[polls])
+  }, [poll]);
+
   const toggleLike = () => {
     setLikeCount(liked ? likeCount - 1 : likeCount + 1);
     setLiked(!liked);
@@ -2316,7 +2375,7 @@ useEffect(()=>{
       unselectOption(); // Unselect the option if it's already selected
     } else {
       setSelectedOption(index); // Select the option
-       setShowVoteButton(true);
+      setShowVoteButton(true);
     }
   };
 
@@ -2346,32 +2405,87 @@ useEffect(()=>{
       });
   };
 
-  const calculatePercentage = (index) => {
-    console.log("option Index", index);
-    console.log(optionscount);
-    console.log("total Votes", totalVotes);
+  //this is the stable code for the calculate percentage
 
+  const calculatePercentage = (count, totalVotes) => {
     if (totalVotes === 0) return 0;
-    // const votesForOption = voteResults[optionIndex] || 0;
-    const votesForOption =
-      optionscount && optionscount[index] ? optionscount[index] : 0;
-    console.log("votesForOption", votesForOption);
-
-    // return ((votesForOption / totalVotes) * 100).toFixed(1);
-
-    const percentage = ((votesForOption / totalVotes) * 100).toFixed(1);
-    console.log("percentage", percentage);
-    return percentage;
+    return ((count / totalVotes) * 100).toFixed(2);
   };
 
-  const handleVoteToggle = () => {
-    console.log(userId);
-    // setHasVoted(!hasVoted);
-    console.log(hasVoted);
-    console.log(selectedOption, hasVoted);
-    // if (selectedOption != null) {
+  // const calculatePercentage = (index) => {
+  //   console.log("option Index", index);
+  //   console.log(optionscount);
+  //   console.log("total Votes", totalVotes);
+
+  //   if (totalVotes === 0) return 0;
+  //   // const votesForOption = voteResults[optionIndex] || 0;
+  //   const votesForOption =
+  //     optionscount && optionscount[index] ? optionscount[index] : 0;
+  //   console.log("votesForOption", votesForOption);
+
+  //   // return ((votesForOption / totalVotes) * 100).toFixed(1);
+
+  //   const percentage = ((votesForOption / totalVotes) * 100).toFixed(1);
+  //   console.log("percentage", percentage);
+  //   return percentage;
+  // };
+
+  // const handleVoteToggle = (poll_id) => {
+  //   console.log(userId);
+  //   // setHasVoted(!hasVoted);
+  //   console.log(hasVoted);
+  //   console.log(selectedOption, hasVoted);
+  //   // if (selectedOption != null) {
+  //   const selectedOptionValue = options[selectedOption];
+  //   console.log(selectedOptionValue);
+
+  //   axios
+  //     .post("http://92.205.109.210:8028/polls/voteonpoll", {
+  //       poll_id: _id,
+  //       user_id: userId,
+  //       option: selectedOptionValue,
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       console.log(response.data.message);
+  //       if (response.data.message === "Vote recorded successfully.") {
+  //         // toast.success("Your vote is successfully registered", {
+  //         //   autoClose: 1000,
+  //         // });
+  //         alert("voted");
+  //         setHasVoted(true);
+  //         setHasvotedbutton("unvote");
+  //         fetchTotalVotes();
+  //       } else if (
+  //         response.data.message ===
+  //         "Vote removed successfully. Please vote again."
+  //       ) {
+  //         // toast.info("Your vote is removed successfully", {
+  //         //   autoClose: 1000,
+  //         // });
+  //         alert("vote removed");
+  //         setHasVoted(false);
+  //         setHasvotedbutton("vote");
+  //       } else {
+  //         setHasVoted(polls.createdBy.isVoted);
+  //         if (hasVoted) {
+  //           setHasvotedbutton("unvote");
+  //         } else {
+  //           setHasvotedbutton("vote");
+  //         }
+  //       }
+  //       console.log(response.data);
+  //       setSelectedOption("");
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error submitting vote:", error);
+  //     });
+  //   // }
+  // };
+
+  const handleVoteToggle = (poll_id, option) => {
+    console.log(poll_id, userId, option);
     const selectedOptionValue = options[selectedOption];
-    console.log(selectedOptionValue);
 
     axios
       .post("http://92.205.109.210:8028/polls/voteonpoll", {
@@ -2379,48 +2493,42 @@ useEffect(()=>{
         user_id: userId,
         option: selectedOptionValue,
       })
-      .then((response) => {
-        console.log(response.data);
-        console.log(response.data.message);
-        if (response.data.message === "Vote recorded successfully.") {
-          // toast.success("Your vote is successfully registered", {
-          //   autoClose: 1000,
-          // });
-          alert("voted");
-          setHasVoted(true);
-          setHasvotedbutton("unvote")
-          fetchTotalVotes();
-     
-        } else if(response.data.message === "Vote removed successfully. Please vote again."){
+      .then((res) => {
+        console.log(res.data.message);
 
-        
-          // toast.info("Your vote is removed successfully", {
-          //   autoClose: 1000,
-          // });
-          alert("vote removed");
-          setHasVoted(false);
-          setHasvotedbutton("vote")
-          
+        if (res.data.message === "Vote recorded successfully.") {
+          alert("Voted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: true,
+          }));
+        } else if (
+          res.data.message === "Vote removed successfully. Please vote again."
+        ) {
+          alert("Unvoted");
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
+        } else {
+          setHasVoted((prevState) => ({
+            ...prevState,
+            [poll_id]: false,
+          }));
         }
-        else{
-          setHasVoted(polls.createdBy.isVoted)
-          if(hasVoted){
-            setHasvotedbutton("unvote")
-          }
-          else{
-            setHasvotedbutton("vote")
-          }
-          
-        }
-        console.log(response.data);
-        setSelectedOption("");
-      })
-      .catch((error) => {
-        console.error("Error submitting vote:", error);
+
+        // handleOnepoll(poll_id);
       });
-    // }
-   
   };
+
+  useEffect(() => {
+    if (poll) {
+      setHasVoted((prevState) => ({
+        ...prevState,
+        [poll._id]: poll.voters.some((voter) => voter._id === userId),
+      }));
+    }
+  }, [poll, userId]);
 
   const getProgressBarColor = (index) => {
     if (selectedOption === index) {
@@ -2476,35 +2584,62 @@ useEffect(()=>{
       });
   };
 
-  const handleFollowToggle = () => {
-    console.log("Created By:", createdBy);
-    console.log("User ID:", userId);
-    console.log("Poll User ID:", polluserId);
+  // const handleFollowToggle = () => {
+  //   console.log("Created By:", createdBy);
+  //   console.log("User ID:", userId);
+  //   console.log("Poll User ID:", polluserId);
+
+  //   axios
+  //     .post("http://92.205.109.210:8028/api/follow", {
+  //       user_id: userId,
+  //       follow_user_id: polluserId,
+  //     })
+  //     .then((response) => {
+  //       console.log("API Response:", response);
+  //       console.log("Response Data:", response.data);
+
+  //       if (response.data.message === "Follower added successfully") {
+  //         setIsFollowing(true);
+  //         toast.success("Followed successfully", { autoClose: 1000 });
+  //       } else if (response.data.message === "Follower removed successfully") {
+  //         setIsFollowing(false);
+  //         toast.info("Unfollowed successfully", { autoClose: 1000 });
+  //       } else {
+  //         toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error following/unfollowing user:", error);
+  //       toast.error("An error occurred. Please try again.", {
+  //         autoClose: 3000,
+  //       });
+  //     });
+  // };
+
+  const handleFollowToggle = (polluserId) => {
+    const isFollowing = followStatus[polluserId] || false;
 
     axios
       .post("http://92.205.109.210:8028/api/follow", {
-        user_id: userId,
         follow_user_id: polluserId,
+        user_id: userId,
       })
-      .then((response) => {
-        console.log("API Response:", response);
-        console.log("Response Data:", response.data);
-
-        if (response.data.message === "Follower added successfully") {
-          setIsFollowing(true);
-          toast.success("Followed successfully", { autoClose: 1000 });
-        } else if (response.data.message === "Follower removed successfully") {
-          setIsFollowing(false);
-          toast.info("Unfollowed successfully", { autoClose: 1000 });
-        } else {
-          toast.warn("Unable to follow Yourself", { autoClose: 1000 });
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.message === "Follower added successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: true,
+          }));
+        } else if (res.data.message === "Follower removed successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: false,
+          }));
         }
       })
-      .catch((error) => {
-        console.error("Error following/unfollowing user:", error);
-        toast.error("An error occurred. Please try again.", {
-          autoClose: 3000,
-        });
+      .catch((err) => {
+        console.error("Error in follow/unfollow request:", err);
       });
   };
 
@@ -2529,9 +2664,13 @@ useEffect(()=>{
               Status: {status}
             </p>
           </div>
-          {userId !== polluserId && (
-            <Button variant="primary" onClick={handleFollowToggle}>
-              {isFollowing ? "Unfollow" : "Follow"}
+          {userId !== polluserId && poll && (
+            <Button
+              variant="primary"
+              onClick={() => handleFollowToggle(poll.createdBy._id)}
+            >
+              {/* {isFollowing ? "Unfollow" : "Follow"} */}
+              {followStatus[poll.createdBy._id] ? "Unfollow" : "Follow"}
             </Button>
           )}
         </Card.Header>
@@ -2593,11 +2732,13 @@ useEffect(()=>{
                 )}
               </Card.Text> */}
 
-              <Card.Text className="d-flex flex-column">
+              {/* this below oneis the stable one dont delete this */}
+
+              {/* <Card.Text className="d-flex flex-column">
                 {options?.map((option, index) => (
                   <div key={index} style={{ marginBottom: "10px" }}>
                     {" "}
-                    {/* Add space between progress bars */}
+                
                     {!hasVoted ? (
                       // Show radio buttons when hasn't voted
                       <div className="form-check">
@@ -2631,7 +2772,7 @@ useEffect(()=>{
                           } // Selected option is green, others are blue
                           label={`${calculatePercentage(index)}%`}
                         />
-                        {/* Custom label to display percentage */}
+                   
                         <span
                           style={{
                             position: "absolute",
@@ -2643,29 +2784,100 @@ useEffect(()=>{
                           }}
                         >
                           {`${calculatePercentage(index)}%`}{" "}
-                          {/* Percentage displayed */}
+                        
                         </span>
                       </div>
                     )}
                   </div>
                 ))}
 
-                {/* Conditionally render the vote/unvote button */}
-                {selectedOption !== null   && showVoteButton &&(
+              
+                {selectedOption !== null && showVoteButton && (
                   <Button
-                    variant={!hasVoted? "primary" : "danger"}
+                    variant={!hasVoted ? "primary" : "danger"}
                     // onClick={handleVoteToggle}
                     onClick={() => {
                       handleVoteToggle();
                     }}
                     className="mt-3 align-self-center"
                   >
-                    {/* {hasVoted? "Vote" : "Unvote"} */}
+                    {hasVoted? "Vote" : "Unvote"}
                     {hasVotedbutton}
                   </Button>
                 )}
-              </Card.Text>
+              </Card.Text> */}
+              <Card.Text>
+                {poll && !hasVoted[poll._id]
+                  ? poll.options?.map((option, index) => (
+                      <div key={index}>
+                        <input
+                          type="radio"
+                          id={`option-${index + 1}`}
+                          name="options"
+                          value={option.option}
+                          onChange={() => handleOptionChange(index)}
+                        />
+                        <label htmlFor={`option-${index + 1}`}>
+                          {option.option} {optionscount[index]}
+                        </label>
+                        <span>{option.count}</span>
+                      </div>
+                    ))
+                  : poll.options?.map((item, index) => (
+                      <div key={index} style={{ position: "relative" }}>
+                        <ProgressBar
+                          now={calculatePercentage(item.count, totalVotes)}
+                          style={{
+                            height: "20px",
+                            cursor: "pointer",
+                          }}
+                          variant={
+                            selectedOption === index ? "success" : "info"
+                          }
+                          label={`${calculatePercentage(
+                            item.count,
+                            totalVotes
+                          )}%`}
+                        />
+                        <span
+                          style={{
+                            position: "absolute",
+                            left: "50%",
+                            top: "50%",
+                            transform: "translate(-50%, -50%)",
+                            color: "black",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {`${calculatePercentage(item.count, totalVotes)}%`}
+                        </span>
+                      </div>
+                    ))}
 
+                {/* {hasVoted[poll._id] && (
+                  <button
+                    onClick={() => handleVoteToggle(poll._id, selectedOption)}
+                  >
+                    Unvote
+                  </button>
+                )}
+
+                <p>{selectedOption}</p>
+
+                <button
+                  onClick={() => handleVoteToggle(poll._id, selectedOption)}
+                >
+                  Vote
+                </button> */}
+
+                <button
+                  onClick={() => handleVoteToggle(poll._id, selectedOption)}
+                >
+                  {hasVoted[poll._id] ? "Unvote" : "Vote"}
+                </button>
+
+                <p>{selectedOption}</p>
+              </Card.Text>
               {/* 
               <Card.Text className="d-flex flex-column">
     {options && options.length > 0 ? (

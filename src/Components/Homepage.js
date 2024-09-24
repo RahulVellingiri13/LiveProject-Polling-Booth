@@ -468,7 +468,7 @@
 
 //updatedone
 
-import React, { useContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -492,29 +492,78 @@ import AddPoll from "./AddPoll";
 import Pollresults from "./Pollresults";
 import Userdetails from "./Userdetails";
 import CommentsComp from "./Common/CommentsComp";
-import { PageContext } from "../App";
+// import { PageContext } from "../App";
 // import logo from './src/images/logo.png';
 import OTPVerificationModal from "./Common/Otpverify";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import CategoryComp from "./Common/CategoryComp";
+export const PageContext = createContext();
 
-function Homepage() {
+function Homepage({ poll }) {
+  let userId =
+    sessionStorage.getItem("loginuserId") ||
+    sessionStorage.getItem("googleuserId");
+  console.log("userId:", userId);
+  console.log("loginuserid", sessionStorage.getItem("loginuserId"));
+  console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
+  let [polls, setPolls] = useState([]);
+
+  //below are states for the useContexts
+
+  let [page, setPage] = useState("Polllist");
+  let [pollid, setPollid] = useState("");
+
+  let [totallike, setTotallike] = useState(
+    polls.map((poll) => poll.createdBy.total_likes)
+  );
+  const [liked, setLiked] = useState(
+    polls.map((poll) => poll.createdBy.isLiked)
+  );
+  const [likeCount, setLikeCount] = useState(
+    polls.map((poll) => poll.createdBy.total_likes)
+  );
+
+  const [likedPolls, setLikedPolls] = useState([]);
+
+  //   let [totallike, setTotallike] = useState(0);
+  // const [liked, setLiked] = useState(false);
+  // const [likeCount, setLikeCount] = useState("");
+
+  const [isFollowing, setIsFollowing] = useState(
+    polls.map((poll) => poll.createdBy.isFollowing)
+  );
+
+  //  const [isFollowing, setIsFollowing] = useState(false);
+
+  const [followStatus, setFollowStatus] = useState({});
+
+  console.log(isFollowing);
+
+  // const [selectedOption, setSelectedOption] = useState( polls.map((option) => option.option));
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [showVoteButton, setShowVoteButton] = useState(false);
+  // const [hasVoted, setHasVoted] = useState(polls.map(poll=>poll.createdBy.isVoted));
+  //   const [hasVoted, setHasVoted] = useState(() => {
+  //     return polls.map(poll => poll.createdBy?.isVoted || false);
+  // });
+  const [hasVoted, setHasVoted] = useState({});
+
+  console.log("hasVoted", hasVoted);
+  const [voteResults, setVoteResults] = useState([]);
+  const [totalVotes, setTotalVotes] = useState(polls.total_votes);
+
+  // const [hasVotedbutton, setHasvotedbutton] = useState(
+  //   polls.createdBy.isVoted ? "unvote" : "vote"
+  // );
+
+  //-------------------------
+
   let loginuser = useLocation();
   let newuser = loginuser.state;
   console.log(newuser);
   console.log(loginuser.state);
-  let [
-    page,
-    setPage,
-    hasLiked,
-    setHasLiked,
-    hasVoted,
-    setHasVoted,
-    isFollowing,
-    setIsFollowing,
-  ] = useContext(PageContext);
-  let [polls, setPolls] = useState([]);
+
   const [searchQuery, setSearchQuery] = useState("");
 
   const [trendingPolls, setTrendingPolls] = useState([]);
@@ -539,12 +588,6 @@ function Homepage() {
   // const [hasVoted, setHasVoted] = useState(false);
   // const [isFollowing, setIsFollowing] = useState(true);
 
-  let userId =
-    sessionStorage.getItem("loginuserId") ||
-    sessionStorage.getItem("googleuserId");
-  console.log("userId:", userId);
-  console.log("loginuserid", sessionStorage.getItem("loginuserId"));
-  console.log("googleuseriod", sessionStorage.getItem("googleuserId"));
   useEffect(() => {
     if (searchQuery) {
       handleSearch();
@@ -553,7 +596,7 @@ function Homepage() {
       fetchPolls();
     }
   }, [searchQuery, userId]);
-  
+
   // Function to fetch polls data from the API
   //   const fetchPolls = async () => {
   //    try {
@@ -779,13 +822,11 @@ function Homepage() {
   const handleAddPoll = () => {
     const verifiedPhoneNumber = sessionStorage.getItem("verifiedPhoneNumber");
     const isVerified = sessionStorage.getItem("isVerified");
-  
+
     if (googlegmail && googleusername) {
       if (isVerified && verifiedPhoneNumber) {
-        
         setPage("AddPoll");
       } else {
-       
         handleShow();
       }
     } else {
@@ -807,186 +848,181 @@ function Homepage() {
   };
 
   return (
-    <div className="polling-booth">
-      <header>
-        <h1>POLLING BOOTH</h1>
-        <input
-          type="search"
-          placeholder="Search Polls"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
-        <div className="user-info">
-          <h4>
-            Welcome... {googleuser ? googleuser : newuser}{" "}
-            <i class="bi bi-person-circle"></i> !
-          </h4>
-        </div>
-      </header>
-      <div className="container">
-        <aside>
-          <nav>
-            <ul>
-              <li onClick={() => handlePageClick("Polllist")}>
-                <i class="bi bi-list"> </i>Poll List
-              </li>
-              <li onClick={handleAddPoll}>
-                <i class="bi bi-plus-circle"> </i> Add Poll
-              </li>
-              {/* <li onClick={() => handlePageClick("Pollresults")}>
-                <i class="bi bi-check2-circle"></i> Voted Polls
-              </li> */}
-              <li onClick={() => handlePageClick("Userdetails")}>
-                <i class="bi bi-person-circle"></i> User Details
-              </li>
-            </ul>
-          </nav>
-          <div className="categories">
-            <h4>CATEGORIES</h4>
-            <nav>
-              {categories.map((cat) => (
-                <button
-                  onClick={() => handleCategoryPage(cat)}
-                  key={cat.category_id}
-                >
-                  {cat.category_name}
-                </button>
-              ))}
-            </nav>
-            <button className="sign-out" onClick={handleSignOut}>
-              Sign Out <i className="bi bi-box-arrow-right"></i>
-            </button>
-          </div>
-        </aside>
-        <main>
-          <nav>
-            {/* 
-          {page === 'Polllist' && <Polllist />}
-      {page === 'AddPoll' && <AddPoll />}
-      {page === 'Pollresults' && <Pollresults />}
-      {page === 'Userdetails' && <Userdetails/>}
- */}
+    <div>
+      <PageContext.Provider
+        value={[
+          page,
+          setPage,
+          pollid,
+          setPollid,
+          totallike,
+          setTotallike,
+          liked,
+          setLiked,
+          likeCount,
+          setLikeCount,
+          likedPolls,
+          setLikedPolls,
 
-            {page === "Polllist" && (
-              <Polllist
-                polls={polls}
-                setPolls={setPolls}
-                selectedCategory={selectedCategory}
-              />
-            )}
-            {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
-
-            {page === "Pollresults" && <Pollresults />}
-            {page === "Userdetails" && <Userdetails />}
-            {page === "CommentsComp" && <CommentsComp />}
-            {page === "category" && (
-              <CategoryComp
-                polls={polls}
-                setPolls={setPolls}
-                filteredPolls={filteredPolls}
-              />
-            )}
-          </nav>
-
-          {/* Add more polls here */}
-        </main>
-        <aside className="trending-polls">
-          <h4>TRENDING POLLS</h4>
-          <hr />
-
-          <nav>
-            {trendingPolls.map((poll) => (
-              <Card key={poll._id}>
-                <Card.Body>
-                  <Card.Header>Question: {poll.question}</Card.Header>
-                  <Card.Text>
-                    <p>
-                      <i className="bi bi-check2-circle"></i> Total Votes:{" "}
-                      {poll.totalVotes}
-                    </p>
-                    <hr />
-                    <p>
-                      <i className="bi bi-heart-fill"></i> Total Likes:{" "}
-                      {poll.totalLikes}
-                    </p>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            ))}
-          </nav>
-        </aside>
-      </div>
-      {/* <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Verify OTP</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group controlId="formOtp">
-            <Form.Label>Enter OTP</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={handleChange}
+          isFollowing,
+          setIsFollowing,
+          followStatus,
+          setFollowStatus,
+          selectedOption,
+          setSelectedOption,
+          showVoteButton,
+          setShowVoteButton,
+          hasVoted,
+          setHasVoted,
+          voteResults,
+          setVoteResults,
+          totalVotes,
+          setTotalVotes,
+          showVoteButton,
+          setShowVoteButton,
+        ]}
+      >
+        <div className="polling-booth">
+          <header>
+            <h1>POLLING BOOTH</h1>
+            <input
+              type="search"
+              placeholder="Search Polls"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Close
-        </Button>
-        <Button variant="primary" onClick={onSubmit}>
-          Verify
-        </Button>
-      </Modal.Footer>
-    </Modal> */}
-      {/* OTP VERIFICATION MODAL */}
-      <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {step === 1 ? "Verify Phone Number" : "Verify OTP"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            {step === 1 && (
-              <Form.Group controlId="formPhoneNumber">
-                <Form.Label>Enter Phone Number</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter Phone Number"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                />
-              </Form.Group>
-            )}
-            {step === 2 && (
-              <Form.Group controlId="formOtp">
-                <Form.Label>Enter OTP</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter OTP"
-                  value={otp}
-                  onChange={handleOtpChange}
-                />
-              </Form.Group>
-            )}
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button
-            variant="primary"
-            onClick={step === 1 ? onPhoneSubmit : handleOtpSubmit}
-          >
-            {step === 1 ? "Send OTP" : "Verify OTP"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            <div className="user-info">
+              <h4>
+                Welcome... {googleuser ? googleuser : newuser}{" "}
+                <i class="bi bi-person-circle"></i> !
+              </h4>
+            </div>
+          </header>
+          <div className="container">
+            <aside>
+              <nav>
+                <ul>
+                  <li onClick={() => handlePageClick("Polllist")}>
+                    <i class="bi bi-list"> </i>Poll List
+                  </li>
+                  <li onClick={handleAddPoll}>
+                    <i class="bi bi-plus-circle"> </i> Add Poll
+                  </li>
+                  <li onClick={() => handlePageClick("Userdetails")}>
+                    <i class="bi bi-person-circle"></i> User Details
+                  </li>
+                </ul>
+              </nav>
+              <div className="categories">
+                <h4>CATEGORIES</h4>
+                <nav>
+                  {categories.map((cat) => (
+                    <button
+                      onClick={() => handleCategoryPage(cat)}
+                      key={cat.category_id}
+                    >
+                      {cat.category_name}
+                    </button>
+                  ))}
+                </nav>
+                <button className="sign-out" onClick={handleSignOut}>
+                  Sign Out <i className="bi bi-box-arrow-right"></i>
+                </button>
+              </div>
+            </aside>
+            <main>
+              <nav>
+                {page === "Polllist" && (
+                  <Polllist
+                    polls={polls}
+                    setPolls={setPolls}
+                    selectedCategory={selectedCategory}
+                  />
+                )}
+                {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
+                {page === "Pollresults" && <Pollresults />}
+                {page === "Userdetails" && <Userdetails />}
+                {page === "CommentsComp" && <CommentsComp />}
+                {page === "category" && (
+                  <CategoryComp
+                    polls={polls}
+                    setPolls={setPolls}
+                    filteredPolls={filteredPolls}
+                  />
+                )}
+              </nav>
+            </main>
+            <aside className="trending-polls">
+              <h4>TRENDING POLLS</h4>
+              <hr />
+              <nav>
+                {trendingPolls.map((poll) => (
+                  <Card key={poll._id}>
+                    <Card.Body>
+                      <Card.Header>Question: {poll.question}</Card.Header>
+                      <Card.Text>
+                        <p>
+                          <i className="bi bi-check2-circle"></i> Total Votes:{" "}
+                          {poll.totalVotes}
+                        </p>
+                        <hr />
+                        <p>
+                          <i className="bi bi-heart-fill"></i> Total Likes:{" "}
+                          {poll.totalLikes}
+                        </p>
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                ))}
+              </nav>
+            </aside>
+          </div>
+          <Modal show={show} onHide={handleClose} centered>
+            <Modal.Header closeButton>
+              <Modal.Title>
+                {step === 1 ? "Verify Phone Number" : "Verify OTP"}
+              </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form>
+                {step === 1 && (
+                  <Form.Group controlId="formPhoneNumber">
+                    <Form.Label>Enter Phone Number</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Phone Number"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                    />
+                  </Form.Group>
+                )}
+                {step === 2 && (
+                  <Form.Group controlId="formOtp">
+                    <Form.Label>Enter OTP</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter OTP"
+                      value={otp}
+                      onChange={handleOtpChange}
+                    />
+                  </Form.Group>
+                )}
+              </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button
+                variant="primary"
+                onClick={step === 1 ? onPhoneSubmit : handleOtpSubmit}
+              >
+                {step === 1 ? "Send OTP" : "Verify OTP"}
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        </div>
+      </PageContext.Provider>
     </div>
   );
 }
