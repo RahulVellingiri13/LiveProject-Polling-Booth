@@ -614,7 +614,7 @@
 
 //   useEffect(() => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/getone", {
+//       .post("http://49.204.232.254:64/polls/getone", {
 //         poll_id: pollid,
 //       })
 //       .then((res) => {
@@ -719,7 +719,7 @@
 //   };
 //   const handleLike = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: onepoll._id,
 //         user_id: onepoll.createdBy._id,
 //       })
@@ -1696,7 +1696,7 @@
 
 //     try {
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/comment/createcomment",
+//         "http://49.204.232.254:64/comment/createcomment",
 //         {
 //           comment: newComment,
 //           poll_id: onepoll._id,
@@ -1721,7 +1721,7 @@
 
 //     // like count
 //     try {
-//       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+//       await axios.post("http://49.204.232.254:64/comment/likecomment", {
 //         user_id: onepoll.createdBy._id,
 //         comment_id: currentCommentId,
 //       });
@@ -1744,7 +1744,7 @@
 
 //     try {
 //       const response = await axios.post(
-//         `http://92.205.109.210:8028/comment/replycomment`,
+//         `http://49.204.232.254:64/comment/replycomment`,
 //         {
 //           reply_msg: newReply,
 //           poll_id: onepoll._id,
@@ -1791,7 +1791,7 @@
 
 //     try {
 //       const response = await axios.post(
-//         `http://92.205.109.210:8028/comment/replycomment`,
+//         `http://49.204.232.254:64/comment/replycomment`,
 //         {
 //           reply_msg: newNestedReply,
 //           poll_id: onepoll._id,
@@ -1840,7 +1840,7 @@
 //     setComments(updatedComments);
 
 //     try {
-//       await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+//       await axios.post("http://49.204.232.254:64/comment/likecomment", {
 //         user_id: onepoll.createdBy._id,
 //         comment_id: replyId,
 //       });
@@ -1850,7 +1850,7 @@
 //   };
 
 //   // useEffect(()=>{
-//   //   axios.post("http://92.205.109.210:8028/polls/getone",{
+//   //   axios.post("http://49.204.232.254:64/polls/getone",{
 //   //     poll_id:pollid
 //   //   }).then(res=>{
 //   //     console.log(res.data)
@@ -1861,7 +1861,7 @@
 
 //   useEffect(() => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/getone", {
+//       .post("http://49.204.232.254:64/polls/getone", {
 //         poll_id: pollid,
 //       })
 //       .then((res) => {
@@ -1883,7 +1883,7 @@
 //   const fetchComments = async () => {
 //     try {
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/comment/getbyid",
+//         "http://49.204.232.254:64/comment/getbyid",
 //         {
 //           poll_id: onepoll._id,
 //           user_id: onepoll.createdBy._id,
@@ -1917,7 +1917,7 @@
 //       const selectedOptionValue = onepoll.options[selectedOption].option;
 //       console.log(selectedOptionValue);
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           option: selectedOptionValue,
 
 //           poll_id: onepoll._id,
@@ -1951,7 +1951,7 @@
 
 //   const handleLike = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: onepoll._id,
 //         user_id: onepoll.createdBy._id,
 //       })
@@ -2307,7 +2307,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
   // useEffect(() => {
   //   axios
-  //     .post("http://92.205.109.210:8028/polls/getone", {
+  //     .post("http://49.204.232.254:64/polls/getone", {
   //       poll_id: pollid,
   //     })
   //     .then((res) => {
@@ -2331,7 +2331,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   const fetchPollDataAndComments = async () => {
     try {
       const pollResponse = await axios.post(
-        "http://92.205.109.210:8028/polls/getone",
+        "http://49.204.232.254:64/polls/getone",
         {
           poll_id: pollid,
         }
@@ -2352,7 +2352,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
     try {
       const response = await axios.post(
-        "http://92.205.109.210:8028/comment/createcomment",
+        "http://49.204.232.254:64/comment/createcomment",
         {
           comment: newComment,
           poll_id: onepoll._id,
@@ -2373,7 +2373,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     setComments(updatedComments);
 
     try {
-      await axios.post("http://92.205.109.210:8028/comment/likecomment", {
+      await axios.post("http://49.204.232.254:64/comment/likecomment", {
         user_id: userId,
         // comment_id: currentCommentId,
         comment_id: commentId,
@@ -2393,7 +2393,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
     try {
       const response = await axios.post(
-        `http://92.205.109.210:8028/comment/replycomment`,
+        `http://49.204.232.254:64/comment/replycomment`,
         {
           reply_msg: newReply,
           poll_id: onepoll._id,
@@ -2430,7 +2430,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
     try {
       const response = await axios.post(
-        `http://92.205.109.210:8028/comment/replycomment`,
+        `http://49.204.232.254:64/comment/replycomment`,
         {
           reply_msg: newNestedReply,
           poll_id: onepoll._id,
@@ -2489,7 +2489,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     setComments(updatedComments);
 
     try {
-      await axios.post("http://92.205.109.210:8028/comment/likereply", {
+      await axios.post("http://49.204.232.254:64/comment/likereply", {
         user_id: userId,
         comment_id: commentId,
         reply_id: replyId,
@@ -2502,7 +2502,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   // const fetchComments = async () => {
   //   try {
   //     const response = await axios.post(
-  //       "http://92.205.109.210:8028/comment/getbyid",
+  //       "http://49.204.232.254:64/comment/getbyid",
   //       {
   //         poll_id: onepoll._id,
   //         user_id: onepoll.createdBy._id,
@@ -2517,7 +2517,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   const fetchComments = async () => {
     try {
       const response = await axios.post(
-        "http://92.205.109.210:8028/comment/getbyid",
+        "http://49.204.232.254:64/comment/getbyid",
         {
           poll_id: onepoll._id,
           user_id: userId,
@@ -2550,7 +2550,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
   const fetchTotalVotes = () => {
     axios
-      .post("http://92.205.109.210:8028/polls/totalvote", {
+      .post("http://49.204.232.254:64/polls/totalvote", {
         poll_id: onepoll._id,
       })
       .then((response) => {
@@ -2595,7 +2595,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     const selectedOptionValue = onepoll.options[selectedOption];
 
     axios
-      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+      .post("http://49.204.232.254:64/polls/voteonpoll", {
         poll_id: onepoll._id,
         user_id: userId,
         option: selectedOptionValue,
@@ -2651,7 +2651,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   // console.log(selectedOptionValue)
 
   // console.log(_id, createdBy._id, selectedOptionValue)
-  //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+  //       axios.post('http://49.204.232.254:64/polls/voteonpoll',{
 
   //       poll_id: _id,
   //       user_id: userId,
@@ -2682,7 +2682,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
 
   const handleLike = () => {
     axios
-      .post("http://92.205.109.210:8028/polls/likeonpoll", {
+      .post("http://49.204.232.254:64/polls/likeonpoll", {
         poll_id: onepoll._id,
         user_id: userId,
       })
@@ -2715,7 +2715,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   //   console.log("Poll User ID:", pollid);
 
   //   axios
-  //     .post("http://92.205.109.210:8028/api/follow", {
+  //     .post("http://49.204.232.254:64/api/follow", {
   //       user_id: userId,
   //       follow_user_id: onepoll.createdBy._id,
   //     })
@@ -2745,7 +2745,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     const isFollowing = followStatus[polluserId] || false;
 
     axios
-      .post("http://92.205.109.210:8028/api/follow", {
+      .post("http://49.204.232.254:64/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
       })

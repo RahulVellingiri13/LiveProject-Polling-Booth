@@ -560,11 +560,11 @@
 //     };
 // console.log(typeof(pollData.duration))
 //     console.log("Preparing to submit Poll Data:", pollData);
-//     axios.post("http://92.205.109.210:8028/polls/create",pollData)
+//     axios.post("http://49.204.232.254:64/polls/create",pollData)
 //     alert("poll added")
 
 //     // try {
-//     //   const response = await axios.post("http://92.205.109.210:8028/polls/create",pollData);
+//     //   const response = await axios.post("http://49.204.232.254:64/polls/create",pollData);
 
 //     //   console.log("Received response:", response);
 
@@ -801,7 +801,7 @@
 //     const fetchCategories = async () => {
 //       try {
 //         const response = await axios.get(
-//           "http://92.205.109.210:8028/category/getall"
+//           "http://49.204.232.254:64/category/getall"
 //         );
 //         console.log(response.data);
 //         setCategories(response.data);
@@ -862,12 +862,12 @@
 //     console.log(pollData);
 //     console.log(typeof pollData.duration);
 //     console.log("Preparing to submit Poll Data:", pollData);
-//     // axios.post("http://92.205.109.210:8028/polls/create", pollData);
+//     // axios.post("http://49.204.232.254:64/polls/create", pollData);
 //     // alert("poll added")
 //     setSnackbarMessage("Your Poll is Successfully created");
 
 //     // try {
-//     //   const response = await axios.post("http://92.205.109.210:8028/polls/create",pollData);
+//     //   const response = await axios.post("http://49.204.232.254:64/polls/create",pollData);
 
 //     //   console.log("Received response:", response);
 
@@ -1117,7 +1117,7 @@
 //   useEffect(() => {
 //     const fetchCategories = async () => {
 //       try {
-//         const response = await axios.get("http://92.205.109.210:8028/category/getall");
+//         const response = await axios.get("http://49.204.232.254:64/category/getall");
 //         setCategories(response.data);
 //       } catch (error) {
 //         console.error("Error fetching categories:", error);
@@ -1169,7 +1169,7 @@
 //     console.log("Preparing to submit Poll Data:", pollData);
 
 //     try {
-//       const response = await axios.post("http://92.205.109.210:8028/polls/create", pollData);
+//       const response = await axios.post("http://49.204.232.254:64/polls/create", pollData);
 //       console.log("Received response:", response);
 
 //       if (response.status === 200 || response.status === 201) {
@@ -1366,7 +1366,7 @@ function AddPoll() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://92.205.109.210:8028/category/getall");
+        const response = await axios.get("http://49.204.232.254:64/category/getall");
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -1413,7 +1413,7 @@ function AddPoll() {
     };
 
     try {
-      const response = await axios.post("http://92.205.109.210:8028/polls/create", pollData);
+      const response = await axios.post("http://49.204.232.254:64/polls/create", pollData);
       if (response.status === 200 || response.status === 201) {
         setSnackbarMessage("Your Poll is Successfully created");
         setSnackbarSeverity("success");

@@ -225,7 +225,7 @@ function VerifyPg() {
 
   const handleSendOtp = async (values) => {
     try {
-      const response = await axios.post("http://92.205.109.210:8028/mobileauth/send-otp-sms", {
+      const response = await axios.post("http://49.204.232.254:64/mobileauth/send-otp-sms", {
         number: values.Phone,
       });
 
@@ -252,7 +252,7 @@ function VerifyPg() {
     
 
     try {
-      const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
+      const response = await axios.post("http://49.204.232.254:64/mobileauth/verify-otp-sms", {
         number: number,
         otp: inputCode,
       });

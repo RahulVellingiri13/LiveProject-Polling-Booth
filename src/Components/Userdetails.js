@@ -36,7 +36,7 @@
 
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getone')
+//     axios.get('http://49.204.232.254:64/api/getone')
 //       .then(response => {
 //         setUserData(response.data); // Set the user data to the state
 //         if (response.data.profileImage) {
@@ -63,16 +63,16 @@
 
 //     switch (type) {
 //       case 'created':
-//         url = 'http://92.205.109.210:8028/polls/getall';
+//         url = 'http://49.204.232.254:64/polls/getall';
 //         break;
 //       case 'voted':
-//         url = 'http://92.205.109.210:8028/polls/getvoted';
+//         url = 'http://49.204.232.254:64/polls/getvoted';
 //         break;
 //       case 'liked':
-//         url = 'http://92.205.109.210:8028/polls/likeonpoll';
+//         url = 'http://49.204.232.254:64/polls/likeonpoll';
 //         break;
 //       case 'commented':
-//         url = 'http://92.205.109.210:8028/comment/getbyid';
+//         url = 'http://49.204.232.254:64/comment/getbyid';
 //         break;
 //       default:
 //         return;
@@ -171,7 +171,7 @@
 // const [votedpolls,setVotedpolls]=useState("")
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getProfile')
+//     axios.get('http://49.204.232.254:64/api/getProfile')
 //       .then(response => {
 //         setUserData(response.data);
 //         if (response.data.profileImage) {
@@ -195,7 +195,7 @@
 //   // Function to fetch created polls
 //   const fetchCreatedPolls = () => {
 //     const pollId = 'your_poll_id_here'; // Replace with the actual poll_id value
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -211,7 +211,7 @@
 //   // Function to fetch voted polls
 //   const fetchVotedPolls = () => {
 //     const userId = sessionStorage.getItem("loginuserId") || sessionStorage.getItem("googleuserId"); // Retrieve the user_id from sessionStorage
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -331,7 +331,7 @@
 // let newuser = loginuser.state;
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getProfile')
+//     axios.get('http://49.204.232.254:64/api/getProfile')
 //       .then(response => {
 //         setUserData(response.data);
 //         if (response.data.profileImage) {
@@ -354,7 +354,7 @@
 
 //   // Function to fetch created polls
 //   const fetchCreatedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -369,7 +369,7 @@
 
 //   // Function to fetch voted polls
 //   const fetchVotedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -389,7 +389,7 @@
 //   const handleLike = () => {
 //     // console.log(poll.createdBy._id);
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: polls._id,
 //         user_id:polls.userId,
 //       })
@@ -416,7 +416,7 @@
 //   const handleFollowToggle = () => {
 //     // console.log(createdBy)
 //     axios
-//       .post("http://92.205.109.210:8028/api/follow", {
+//       .post("http://49.204.232.254:64/api/follow", {
 //         user_id: userId,
 //         follow_user_id:polls.userId,
 //       })
@@ -449,7 +449,7 @@
 //   };
 //   const fetchTotalVotes = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/totalvote", {
+//       .post("http://49.204.232.254:64/polls/totalvote", {
 //         poll_id: polls._id,
 //       })
 //       .then((response) => {
@@ -472,7 +472,7 @@
 //       console.log(selectedOptionValue);
 
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           poll_id: polls._id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -983,7 +983,7 @@
 // let newuser = loginuser.state;
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getProfile')
+//     axios.get('http://49.204.232.254:64/api/getProfile')
 //       .then(response => {
 //         setUserData(response.data);
 //         if (response.data.profileImage) {
@@ -1006,7 +1006,7 @@
 
 //   // Function to fetch created polls
 //   const fetchCreatedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -1021,7 +1021,7 @@
 
 //   // Function to fetch voted polls
 //   const fetchVotedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -1041,7 +1041,7 @@
 //   const handleLike = () => {
 //     // console.log(poll.createdBy._id);
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: polls._id,
 //         user_id:polls.userId,
 //       })
@@ -1068,7 +1068,7 @@
 //   const handleFollowToggle = () => {
 //     // console.log(createdBy)
 //     axios
-//       .post("http://92.205.109.210:8028/api/follow", {
+//       .post("http://49.204.232.254:64/api/follow", {
 //         user_id: userId,
 //         follow_user_id:polls.userId,
 //       })
@@ -1101,7 +1101,7 @@
 //   };
 //   const fetchTotalVotes = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/totalvote", {
+//       .post("http://49.204.232.254:64/polls/totalvote", {
 //         poll_id: polls._id,
 //       })
 //       .then((response) => {
@@ -1124,7 +1124,7 @@
 //       console.log(selectedOptionValue);
 
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           poll_id: polls._id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -1172,7 +1172,7 @@
 //   const handleDeleteAccount = () => {
 //     if (window.confirm("Are you sure you want to delete your account?")) {
 //       axios
-//         .delete('http://92.205.109.210:8028/api/deleteuser', {
+//         .delete('http://49.204.232.254:64/api/deleteuser', {
 //           // data: { identifier: number },
 //         })
 //         .then((response) => {
@@ -1648,7 +1648,7 @@
 
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getone')
+//     axios.get('http://49.204.232.254:64/api/getone')
 //       .then(response => {
 //         setUserData(response.data); // Set the user data to the state
 //         if (response.data.profileImage) {
@@ -1675,16 +1675,16 @@
 
 //     switch (type) {
 //       case 'created':
-//         url = 'http://92.205.109.210:8028/polls/getall';
+//         url = 'http://49.204.232.254:64/polls/getall';
 //         break;
 //       case 'voted':
-//         url = 'http://92.205.109.210:8028/polls/getvoted';
+//         url = 'http://49.204.232.254:64/polls/getvoted';
 //         break;
 //       case 'liked':
-//         url = 'http://92.205.109.210:8028/polls/likeonpoll';
+//         url = 'http://49.204.232.254:64/polls/likeonpoll';
 //         break;
 //       case 'commented':
-//         url = 'http://92.205.109.210:8028/comment/getbyid';
+//         url = 'http://49.204.232.254:64/comment/getbyid';
 //         break;
 //       default:
 //         return;
@@ -1783,7 +1783,7 @@
 // const [votedpolls,setVotedpolls]=useState("")
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getProfile')
+//     axios.get('http://49.204.232.254:64/api/getProfile')
 //       .then(response => {
 //         setUserData(response.data);
 //         if (response.data.profileImage) {
@@ -1807,7 +1807,7 @@
 //   // Function to fetch created polls
 //   const fetchCreatedPolls = () => {
 //     const pollId = 'your_poll_id_here'; // Replace with the actual poll_id value
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -1823,7 +1823,7 @@
 //   // Function to fetch voted polls
 //   const fetchVotedPolls = () => {
 //     const userId = sessionStorage.getItem("loginuserId") || sessionStorage.getItem("googleuserId"); // Retrieve the user_id from sessionStorage
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -1943,7 +1943,7 @@
 // let newuser = loginuser.state;
 //   // Fetch user details when the component mounts
 //   useEffect(() => {
-//     axios.get('http://92.205.109.210:8028/api/getProfile')
+//     axios.get('http://49.204.232.254:64/api/getProfile')
 //       .then(response => {
 //         setUserData(response.data);
 //         if (response.data.profileImage) {
@@ -1966,7 +1966,7 @@
 
 //   // Function to fetch created polls
 //   const fetchCreatedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -1981,7 +1981,7 @@
 
 //   // Function to fetch voted polls
 //   const fetchVotedPolls = () => {
-//     axios.post('http://92.205.109.210:8028/api/getProfile', {
+//     axios.post('http://49.204.232.254:64/api/getProfile', {
 //       user_id: userId
 //     })
 //     .then(response => {
@@ -2001,7 +2001,7 @@
 //   const handleLike = () => {
 //     // console.log(poll.createdBy._id);
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: polls._id,
 //         user_id:polls.userId,
 //       })
@@ -2028,7 +2028,7 @@
 //   const handleFollowToggle = () => {
 //     // console.log(createdBy)
 //     axios
-//       .post("http://92.205.109.210:8028/api/follow", {
+//       .post("http://49.204.232.254:64/api/follow", {
 //         user_id: userId,
 //         follow_user_id:polls.userId,
 //       })
@@ -2061,7 +2061,7 @@
 //   };
 //   const fetchTotalVotes = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/totalvote", {
+//       .post("http://49.204.232.254:64/polls/totalvote", {
 //         poll_id: polls._id,
 //       })
 //       .then((response) => {
@@ -2084,7 +2084,7 @@
 //       console.log(selectedOptionValue);
 
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           poll_id: polls._id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -2560,7 +2560,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { PageContext } from "../App";
+import { PageContext } from "../Components/Homepage";
 import { toast } from "react-toastify";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
@@ -2641,7 +2641,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   useEffect(() => {
     console.log(data);
     axios
-      .post("http://92.205.109.210:8028/api/getProfile", {
+      .post("http://49.204.232.254:64/api/getProfile", {
         user_id: userId,
       })
       .then((response) => {
@@ -2669,7 +2669,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   // Function to fetch created polls
   const fetchCreatedPolls = () => {
     axios
-      .post("http://92.205.109.210:8028/api/getProfile", {
+      .post("http://49.204.232.254:64/api/getProfile", {
         user_id: userId,
       })
       .then((response) => {
@@ -2687,7 +2687,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   // Function to fetch voted polls
   const fetchVotedPolls = () => {
     axios
-      .post("http://92.205.109.210:8028/api/getProfile", {
+      .post("http://49.204.232.254:64/api/getProfile", {
         user_id: userId,
       })
       .then((response) => {
@@ -2707,7 +2707,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   const handleLike = () => {
     // console.log(poll.createdBy._id);
     axios
-      .post("http://92.205.109.210:8028/polls/likeonpoll", {
+      .post("http://49.204.232.254:64/polls/likeonpoll", {
         poll_id: polls._id,
         user_id: polls.userId,
       })
@@ -2735,7 +2735,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
     const isFollowing = followStatus[polluserId] || false;
 
     axios
-      .post("http://92.205.109.210:8028/api/follow", {
+      .post("http://49.204.232.254:64/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
       })
@@ -2759,8 +2759,8 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   };
   const fetchTotalVotes = () => {
     axios
-      .post("http://92.205.109.210:8028/polls/totalvote", {
-        poll_id: polls._id,
+      .post("http://49.204.232.254:64/polls/totalvote", {
+        poll_id: poll._id,
       })
       .then((response) => {
         const updatedVoteResults = response.data.results || [];
@@ -2778,7 +2778,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
     const selectedOptionValue = options[selectedOption];
 
     axios
-      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+      .post("http://49.204.232.254:64/polls/voteonpoll", {
         poll_id: poll._id,
         user_id: userId,
         option: selectedOptionValue,
@@ -2843,7 +2843,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
     console.log("phone_number", phone_number);
     if (window.confirm("Are you sure you want to delete your account?")) {
       axios
-        .post("http://92.205.109.210:8028/api/deleteuser", {
+        .post("http://49.204.232.254:64/api/deleteuser", {
           identifier: phone_number,
         })
         .then((response) => {
@@ -2972,7 +2972,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                                     value={option.option}
                                     onChange={() => handleOptionChange(index)}
                                   />
-                                  <label htmlFor={`option-${index + 1}`}>
+                                  <label htmlFor={`option-${index }`}>
                                     {option.option} {optionscount[index]}
                                   </label>
                                   <span>{option.count}</span>
@@ -3172,7 +3172,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                   <Card.Header className="d-flex justify-content-between align-items-center">
                     <div>
                       <h6>Name:{poll.createdBy.user_name}</h6>
-                      {/* <p>Title:{poll.title}</p> */}
+                  
                       <p>Status:{poll.status}</p>
                     </div>
                     <Button variant="primary" onClick={handleFollowToggle}>
@@ -3365,7 +3365,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                                 style={{ fontSize: "35px" }}
                               ></i>
                             </a>
-                            {/* Add more social media links here */}
+                        
                           </div>
                         </Popover.Body>
                       </Popover>

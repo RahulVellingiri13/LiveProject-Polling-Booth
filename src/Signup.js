@@ -1076,7 +1076,7 @@
 //     console.log(signupdata);
 
 //     axios
-//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
+//       .post("http://49.204.232.254:64/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -1097,7 +1097,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -1126,7 +1126,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -1732,7 +1732,7 @@
 //     };
 
 //     axios
-//     .post("http://92.205.109.210:8028/api/createuser", signupdata)
+//     .post("http://49.204.232.254:64/api/createuser", signupdata)
 //     .then((response) => {
 //       alert("Created successfully");
 //       setShowAlert(true);
@@ -1752,7 +1752,7 @@
 // const sendOtp = async () => {
 //   if (formik.values.phone && !formik.errors.phone) {
 //     try {
-//       const response = await fetch("http://92.205.109.210:8028/mobileauth/send-otp-sms", {
+//       const response = await fetch("http://49.204.232.254:64/mobileauth/send-otp-sms", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify({ number: formik.values.phone }),
@@ -1778,7 +1778,7 @@
 // const verifyOtp = async () => {
 //   try {
 //     console.log(otp)
-//     const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
+//     const response = await axios.post("http://49.204.232.254:64/mobileauth/verify-otp-sms", {
 //       number: formik.values.phone,
 //       otp: otp,
 //     });
@@ -2467,7 +2467,7 @@
 //       // dob: formattedDob,
 //     };
 //     console.log(signupdata)
-//     axios.post("http://92.205.109.210:8028/api/createuser", signupdata)
+//     axios.post("http://49.204.232.254:64/api/createuser", signupdata)
 //       .then((response) => {
 //         console.log(response.data)
 //         alert("Created successfully");
@@ -2488,7 +2488,7 @@
 //   const sendOtp = async () => {
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
-//         const response = await fetch("http://92.205.109.210:8028/mobileauth/send-otp-sms", {
+//         const response = await fetch("http://49.204.232.254:64/mobileauth/send-otp-sms", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({ number: formik.values.phone }),
@@ -2514,7 +2514,7 @@
 //   const verifyOtp = async () => {
 //     try {
 //       console.log(otp)
-//       const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
+//       const response = await axios.post("http://49.204.232.254:64/mobileauth/verify-otp-sms", {
 //         number: formik.values.phone,
 //         otp: otp,
 //       });
@@ -3207,7 +3207,7 @@
 //     console.log(signupdata)
 
 //     axios
-//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
+//       .post("http://49.204.232.254:64/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -3228,7 +3228,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -3257,7 +3257,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -3867,7 +3867,7 @@
 //     console.log(signupdata)
 
 //     axios
-//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
+//       .post("http://49.204.232.254:64/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -3888,7 +3888,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -3917,7 +3917,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -4546,7 +4546,7 @@
 //     console.log(signupdata);
 
 //     axios
-//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
+//       .post("http://49.204.232.254:64/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -4567,7 +4567,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -4596,7 +4596,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -5075,9 +5075,9 @@
 
 //------------------------------------------------------------
 
-//updated one - 23 sep
+//updated one - 25 sep
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Row,
   Col,
@@ -5111,20 +5111,10 @@ function Signup() {
   const [otpError, setOtpError] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  const emailRef = useRef(null);
-  const phoneNumberRef = useRef(null);
-
   const navigate = useNavigate();
   let [username, setUsername] = useState(sessionStorage.getItem("username"));
   let [email, setEmail] = useState(sessionStorage.getItem("email"));
-  let [formemail,setFormemail]=useState("")
   console.log(username, email);
-
-
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-const [signuppoll,setSignuppoll]=useState([])
-
 
   useEffect(() => {
     if (timer > 0) {
@@ -5137,14 +5127,6 @@ const [signuppoll,setSignuppoll]=useState([])
       setCanResend(true);
     }
   }, [timer]);
-
-  useEffect(() => {
-    axios.get("http://92.205.109.210:8028/api/getall").then((res) => {
-      console.log(res.data.users);
-      setSignuppoll(res.data);
-      console.log(signuppoll);
-    });
-  }, []);
 
   const formik = useFormik({
     initialValues: {
@@ -5200,9 +5182,38 @@ const [signuppoll,setSignuppoll]=useState([])
     },
   });
 
+//   validateOnBlur: true,
+//   onSubmit: async (values) => {
+//     try {
+//       const response = await axios.get("http://49.204.232.254:64/api/getall", {
+//         email: formik.values.email,
+//        phone_number: formik.values.phone,
+//       });
+//       console.log(response);
+      
+
+//       if (response.data.exists) {
+//         if (response.data.emailExists) {
+//           formik.setFieldError('email', 'This email is already registered');
+//         }
+//         if (response.data.phoneExists) {
+//           formik.setFieldError('phone', 'This phone number is already registered');
+//         }
+//       } else {
+//         if (otpVerified) {
+//           handleSignup(values);
+//         } else {
+//           setOtpError("Please verify OTP.");
+//         }
+//       }
+//     } catch (error) {
+//       console.error("Error checking email/phone:", error);
+//       alert("Error occurred while checking email/phone. Please try again.");
+//     }
+//   },
+// });
+
   const handleSignup = (values) => {
-    let esistinguser = signuppoll.users.some((item) => item.email == formemail && item.phoneNumber==phoneNumber );
-      console.log(esistinguser)
     console.log("signup");
     let dob = new Date(
       formik.values.year,
@@ -5219,23 +5230,7 @@ const [signuppoll,setSignuppoll]=useState([])
     let age1 = currentdate.getFullYear() - dob.getFullYear();
     let formattedDob = dob.toISOString().split("T")[1];
     console.log(formattedDob);
-    ////////////////////////////////////
-    // values.preventDefault();
-    // if (isNaN(Date.parse(dob))) {
-    //   console.error("Invalid date of birth");
-    //   return;
-    // }
-    // const formattedDate = new Date(dob).toISOString();
-    // console.log("Formatted Date:", formattedDate);
-    /////////////////////////////////////
 
-    // let dob = new Date(values.year, values.month - 1, values.day);
-    // let currentdate = new Date();
-    // let age1 = currentdate.getFullYear() - dob.getFullYear();
-    // let formattedDob = dob.toISOString().split("T")[1];
-    // console.log(password)
-    // let newpassword = password.join("")
-    // console.log(newpassword)
     let newphone = parseInt(formik.values.phone);
     let signupdata = {
       user_name: `${formik.values.firstname} ${formik.values.lastname}`,
@@ -5249,7 +5244,7 @@ const [signuppoll,setSignuppoll]=useState([])
     console.log(signupdata);
 
     axios
-      .post("http://92.205.109.210:8028/api/createuser", signupdata)
+      .post("http://49.204.232.254:64/api/createuser", signupdata)
       .then((response) => {
         alert("Created successfully");
         setShowAlert(true);
@@ -5270,7 +5265,7 @@ const [signuppoll,setSignuppoll]=useState([])
     if (formik.values.phone && !formik.errors.phone) {
       try {
         const response = await fetch(
-          "http://92.205.109.210:8028/mobileauth/send-otp-sms",
+          "http://49.204.232.254:64/mobileauth/send-otp-sms",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -5299,7 +5294,7 @@ const [signuppoll,setSignuppoll]=useState([])
     try {
       console.log(otp);
       const response = await axios.post(
-        "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
+        "http://49.204.232.254:64/mobileauth/verify-otp-sms",
         {
           number: formik.values.phone,
           otp: otp,
@@ -5325,59 +5320,6 @@ const [signuppoll,setSignuppoll]=useState([])
 
   const handleLoginClick = () => {
     navigate("/Loginpg");
-  };
-
-  // const checkUserExistence = async () => {
-  //   try {
-  //     const response = await axios.get('http://92.205.109.210:8028/api/getall');
-  //     const users = response.data;
-
-  //     const userExists = users.some(user =>
-  //       user.email === email || user.phoneNumber === phoneNumber
-  //     );
-
-  //     if (userExists) {
-  //       setErrorMessage('User already exists with this email or phone number');
-  //     } else {
-  //       setErrorMessage('');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching users:', error);
-  //     setErrorMessage('Error checking user existence');
-  //   }
-  // };
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   checkUserExistence();
-  // };
-  const checkUserExistence = async (email, phoneNumber) => {
-    try {
-      const response = await axios.get('http://92.205.109.210:8028/api/getall');
-      const users = response.data; 
-
-      const userExists = users.some(user => 
-        user.email === email || user.phoneNumber === phoneNumber
-      );
-
-      if (userExists) {
-        setErrorMessage('User already exists with this email or phone number');
-      } else {
-        setErrorMessage('');
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      setErrorMessage('Error checking user existence');
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const email = emailRef.current.value;
-    const phoneNumber = phoneNumberRef.current.value;
-
-    checkUserExistence(email, phoneNumber);
   };
 
   return (
@@ -5409,8 +5351,7 @@ const [signuppoll,setSignuppoll]=useState([])
                 </Alert>
               )}
               <Form onSubmit={formik.handleSubmit}>
-                {/* Name */}
-                  {/* Firstname */}
+                    {/* Firstname */}
          <div>   
           <Row>  
             <Col sm={6}>          
@@ -5441,18 +5382,13 @@ const [signuppoll,setSignuppoll]=useState([])
         </div>
                 {/* Email */}
                 <Form.Control
-                  type="email"
-                  id="email" 
+                  type="text"
+                  style={{marginTop:"10px"}}
                   placeholder="Email address"
                   className="x4"
-                  style={{marginTop:"10px"}}
                   {...formik.getFieldProps("email")}
-                  ref={emailRef}
                   isInvalid={formik.touched.email && formik.errors.email}
                   onBlur={formik.handleBlur}
-                  // onChange={(e) => {
-                  //   setFormemail(e.target.value);
-                  //   console.log("Email address ", e.target.value); }}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.email}
@@ -5474,15 +5410,11 @@ const [signuppoll,setSignuppoll]=useState([])
                         type="text"
                         placeholder="Phone number"
                         className="x4"
-                        ref={phoneNumberRef}
                         {...formik.getFieldProps("phone")}
                         isInvalid={formik.touched.phone && formik.errors.phone}
                         onBlur={formik.handleBlur}
-                        // onChange={(e) => {
-                        //   setPhoneNumber(e.target.value);
-                        //   console.log("Phone number: ", e.target.value); }}
                         maxLength={10}
-                        disabled={otpVerified && !isPhoneEditable} 
+                        disabled={otpVerified && !isPhoneEditable} // Enable editing only when "Edit" is clicked
                       />
                       <Form.Control.Feedback type="invalid">
                         {formik.errors.phone}

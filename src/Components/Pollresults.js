@@ -9,7 +9,7 @@ function Pollresults() {
 
   // Fetch voted polls when the component mounts
   useEffect(() => {
-    axios.get('http://92.205.109.210:8028/polls/getvoted')
+    axios.get('http://49.204.232.254:64/polls/getvoted')
       .then(response => {
         setVotedPolls(response.data); // Set the fetched data to state
       })
@@ -95,7 +95,7 @@ export default Pollresults;
 
 //   useEffect(() => {
 //     // Fetch voted polls from the API
-//     axios.post('http://92.205.109.210:8028/polls/getvoted')
+//     axios.post('http://49.204.232.254:64/polls/getvoted')
 //       .then(response => {
 //         setPolls(response.data); // Assuming the API returns an array of polls
 //       })

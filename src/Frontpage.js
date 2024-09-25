@@ -52,7 +52,7 @@
 
 //         // Navigate to the Signup page
 //         navigate("/homepage");
-//         // axios.post("http://92.205.109.210:8028//api/createuser",{
+//         // axios.post("http://49.204.232.254:64//api/createuser",{
 //         //   user_name:result.user.displayName,
 //         //   email:result.user.email
 //         // }).then(res=>{
@@ -176,7 +176,7 @@
 //     console.log(user_name, email);
 //     // Navigate to the Signup page
 //     axios
-//       .post("http://92.205.109.210:8028/api/createuser", {
+//       .post("http://49.204.232.254:64/api/createuser", {
 //         user_name: user_name,
 //         email: email,
 //         phone_number: email,
@@ -279,7 +279,7 @@ const Frontpg = () => {
   let [allpoll, setAllpoll] = useState([]);
 
   useEffect(() => {
-    axios.get("http://92.205.109.210:8028/api/getall").then((res) => {
+    axios.get("http://49.204.232.254:64/api/getall").then((res) => {
       console.log(res.data.users);
       setAllpoll(res.data);
       console.log(allpoll);
@@ -316,7 +316,7 @@ const Frontpg = () => {
       // Navigate to the Signup page
       console.log(user_name, email);
       axios
-        .post("http://92.205.109.210:8028/api/createuser", {
+        .post("http://49.204.232.254:64/api/createuser", {
           user_name: user_name,
           email: email,
           phone_number: user_name,

@@ -1418,7 +1418,7 @@
 
 //   const toggleLike = async () => {
 //     try {
-//       const response = await axios.post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       const response = await axios.post("http://49.204.232.254:64/polls/likeonpoll", {
 //         pollId: pollId, // Pass the poll ID to the API
 //       });
 
@@ -1435,7 +1435,7 @@
 
 //   const handleVote = async (index) => {
 //     try {
-//       const response = await axios.post("http://92.205.109.210:8028/polls/voteonpoll", {
+//       const response = await axios.post("http://49.204.232.254:64/polls/voteonpoll", {
 //         pollId: pollId, // Pass the poll ID to the API
 //         optionIndex: index, // Pass the selected option index
 //       });
@@ -1761,7 +1761,7 @@
 //   //new vote Toggle after progreebar operation
 //   const fetchTotalVotes = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/totalvote", {
+//       .post("http://49.204.232.254:64/polls/totalvote", {
 //         poll_id: _id,
 //       })
 //       .then((response) => {
@@ -1785,7 +1785,7 @@
 //       console.log(selectedOptionValue);
 
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           poll_id: _id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -1816,7 +1816,7 @@
 //     //   if (selectedOption != null) {
 //     //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
 //     //     axios
-//     //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//     //       .post("http://49.204.232.254:64/polls/voteonpoll", {
 //     //         poll_id: _id,
 //     //         user_id: userId,
 //     //         option: selectedOptionValue,
@@ -1830,7 +1830,7 @@
 
 //     //           // Fetch updated vote results from the API
 //     //           axios
-//     //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
+//     //             .post(`http://49.204.232.254:64/polls/totalvote`,{
 //     //               poll_id: _id,
 
 //     //             })
@@ -1870,7 +1870,7 @@
 //     // console.log(selectedOptionValue)
 
 //     // console.log(_id, createdBy._id, selectedOptionValue)
-//     //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
+//     //       axios.post('http://49.204.232.254:64/polls/voteonpoll',{
 
 //     //       poll_id: _id,
 //     //       user_id: userId,
@@ -1929,7 +1929,7 @@
 //   const handleLike = () => {
 //     console.log(createdBy._id);
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: _id,
 //         user_id: userId,
 //       })
@@ -2225,7 +2225,8 @@ function CardComp({
     setLiked,
     likeCount,
     setLikeCount,
-    likedPolls, setLikedPolls,
+    likedPolls,
+    setLikedPolls,
     selectedOption,
     setSelectedOption,
     showVoteButton,
@@ -2300,8 +2301,8 @@ function CardComp({
   // const fetchPolls = async () => {
   //   try {
   //     const response = await axios.post(
-  //       "http://92.205.109.210:8028/polls/getall",
-  //       {  
+  //       "http://49.204.232.254:64/polls/getall",
+  //       {
   //         user_id: userId,
   //       }
   //     );
@@ -2325,10 +2326,8 @@ function CardComp({
     }
   }, [poll]);
 
-  const toggleLike = () => {
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-    setLiked(!liked);
-  };
+
+
 
   console.log("isUserFollowing", poll);
 
@@ -2386,7 +2385,7 @@ function CardComp({
 
   const fetchTotalVotes = () => {
     axios
-      .post("http://92.205.109.210:8028/polls/totalvote", {
+      .post("http://49.204.232.254:64/polls/totalvote", {
         poll_id: _id,
       })
       .then((response) => {
@@ -2440,7 +2439,7 @@ function CardComp({
   //   console.log(selectedOptionValue);
 
   //   axios
-  //     .post("http://92.205.109.210:8028/polls/voteonpoll", {
+  //     .post("http://49.204.232.254:64/polls/voteonpoll", {
   //       poll_id: _id,
   //       user_id: userId,
   //       option: selectedOptionValue,
@@ -2488,7 +2487,7 @@ function CardComp({
     const selectedOptionValue = options[selectedOption];
 
     axios
-      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+      .post("http://49.204.232.254:64/polls/voteonpoll", {
         poll_id: _id,
         user_id: userId,
         option: selectedOptionValue,
@@ -2569,28 +2568,88 @@ function CardComp({
     console.log(page, pollid);
   };
 
-  const handleLike = () => {
-    console.log(createdBy._id);
+  console.log(poll)
+
+
+  useEffect(() => {
+    if (poll && poll.createdBy) {
+      setLiked((prevState) => ({
+        ...prevState,
+        [poll._id]: poll.createdBy.isLiked,
+      }));
+
+      setTotallike((prev) => ({
+        ...prev,
+        [poll._id]: poll.total_likes
+      }))
+      
+      
+    }
+    
+    console.log({[poll._id]: poll.total_likes});
+    console.log(totallike);
+    
+    
+  }, [poll]);
+
+  // const toggleLike = () => {
+  //   setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+
+  //  // setLiked(!liked);
+
+  // };
+
+  const handleLike = (id) => {
+    
+    //console.log(createdBy._id);
+   // console.log(id)
+    
+   
+
     axios
-      .post("http://92.205.109.210:8028/polls/likeonpoll", {
-        poll_id: _id,
+      .post("http://49.204.232.254:64/polls/likeonpoll", {
+        poll_id: id,
         user_id: userId,
       })
+  
       .then((res) => {
         console.log(res.data);
-        setTotallike(res.data.Total_likes);
-        console.log(res.data.Total_likes);
-        console.log(totallike);
+        setLikeCount(res.data.Total_likes)
+        if (res.data.message === "Like recorded successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: true,
+          }));
+        } else if (res.data.message === "Like removed successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: false,
+          }));
+        }
+        
+      })
+      .catch((err) => {
+        console.error("Error in Liking a poll", err);
       });
   };
 
+  // useEffect(() => {
+  //   if (poll) {
+  //     setLiked((prevState) => ({
+  //       ...prevState,
+  //       [poll._id]: poll.createdBy.isLiked,
+  //     }));
+  //   }
+  // }, [poll,userId]);
+  
+  
   // const handleFollowToggle = () => {
   //   console.log("Created By:", createdBy);
   //   console.log("User ID:", userId);
   //   console.log("Poll User ID:", polluserId);
 
   //   axios
-  //     .post("http://92.205.109.210:8028/api/follow", {
+  //     .post("http://49.204.232.254:64/api/follow", {
   //       user_id: userId,
   //       follow_user_id: polluserId,
   //     })
@@ -2620,9 +2679,10 @@ function CardComp({
     const isFollowing = followStatus[polluserId] || false;
 
     axios
-      .post("http://92.205.109.210:8028/api/follow", {
+      .post("http://49.204.232.254:64/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
+        action: isFollowing ? "unfollow" : "follow"  
       })
       .then((res) => {
         console.log(res.data);
@@ -2935,19 +2995,21 @@ function CardComp({
           </Card>
         </Card.Text>
 
+
         <Card.Footer className="d-flex justify-content-between">
           <p>
             <button
-              onClick={toggleLike}
+              
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
+            {/* {(poll.createdBy.isLiked).toString()} */}
               <FontAwesomeIcon
-                icon={liked ? solidHeart : regularHeart}
-                style={{ color: liked ? "red" : "gray", fontSize: "24px" }}
-                onClick={handleLike}
+                icon={liked[poll._id] ? solidHeart : regularHeart}
+                style={{ color: liked[poll._id] ? "red" : "gray", fontSize: "24px" }}
+                onClick={()=> handleLike(poll._id)}
               />
             </button>
-            <span style={{ marginLeft: "8px" }}> total like:{totallike}</span>{" "}
+            <span style={{ marginLeft: "8px" }}> total like:{poll.total_likes||likeCount}</span>{" "}
             {/* Display the like count */}
             like
           </p>

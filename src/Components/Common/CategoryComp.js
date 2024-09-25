@@ -91,7 +91,7 @@
 //       const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
 
 //       axios
-//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
+//         .post("http://49.204.232.254:64/polls/voteonpoll", {
 //           poll_id: _id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -142,7 +142,7 @@
 
 //   const handleLike = () => {
 //     axios
-//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
+//       .post("http://49.204.232.254:64/polls/likeonpoll", {
 //         poll_id: _id,
 //         user_id: userId,
 //       })
@@ -386,14 +386,16 @@ function CategoryComp({
     setPollid,
     isFollowing,
     setIsFollowing,
-    followStatus, setFollowStatus,
+    followStatus,
+    setFollowStatus,
     totallike,
     setTotallike,
     liked,
     setLiked,
     likeCount,
     setLikeCount,
-    likedPolls, setLikedPolls,
+    likedPolls,
+    setLikedPolls,
     selectedOption,
     setSelectedOption,
     showVoteButton,
@@ -404,10 +406,11 @@ function CategoryComp({
     setVoteResults,
     totalVotes,
     setTotalVotes,
-    hasVotedbutton, setHasvotedbutton,
+    hasVotedbutton,
+    setHasvotedbutton,
   ] = useContext(PageContext);
 
-  // const [selectedOption, setSelectedOption] = useState(null); 
+  // const [selectedOption, setSelectedOption] = useState(null);
   // const [showVoteButton, setShowVoteButton] = useState(false);
   // const [hasVoted, setHasVoted] = useState(true);
 
@@ -450,7 +453,7 @@ function CategoryComp({
     const selectedOptionValue = polls.options[selectedOption];
 
     axios
-      .post("http://92.205.109.210:8028/polls/voteonpoll", {
+      .post("http://49.204.232.254:64/polls/voteonpoll", {
         poll_id: polls._id,
         user_id: userId,
         option: selectedOptionValue,
@@ -500,7 +503,7 @@ function CategoryComp({
   const handleLike = () => {
     // console.log(createdBy._id);
     axios
-      .post("http://92.205.109.210:8028/polls/likeonpoll", {
+      .post("http://49.204.232.254:64/polls/likeonpoll", {
         poll_id: polls._id,
         user_id: polls.userId,
       })
@@ -525,34 +528,32 @@ function CategoryComp({
     setShowOverlay(!showOverlay);
   };
 
-  
-
-  
-
   const handleFollowToggle = (polluserId) => {
+    const isFollowing = followStatus[polluserId] || false;
 
-  const isFollowing = followStatus[polluserId] || false;
-
-  axios.post("http://92.205.109.210:8028/api/follow", {
-    follow_user_id: polluserId,
-    user_id: userId
-  }).then(res => {
-    console.log(res.data);
-    if (res.data.message === "Follower added successfully") {
-      setFollowStatus(prevState => ({
-        ...prevState,
-        [polluserId]: true  
-      }));
-    } else if (res.data.message === "Follower removed successfully") {
-      setFollowStatus(prevState => ({
-        ...prevState,
-        [polluserId]: false  
-      }));
-    }
-  }).catch(err => {
-    console.error("Error in follow/unfollow request:", err);
-  });
-};
+    axios
+      .post("http://49.204.232.254:64/api/follow", {
+        follow_user_id: polluserId,
+        user_id: userId,
+      })
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.message === "Follower added successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: true,
+          }));
+        } else if (res.data.message === "Follower removed successfully") {
+          setFollowStatus((prevState) => ({
+            ...prevState,
+            [polluserId]: false,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error("Error in follow/unfollow request:", err);
+      });
+  };
 
   return (
     <div className="category-container">
@@ -568,16 +569,17 @@ function CategoryComp({
                     <h6>Name:{poll.createdBy.user_name}</h6>
                     <p>Status:{poll.status}</p>
                   </div>
-                  {userId !== poll.createdBy._id && (
-                    poll &&
-                    <Button variant="primary" onClick={()=>handleFollowToggle(poll.createdBy._id)}>
+                  {userId !== poll.createdBy._id && poll && (
+                    <Button
+                      variant="primary"
+                      onClick={() => handleFollowToggle(poll.createdBy._id)}
+                    >
                       {/* {isFollowing ? "Unfollow" : "Follow"} */}
                       {followStatus[poll.createdBy._id] ? "Unfollow" : "Follow"}
                     </Button>
                   )}
                 </Card.Header>
                 <Card.Text>
-                
                   <div className="mt-3 mb-3">Question: {poll.question}</div>
                   <Card className="mb-3">
                     <Card.Body>
@@ -590,56 +592,69 @@ function CategoryComp({
                         </p>
                       </Card.Header>
                       <Card.Text>
-                      <div>
-                    
-                    {polls && !hasVoted[polls._id]
-                      ? polls.options?.map((item, index) => (
-                          <div key={index}>
-                            <input
-                              type="radio"
-                              id={`option-${index}`}
-                              name="poll-option"
-                              value={item.option}
-                              onChange={() => handleOptionChange(item.option)}
-                            />
-                            <label htmlFor={`option-${index}`}>
-                              {item.option}
-                            </label>
-                            <span>{item.count}</span>
-                          </div>
-                        ))
-                      : polls.options?.map((item, index) => (
-                          <div key={index} style={{ position: "relative" }}>
-                            <ProgressBar
-                              now={calculatePercentage(item.count, totalVotes)}
-                              style={{
-                                height: "20px",
-                                cursor: "pointer",
-                              }}
-                              variant={
-                                selectedOption === index ? "success" : "info"
-                              }
-                              label={`${calculatePercentage(
-                                item.count,
-                                totalVotes
-                              )}%`}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                                color: "black",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {calculatePercentage(item.count, totalVotes)}%
-                            </span>
-                          </div>
-                        ))}
+                        <div>
+                          {polls && !hasVoted[polls._id]
+                            ? polls.options?.map((item, index) => (
+                                <div key={index}>
+                                  <input
+                                    type="radio"
+                                    id={`option-${index}`}
+                                    name="poll-option"
+                                    value={item.option}
+                                    onChange={() =>
+                                      handleOptionChange(item.option)
+                                    }
+                                  />
+                                  <label htmlFor={`option-${index}`}>
+                                    {item.option}
+                                  </label>
+                                  <span>{item.count}</span>
+                                </div>
+                              ))
+                            : polls.options?.map((item, index) => (
+                                <div
+                                  key={index}
+                                  style={{ position: "relative" }}
+                                >
+                                  <ProgressBar
+                                    now={calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}
+                                    style={{
+                                      height: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                    variant={
+                                      selectedOption === index
+                                        ? "success"
+                                        : "info"
+                                    }
+                                    label={`${calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}%`}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      left: "50%",
+                                      top: "50%",
+                                      transform: "translate(-50%, -50%)",
+                                      color: "black",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}
+                                    %
+                                  </span>
+                                </div>
+                              ))}
 
-                    {/* {hasVoted[onepoll._id] && (
+                          {/* {hasVoted[onepoll._id] && (
                         <button
                           onClick={() =>
                             handleVoteToggle(onepoll._id, selectedOption)
@@ -658,17 +673,17 @@ function CategoryComp({
                       >
                         Vote
                       </button> */}
-                    <button
-                      onClick={() =>
-                        handleVoteToggle(polls._id, selectedOption)
-                      }
-                    >
-                      {hasVoted[polls._id] ? "Unvote" : "Vote"}
-                    </button>
+                          <button
+                            onClick={() =>
+                              handleVoteToggle(polls._id, selectedOption)
+                            }
+                          >
+                            {hasVoted[polls._id] ? "Unvote" : "Vote"}
+                          </button>
 
-                    <p>{selectedOption}</p>
-                  </div>
-                  </Card.Text>
+                          <p>{selectedOption}</p>
+                        </div>
+                      </Card.Text>
                       <ToastContainer />
                     </Card.Body>
                   </Card>
