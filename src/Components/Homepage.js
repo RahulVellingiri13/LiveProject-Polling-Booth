@@ -514,10 +514,13 @@ function Homepage({ poll }) {
   let [page, setPage] = useState("Polllist");
   let [pollid, setPollid] = useState("");
 
-  let [totallike, setTotallike] = useState({})
+  let [totallike, setTotallike] = useState(
+    polls.map((poll) => poll.total_likes)
+  )
   
   const [liked, setLiked] = useState( {} );
   const [likeCount, setLikeCount] = useState()
+ 
   
 
   const [likedPolls, setLikedPolls] = useState([]);
@@ -878,6 +881,7 @@ function Homepage({ poll }) {
           setTotalVotes,
           showVoteButton,
           setShowVoteButton,
+          
         ]}
       >
         <div className="polling-booth">
@@ -939,7 +943,7 @@ function Homepage({ poll }) {
                 )}
                 {page === "AddPoll" && <AddPoll addNewPoll={addNewPoll} />}
                 {page === "Pollresults" && <Pollresults />}
-                {page === "Userdetails" && <Userdetails />}
+                {page === "Userdetails" && <Userdetails   />}
                 {page === "CommentsComp" && <CommentsComp />}
                 {page === "category" && (
                   <CategoryComp

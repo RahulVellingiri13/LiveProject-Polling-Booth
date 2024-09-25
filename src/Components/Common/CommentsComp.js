@@ -2201,7 +2201,7 @@
 
 // export default CommentsComp;
 
-//----------------------------------
+//-------------------------------------------------------------------------------------------------------------
 
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -2238,7 +2238,8 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     setLiked,
     likeCount,
     setLikeCount,
-    likedPolls, setLikedPolls,
+    likedPolls,
+    setLikedPolls,
     selectedOption,
     setSelectedOption,
     showVoteButton,
@@ -2675,22 +2676,57 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
     window.location.href = "/Homepage";
   };
 
-  const toggleLike = () => {
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-    setLiked(!liked);
-  };
+  useEffect(() => {
+    if (onepoll && onepoll.createdBy) {
+      setLiked((prevState) => ({
+        ...prevState,
+        [onepoll._id]: onepoll.createdBy.isLiked,
+      }));
 
-  const handleLike = () => {
+      setTotallike((prev) => ({
+        ...prev,
+        [onepoll._id]: onepoll.total_likes,
+      }));
+    }
+
+    console.log({ [onepoll._id]: onepoll.total_likes });
+    console.log(totallike);
+  }, [poll]);
+
+  // const toggleLike = () => {
+  //   setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+  //   setLiked(!liked);
+  // };
+
+  const handleLike = (id) => {
+    //console.log(createdBy._id);
+    // console.log(id)
+
     axios
       .post("http://49.204.232.254:64/polls/likeonpoll", {
-        poll_id: onepoll._id,
+        poll_id: id,
         user_id: userId,
       })
+
       .then((res) => {
-        setTotallike(res.data.Total_likes);
+        console.log(res.data);
+        setLikeCount(res.data.Total_likes);
+        if (res.data.message === "Like recorded successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: true,
+          }));
+        } else if (res.data.message === "Like removed successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: false,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error("Error in Liking a poll", err);
       });
   };
-  // console.log(onepoll);
 
   const toggleCommentLike = (index) => {
     setLikedComments((prev) => ({
@@ -2740,6 +2776,14 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
   //       });
   //     });
   // };
+  useEffect(() => {
+    if (onepoll && onepoll.createdBy) {
+      setFollowStatus((prevState) => ({
+        ...prevState,
+        [onepoll.createdBy._id]: onepoll.createdBy.isFollowing,
+      }));
+    }
+  }, [onepoll]);
 
   const handleFollowToggle = (polluserId) => {
     const isFollowing = followStatus[polluserId] || false;
@@ -2823,57 +2867,59 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                 </Card.Header>
 
                 <Card.Body>
-                <Card.Text>
-                  <div>
+                  <Card.Text>
+                    <div>
+                      {onepoll && !hasVoted[onepoll._id]
+                        ? onepoll.options?.map((item, index) => (
+                            <div key={index}>
+                              <input
+                                type="radio"
+                                id={`option-${index}`}
+                                name="poll-option"
+                                value={item.option}
+                                onChange={() => handleOptionChange(item.option)}
+                              />
+                              <label htmlFor={`option-${index}`}>
+                                {item.option}
+                              </label>
+                              <span>{item.count}</span>
+                            </div>
+                          ))
+                        : onepoll.options?.map((item, index) => (
+                            <div key={index} style={{ position: "relative" }}>
+                              <ProgressBar
+                                now={calculatePercentage(
+                                  item.count,
+                                  totalVotes
+                                )}
+                                style={{
+                                  height: "20px",
+                                  cursor: "pointer",
+                                }}
+                                variant={
+                                  selectedOption === index ? "success" : "info"
+                                }
+                                label={`${calculatePercentage(
+                                  item.count,
+                                  totalVotes
+                                )}%`}
+                              />
+                              <span
+                                style={{
+                                  position: "absolute",
+                                  left: "50%",
+                                  top: "50%",
+                                  transform: "translate(-50%, -50%)",
+                                  color: "black",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {calculatePercentage(item.count, totalVotes)}%
+                              </span>
+                            </div>
+                          ))}
 
-                    {onepoll && !hasVoted[onepoll._id]
-                      ? onepoll.options?.map((item, index) => (
-                          <div key={index}>
-                            <input
-                              type="radio"
-                              id={`option-${index}`}
-                              name="poll-option"
-                              value={item.option}
-                              onChange={() => handleOptionChange(item.option)}
-                            />
-                            <label htmlFor={`option-${index}`}>
-                              {item.option}
-                            </label>
-                            <span>{item.count}</span>
-                          </div>
-                        ))
-                      : onepoll.options?.map((item, index) => (
-                          <div key={index} style={{ position: "relative" }}>
-                            <ProgressBar
-                              now={calculatePercentage(item.count, totalVotes)}
-                              style={{
-                                height: "20px",
-                                cursor: "pointer",
-                              }}
-                              variant={
-                                selectedOption === index ? "success" : "info"
-                              }
-                              label={`${calculatePercentage(
-                                item.count,
-                                totalVotes
-                              )}%`}
-                            />
-                            <span
-                              style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: "50%",
-                                transform: "translate(-50%, -50%)",
-                                color: "black",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              {calculatePercentage(item.count, totalVotes)}%
-                            </span>
-                          </div>
-                        ))}
-
-                    {/* {hasVoted[onepoll._id] && (
+                      {/* {hasVoted[onepoll._id] && (
                         <button
                           onClick={() =>
                             handleVoteToggle(onepoll._id, selectedOption)
@@ -2892,16 +2938,16 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                       >
                         Vote
                       </button> */}
-                    <button
-                      onClick={() =>
-                        handleVoteToggle(onepoll._id, selectedOption)
-                      }
-                    >
-                      {hasVoted[onepoll._id] ? "Unvote" : "Vote"}
-                    </button>
+                      <button
+                        onClick={() =>
+                          handleVoteToggle(onepoll._id, selectedOption)
+                        }
+                      >
+                        {hasVoted[onepoll._id] ? "Unvote" : "Vote"}
+                      </button>
 
-                    <p>{selectedOption}</p>
-                  </div>
+                      <p>{selectedOption}</p>
+                    </div>
                   </Card.Text>
                   <ToastContainer />
                 </Card.Body>
@@ -2910,24 +2956,25 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                   <Card.Footer className="d-flex justify-content-between">
                     <p>
                       <button
-                        onClick={toggleLike}
                         style={{
                           background: "none",
                           border: "none",
                           cursor: "pointer",
                         }}
                       >
+                        {/* {(poll.createdBy.isLiked).toString()} */}
                         <FontAwesomeIcon
-                          icon={liked ? solidHeart : regularHeart}
+                          icon={liked[onepoll._id] ? solidHeart : regularHeart}
                           style={{
-                            color: liked ? "red" : "gray",
+                            color: liked[onepoll._id] ? "red" : "gray",
                             fontSize: "24px",
                           }}
-                          onClick={handleLike}
+                          onClick={() => handleLike(onepoll._id)}
                         />
                       </button>
                       <span style={{ marginLeft: "8px" }}>
-                        total like: {totallike}
+                        {" "}
+                        total like:{onepoll.total_likes || likeCount}
                       </span>{" "}
                       {/* Display the like count */}
                       like

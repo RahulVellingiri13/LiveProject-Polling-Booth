@@ -2571,6 +2571,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
     sessionStorage.getItem("loginuserId") ||
     sessionStorage.getItem("googleuserId");
   console.log("userId", userId);
+  console.log(polluserId, options, poll, optionscount);
 
   const [
     page,
@@ -2587,7 +2588,8 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
     setLiked,
     likeCount,
     setLikeCount,
-    likedPolls, setLikedPolls,
+    likedPolls,
+    setLikedPolls,
     selectedOption,
     setSelectedOption,
     showVoteButton,
@@ -2667,6 +2669,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
   };
 
   // Function to fetch created polls
+
   const fetchCreatedPolls = () => {
     axios
       .post("http://49.204.232.254:64/api/getProfile", {
@@ -2684,7 +2687,6 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
       });
   };
 
-  // Function to fetch voted polls
   const fetchVotedPolls = () => {
     axios
       .post("http://49.204.232.254:64/api/getProfile", {
@@ -2700,22 +2702,60 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
       });
   };
 
-  const toggleLike = () => {
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-    setLiked(!liked);
-  };
-  const handleLike = () => {
-    // console.log(poll.createdBy._id);
+  useEffect(() => {
+    if (poll && poll.createdBy && poll.total_likes) {
+      setLiked((prevState) => ({
+        ...prevState,
+        [poll._id]: poll.createdBy.isLiked,
+      }));
+
+      setTotallike((prev) => ({
+        ...prev,
+        [poll._id]: poll.total_likes,
+      }));
+    }
+
+    //console.log(liked[poll._id]);
+    // console.log({[poll._id]:poll.total_likes});
+
+    console.log(totallike);
+  }, [poll]);
+
+  // const toggleLike = () => {
+  //   setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+  //   setLiked(!liked);
+  // };
+
+  const handleLike = (id) => {
+    //console.log(createdBy._id);
+    // console.log(id)
+
     axios
       .post("http://49.204.232.254:64/polls/likeonpoll", {
-        poll_id: polls._id,
-        user_id: polls.userId,
+        poll_id: id,
+        user_id: userId,
       })
+
       .then((res) => {
         console.log(res.data);
-        setTotallike(res.data.Total_likes);
-        console.log(res.data.Total_likes);
-        console.log(totallike);
+        setTotallike((prev) => ({
+          ...prev,
+          [id]: res.data.Total_likes,
+        }));
+        if (res.data.message === "Like recorded successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: true,
+          }));
+        } else if (res.data.message === "Like removed successfully") {
+          setLiked((prevState) => ({
+            ...prevState,
+            [id]: false,
+          }));
+        }
+      })
+      .catch((err) => {
+        console.error("Error in Liking a poll", err);
       });
   };
   let handleOnepoll = (_id) => {
@@ -2738,6 +2778,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
       .post("http://49.204.232.254:64/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
+        action: isFollowing ? "unfollow" : "follow",
       })
       .then((res) => {
         console.log(res.data);
@@ -2972,8 +3013,8 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                                     value={option.option}
                                     onChange={() => handleOptionChange(index)}
                                   />
-                                  <label htmlFor={`option-${index }`}>
-                                    {option.option} {optionscount[index]}
+                                  <label htmlFor={`option-${index + 1}`}>
+                                    {option.option} {optionscount?.[index] || 0}
                                   </label>
                                   <span>{option.count}</span>
                                 </div>
@@ -3019,7 +3060,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                                   </span>
                                 </div>
                               ))}
-
+                              
                           {/* {hasVoted[poll._id] && (
                   <button
                     onClick={() => handleVoteToggle(poll._id, selectedOption)}
@@ -3055,7 +3096,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                   <Card.Footer className="d-flex justify-content-between">
                     <p>
                       <button
-                        onClick={toggleLike}
+                        // onClick={toggleLike}
                         style={{
                           background: "none",
                           border: "none",
@@ -3172,7 +3213,7 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                   <Card.Header className="d-flex justify-content-between align-items-center">
                     <div>
                       <h6>Name:{poll.createdBy.user_name}</h6>
-                  
+
                       <p>Status:{poll.status}</p>
                     </div>
                     <Button variant="primary" onClick={handleFollowToggle}>
@@ -3192,54 +3233,65 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                           </p>
                         </Card.Header>
                         <Card.Text>
-                {poll && !hasVoted[poll._id]
-                  ? poll.options?.map((option, index) => (
-                      <div key={index}>
-                        <input
-                          type="radio"
-                          id={`option-${index + 1}`}
-                          name="options"
-                          value={option.option}
-                          onChange={() => handleOptionChange(index)}
-                        />
-                        <label htmlFor={`option-${index + 1}`}>
-                          {option.option} {optionscount[index]}
-                        </label>
-                        <span>{option.count}</span>
-                      </div>
-                    ))
-                  : poll.options?.map((item, index) => (
-                      <div key={index} style={{ position: "relative" }}>
-                        <ProgressBar
-                          now={calculatePercentage(item.count, totalVotes)}
-                          style={{
-                            height: "20px",
-                            cursor: "pointer",
-                          }}
-                          variant={
-                            selectedOption === index ? "success" : "info"
-                          }
-                          label={`${calculatePercentage(
-                            item.count,
-                            totalVotes
-                          )}%`}
-                        />
-                        <span
-                          style={{
-                            position: "absolute",
-                            left: "50%",
-                            top: "50%",
-                            transform: "translate(-50%, -50%)",
-                            color: "black",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          {`${calculatePercentage(item.count, totalVotes)}%`}
-                        </span>
-                      </div>
-                    ))}
+                          {poll && !hasVoted[poll._id]
+                            ? poll.options?.map((option, index) => (
+                                <div key={index}>
+                                  <input
+                                    type="radio"
+                                    id={`option-${index + 1}`}
+                                    name="options"
+                                    value={option.option}
+                                    onChange={() => handleOptionChange(index)}
+                                  />
+                                  <label htmlFor={`option-${index + 1}`}>
+                                    {option.option} {optionscount?.[index]||0}
+                                  </label>
+                                  <span>{option.count}</span>
+                                </div>
+                              ))
+                            : poll.options?.map((item, index) => (
+                                <div
+                                  key={index}
+                                  style={{ position: "relative" }}
+                                >
+                                  <ProgressBar
+                                    now={calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}
+                                    style={{
+                                      height: "20px",
+                                      cursor: "pointer",
+                                    }}
+                                    variant={
+                                      selectedOption === index
+                                        ? "success"
+                                        : "info"
+                                    }
+                                    label={`${calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}%`}
+                                  />
+                                  <span
+                                    style={{
+                                      position: "absolute",
+                                      left: "50%",
+                                      top: "50%",
+                                      transform: "translate(-50%, -50%)",
+                                      color: "black",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {`${calculatePercentage(
+                                      item.count,
+                                      totalVotes
+                                    )}%`}
+                                  </span>
+                                </div>
+                              ))}
 
-                {/* {hasVoted[poll._id] && (
+                          {/* {hasVoted[poll._id] && (
                   <button
                     onClick={() => handleVoteToggle(poll._id, selectedOption)}
                   >
@@ -3255,14 +3307,16 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                   Vote
                 </button> */}
 
-                <button
-                  onClick={() => handleVoteToggle(poll._id, selectedOption)}
-                >
-                  {hasVoted[poll._id] ? "Unvote" : "Vote"}
-                </button>
+                          <button
+                            onClick={() =>
+                              handleVoteToggle(poll._id, selectedOption)
+                            }
+                          >
+                            {hasVoted[poll._id] ? "Unvote" : "Vote"}
+                          </button>
 
-                <p>{selectedOption}</p>
-              </Card.Text>
+                          <p>{selectedOption}</p>
+                        </Card.Text>
 
                         <ToastContainer />
                       </Card.Body>
@@ -3272,24 +3326,25 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                   <Card.Footer className="d-flex justify-content-between">
                     <p>
                       <button
-                        onClick={toggleLike}
                         style={{
                           background: "none",
                           border: "none",
                           cursor: "pointer",
                         }}
                       >
+                        {/* {(poll.createdBy.isLiked).toString()} */}
                         <FontAwesomeIcon
-                          icon={liked ? solidHeart : regularHeart}
+                          icon={liked[poll._id] ? solidHeart : regularHeart}
                           style={{
-                            color: liked ? "red" : "gray",
+                            color: liked[poll._id] ? "red" : "gray",
                             fontSize: "24px",
                           }}
-                          onClick={handleLike}
+                          onClick={() => handleLike(poll._id)}
                         />
                       </button>
                       <span style={{ marginLeft: "8px" }}>
-                        total like: {totallike}
+                        {" "}
+                        total like:{totallike ? totallike[poll._id] : 1}
                       </span>{" "}
                       {/* Display the like count */}
                       like
@@ -3365,7 +3420,6 @@ const Userdetails = ({ polls, polluserId, poll, options, optionscount }) => {
                                 style={{ fontSize: "35px" }}
                               ></i>
                             </a>
-                        
                           </div>
                         </Popover.Body>
                       </Popover>

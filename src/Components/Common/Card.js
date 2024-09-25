@@ -2326,9 +2326,6 @@ function CardComp({
     }
   }, [poll]);
 
-
-
-
   console.log("isUserFollowing", poll);
 
   // const handleLike = (id) => {
@@ -2568,11 +2565,10 @@ function CardComp({
     console.log(page, pollid);
   };
 
-  console.log(poll)
-
+  console.log(poll);
 
   useEffect(() => {
-    if (poll && poll.createdBy) {
+    if (poll && poll.createdBy && poll.total_likes) {
       setLiked((prevState) => ({
         ...prevState,
         [poll._id]: poll.createdBy.isLiked,
@@ -2580,16 +2576,14 @@ function CardComp({
 
       setTotallike((prev) => ({
         ...prev,
-        [poll._id]: poll.total_likes
-      }))
-      
-      
+        [poll._id]: poll.total_likes,
+      }));
     }
-    
-    console.log({[poll._id]: poll.total_likes});
+
+    console.log(liked[poll._id]);
+    console.log({ [poll._id]: poll.total_likes });
+
     console.log(totallike);
-    
-    
   }, [poll]);
 
   // const toggleLike = () => {
@@ -2600,21 +2594,21 @@ function CardComp({
   // };
 
   const handleLike = (id) => {
-    
     //console.log(createdBy._id);
-   // console.log(id)
-    
-   
+    // console.log(id)
 
     axios
       .post("http://49.204.232.254:64/polls/likeonpoll", {
         poll_id: id,
         user_id: userId,
       })
-  
+
       .then((res) => {
         console.log(res.data);
-        setLikeCount(res.data.Total_likes)
+        setTotallike((prev) => ({
+          ...prev,
+          [id]: res.data.Total_likes,
+        }));
         if (res.data.message === "Like recorded successfully") {
           setLiked((prevState) => ({
             ...prevState,
@@ -2626,7 +2620,6 @@ function CardComp({
             [id]: false,
           }));
         }
-        
       })
       .catch((err) => {
         console.error("Error in Liking a poll", err);
@@ -2641,8 +2634,7 @@ function CardComp({
   //     }));
   //   }
   // }, [poll,userId]);
-  
-  
+
   // const handleFollowToggle = () => {
   //   console.log("Created By:", createdBy);
   //   console.log("User ID:", userId);
@@ -2682,7 +2674,7 @@ function CardComp({
       .post("http://49.204.232.254:64/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
-        action: isFollowing ? "unfollow" : "follow"  
+        action: isFollowing ? "unfollow" : "follow",
       })
       .then((res) => {
         console.log(res.data);
@@ -2995,21 +2987,25 @@ function CardComp({
           </Card>
         </Card.Text>
 
-
         <Card.Footer className="d-flex justify-content-between">
           <p>
             <button
-              
               style={{ background: "none", border: "none", cursor: "pointer" }}
             >
-            {/* {(poll.createdBy.isLiked).toString()} */}
+              {/* {(poll.createdBy.isLiked).toString()} */}
               <FontAwesomeIcon
                 icon={liked[poll._id] ? solidHeart : regularHeart}
-                style={{ color: liked[poll._id] ? "red" : "gray", fontSize: "24px" }}
-                onClick={()=> handleLike(poll._id)}
+                style={{
+                  color: liked[poll._id] ? "red" : "gray",
+                  fontSize: "24px",
+                }}
+                onClick={() => handleLike(poll._id)}
               />
             </button>
-            <span style={{ marginLeft: "8px" }}> total like:{poll.total_likes||likeCount}</span>{" "}
+            <span style={{ marginLeft: "8px" }}>
+              {" "}
+              total like:{totallike ? totallike[poll._id] : 1}
+            </span>{" "}
             {/* Display the like count */}
             like
           </p>
