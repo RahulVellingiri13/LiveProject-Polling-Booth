@@ -2366,9 +2366,9 @@ function CardComp({
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
-      unselectOption(); // Unselect the option if it's already selected
+      unselectOption(); 
     } else {
-      setSelectedOption(index); // Select the option
+      setSelectedOption(index); 
       setShowVoteButton(true);
     }
   };
@@ -2860,7 +2860,7 @@ function CardComp({
                   </Button>
                 )}
               </Card.Text> */}
-              
+
               <Card.Text>
                 {poll && !hasVoted[poll._id]
                   ? poll.options?.map((option, index) => (
