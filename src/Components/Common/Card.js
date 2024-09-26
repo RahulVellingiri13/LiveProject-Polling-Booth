@@ -2164,7 +2164,7 @@
 
 //---------------
 
-//updated 11 sep
+//updated 26 sep
 
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { Button, Card, ProgressBar, Overlay, Popover } from "react-bootstrap";
@@ -2860,6 +2860,7 @@ function CardComp({
                   </Button>
                 )}
               </Card.Text> */}
+              
               <Card.Text>
                 {poll && !hasVoted[poll._id]
                   ? poll.options?.map((option, index) => (
