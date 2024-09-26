@@ -2841,9 +2841,21 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
               <p>Created At: {onepoll.createdAt}</p>
               <p>Expiration Time: {onepoll.expirationTime}</p>
               <p>Question: {onepoll.question}</p>
-              <p>Status: {onepoll.status}</p>
+              {/* <p>Status: {onepoll.status}</p> */}
+              <p
+              style={{
+                color:
+                  onepoll.status === "open"
+                    ? "green"
+                    : onepoll.status === "closed"
+                    ? "red"
+                    : "black",
+              }}
+            >
+              Status: {onepoll.status}
+            </p>
             </div>
-            {userId !== polluserId && onepoll && (
+            {userId !== polluserId && poll && (
               <Button
                 variant="primary"
                 onClick={() => handleFollowToggle(onepoll.createdBy._id)}

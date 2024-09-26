@@ -2362,9 +2362,7 @@ function CardComp({
     setComments(comments.map(addReply));
   };
 
-  //  useEffect(() => {
-  //   fetchTotalVotes();
-  // }, []);
+  
 
   const handleOptionChange = (index) => {
     if (selectedOption === index) {
@@ -2379,6 +2377,10 @@ function CardComp({
     setSelectedOption(null); // Unselect the currently selected option
     setShowVoteButton(false);
   };
+
+   useEffect(() => {
+    fetchTotalVotes();
+  }, [pollid]);
 
   const fetchTotalVotes = () => {
     axios
@@ -3004,7 +3006,9 @@ function CardComp({
             </button>
             <span style={{ marginLeft: "8px" }}>
               {" "}
-              total like:{totallike ? totallike[poll._id] : 1}
+              total like:
+              {totallike ? totallike[poll._id] : 1}
+              {/* {totallike[poll._id]} */}
             </span>{" "}
             {/* Display the like count */}
             like

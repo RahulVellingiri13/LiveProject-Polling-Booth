@@ -5075,7 +5075,7 @@
 
 //------------------------------------------------------------
 
-//updated one - 25 sep
+//updated one - 26 sep
 
 import React, { useState, useEffect } from "react";
 import {
@@ -5128,6 +5128,16 @@ function Signup() {
     }
   }, [timer]);
 
+  let [allpoll, setAllpoll] = useState([]);
+  useEffect(() => {
+    axios.get("http://49.204.232.254:64/api/getall").then((res) => {
+      console.log(res.data.users);
+      setAllpoll(res.data);
+      console.log(allpoll);
+    });
+  }, []);
+
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -5174,25 +5184,56 @@ function Signup() {
     validateOnBlur: true,
     onSubmit: (values) => {
       console.log(otpVerified);
-      if (otpVerified) {
-        handleSignup(values);
+      let existingemail = allpoll.users.some((item) => item.email == formik.values.email);
+      console.log(existingemail)
+      let existingphonenumber=allpoll.users.some(item=>item.phone_number==formik.values.phone)
+      console.log(existingphonenumber)
+    //   if (otpVerified) {
+    //     if(existingemail || existingphonenumber){
+    //            if(existingemail || existingphonenumber)
+    //            {
+    //             alert("Already an user")
+    //             navigate("/Loginpg");
+    //            }
+    //            else{
+    //             handleSignup(values);
+    //            }
+    //     }
+    //     // else{
+    //     //        handleSignup(values);
+    //     // }
+       
+    //   } else {
+    //     setOtpError("Please verify OTP.");
+    //   }
+    // },
+    if (otpVerified) {
+      if (existingemail || existingphonenumber) {
+        alert("Already a user");
+        navigate("/Loginpg"); 
       } else {
-        setOtpError("Please verify OTP.");
+        handleSignup(values);
       }
-    },
+    } else {
+      setOtpError("Please verify OTP.");
+    }
+  },
   });
 
 //   validateOnBlur: true,
 //   onSubmit: async (values) => {
 //     try {
-//       const response = await axios.get("http://49.204.232.254:64/api/getall", {
+//       const response = await axios.post("http://49.204.232.254:64/api/createuser", {
 //         email: formik.values.email,
 //        phone_number: formik.values.phone,
 //       });
 //       console.log(response);
       
 
-//       if (response.data.exists) {
+//       if (response.data.message="User already exists") {
+//         console.log("existing user")
+//         alert("Already an user")
+//         navigate("/Loginpg");
 //         if (response.data.emailExists) {
 //           formik.setFieldError('email', 'This email is already registered');
 //         }

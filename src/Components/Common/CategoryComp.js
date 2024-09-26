@@ -494,7 +494,6 @@ function CategoryComp({
     }
   }, [poll, userId]);
 
-
   useEffect(() => {
     if (poll && poll.createdBy) {
       setLiked((prevState) => ({
@@ -504,21 +503,15 @@ function CategoryComp({
 
       setTotallike((prev) => ({
         ...prev,
-        [poll._id]: poll.total_likes
-      }))
-      
-      
+        [poll._id]: poll.total_likes,
+      }));
     }
-    
+
     //console.log(liked[poll._id]);
     //console.log({[poll._id]:poll.total_likes});
-    
+
     console.log(totallike);
-    
-    
   }, [poll]);
-
-
 
   // const toggleLike = () => {
   //   setLikeCount(liked ? likeCount - 1 : likeCount + 1);
@@ -526,24 +519,21 @@ function CategoryComp({
   // };
 
   const handleLike = (id) => {
-    
     //console.log(createdBy._id);
-   // console.log(id)
-    
-   
+    // console.log(id)
 
     axios
       .post("http://49.204.232.254:64/polls/likeonpoll", {
         poll_id: id,
         user_id: userId,
       })
-  
+
       .then((res) => {
         console.log(res.data);
-        setTotallike((prev) =>({
+        setTotallike((prev) => ({
           ...prev,
-          [id]: res.data.Total_likes
-        }))
+          [id]: res.data.Total_likes,
+        }));
         if (res.data.message === "Like recorded successfully") {
           setLiked((prevState) => ({
             ...prevState,
@@ -555,13 +545,11 @@ function CategoryComp({
             [id]: false,
           }));
         }
-        
       })
       .catch((err) => {
         console.error("Error in Liking a poll", err);
       });
   };
-
 
   let handleOnepoll = (_id) => {
     console.log(_id);
@@ -604,105 +592,121 @@ function CategoryComp({
   };
 
   return (
-    <div className="category-container">
-      {/* <h3>Category:{filteredPolls.category_name}</h3> */}
-      {/* <h2 className="category-title text-center">{polls.category_name}</h2>` */}
-      {filteredPolls && filteredPolls.length > 0 ? (
-        <div>
-          {filteredPolls.map((poll) => (
-            <Card key={poll._id} className="poll-card h-100">
-              <Card.Body>
-                <Card.Header>
-                  <div>
-                    <h6>Name:{poll.createdBy.user_name}</h6>
-                    <p>Status:{poll.status}</p>
-                  </div>
-                  {userId !== poll.createdBy._id && poll && (
-                    <Button
-                      variant="primary"
-                      onClick={() => handleFollowToggle(poll.createdBy._id)}
-                    >
-                      {/* {isFollowing ? "Unfollow" : "Follow"} */}
-                      {followStatus[poll.createdBy._id] ? "Unfollow" : "Follow"}
-                    </Button>
-                  )}
-                </Card.Header>
-                <Card.Text>
-                  <div className="mt-3 mb-3">Question: {poll.question}</div>
-                  <Card className="mb-3">
-                    <Card.Body>
-                      <Card.Header className="d-flex justify-content-between">
-                        <p>Poll Ends on {poll.expirationTime}</p>
-                        <p>
-                          Category:{" "}
-                          {poll.category &&
-                            poll.category.map((item) => item.category_name)}
-                        </p>
-                      </Card.Header>
-                      <Card.Text>
-                        <div>
-                          {poll && !hasVoted[poll._id]
-                            ? poll.options?.map((item, index) => (
-                                <div key={index}>
-                                  <input
-                                    type="radio"
-                                    id={`option-${index}`}
-                                    name="poll-option"
-                                    value={item.option}
-                                    onChange={() =>
-                                      handleOptionChange(item.option)
-                                    }
-                                  />
-                                  <label htmlFor={`option-${index}`}>
-                                    {item.option}
-                                  </label>
-                                  <span>{item.count}</span>
-                                </div>
-                              ))
-                            : poll.options?.map((item, index) => (
-                                <div
-                                  key={index}
-                                  style={{ position: "relative" }}
-                                >
-                                  <ProgressBar
-                                    now={calculatePercentage(
-                                      item.count,
-                                      totalVotes
-                                    )}
-                                    style={{
-                                      height: "20px",
-                                      cursor: "pointer",
-                                    }}
-                                    variant={
-                                      selectedOption === index
-                                        ? "success"
-                                        : "info"
-                                    }
-                                    label={`${calculatePercentage(
-                                      item.count,
-                                      totalVotes
-                                    )}%`}
-                                  />
-                                  <span
-                                    style={{
-                                      position: "absolute",
-                                      left: "50%",
-                                      top: "50%",
-                                      transform: "translate(-50%, -50%)",
-                                      color: "black",
-                                      fontWeight: "bold",
-                                    }}
+    <>
+      
+      <div className="category-container">
+        {/* <h3>Category:{filteredPolls.category_name}</h3> */}
+        {/* <h2 className="category-title text-center">{polls.category_name}</h2>` */}
+        {filteredPolls && filteredPolls.length > 0 ? (
+          <div>
+            {filteredPolls.map((poll) => (
+              <Card key={poll._id} className="poll-card h-100">
+                <Card.Body>
+                  <Card.Header className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6>Name:{poll.createdBy.user_name}</h6>
+                      {/* <p>Status:{poll.status}</p> */}
+                      <p
+                        style={{
+                          color:
+                            poll.status === "open"
+                              ? "green"
+                              : poll.status === "closed"
+                              ? "red"
+                              : "black",
+                        }}
+                      >
+                        Status: {poll.status}
+                      </p>
+                    </div>
+                    {userId !== poll.createdBy._id && poll && (
+                      <Button
+                        variant="primary"
+                        onClick={() => handleFollowToggle(poll.createdBy._id)}
+                      >
+                        {/* {isFollowing ? "Unfollow" : "Follow"} */}
+                        {followStatus[poll.createdBy._id]
+                          ? "Unfollow"
+                          : "Follow"}
+                      </Button>
+                    )}
+                  </Card.Header>
+                  <Card.Text>
+                    <div className="mt-3 mb-3">Question: {poll.question}</div>
+                    <Card className="mb-3">
+                      <Card.Body>
+                        <Card.Header className="d-flex justify-content-between">
+                          <p>Poll Ends on {poll.expirationTime}</p>
+                          <p>
+                            Category:{" "}
+                            {poll.category &&
+                              poll.category.map((item) => item.category_name)}
+                          </p>
+                        </Card.Header>
+                        <Card.Text>
+                          <div>
+                            {poll && !hasVoted[poll._id]
+                              ? poll.options?.map((item, index) => (
+                                  <div key={index}>
+                                    <input
+                                      type="radio"
+                                      id={`option-${index}`}
+                                      name="poll-option"
+                                      value={item.option}
+                                      onChange={() =>
+                                        handleOptionChange(item.option)
+                                      }
+                                    />
+                                    <label htmlFor={`option-${index}`}>
+                                      {item.option}
+                                    </label>
+                                    <span>{item.count}</span>
+                                  </div>
+                                ))
+                              : poll.options?.map((item, index) => (
+                                  <div
+                                    key={index}
+                                    style={{ position: "relative" }}
                                   >
-                                    {calculatePercentage(
-                                      item.count,
-                                      totalVotes
-                                    )}
-                                    %
-                                  </span>
-                                </div>
-                              ))}
+                                    <ProgressBar
+                                      now={calculatePercentage(
+                                        item.count,
+                                        totalVotes
+                                      )}
+                                      style={{
+                                        height: "20px",
+                                        cursor: "pointer",
+                                      }}
+                                      variant={
+                                        selectedOption === index
+                                          ? "success"
+                                          : "info"
+                                      }
+                                      label={`${calculatePercentage(
+                                        item.count,
+                                        totalVotes
+                                      )}%`}
+                                    />
+                                    <span
+                                      style={{
+                                        position: "absolute",
+                                        left: "50%",
+                                        top: "50%",
+                                        transform: "translate(-50%, -50%)",
+                                        color: "black",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {calculatePercentage(
+                                        item.count,
+                                        totalVotes
+                                      )}
+                                      %
+                                    </span>
+                                  </div>
+                                ))}
 
-                          {/* {hasVoted[onepoll._id] && (
+                            {/* {hasVoted[onepoll._id] && (
                         <button
                           onClick={() =>
                             handleVoteToggle(onepoll._id, selectedOption)
@@ -721,126 +725,137 @@ function CategoryComp({
                       >
                         Vote
                       </button> */}
-                          <button
-                            onClick={() =>
-                              handleVoteToggle(poll._id, selectedOption)
-                            }
-                          >
-                            {hasVoted[poll._id] ? "Unvote" : "Vote"}
-                          </button>
+                            <button
+                              onClick={() =>
+                                handleVoteToggle(poll._id, selectedOption)
+                              }
+                            >
+                              {hasVoted[poll._id] ? "Unvote" : "Vote"}
+                            </button>
 
-                          <p>{selectedOption}</p>
-                        </div>
-                      </Card.Text>
-                      <ToastContainer />
-                    </Card.Body>
-                  </Card>
-                </Card.Text>
+                            <p>{selectedOption}</p>
+                          </div>
+                        </Card.Text>
+                        <ToastContainer />
+                      </Card.Body>
+                    </Card>
+                  </Card.Text>
 
-                <Card.Footer className="d-flex justify-content-between">
-                <p>
-            <button
-              
-              style={{ background: "none", border: "none", cursor: "pointer" }}
-            >{poll._id}
-            {/* {(poll.createdBy.isLiked).toString()} */}
-              <FontAwesomeIcon
-                icon={liked[poll._id] ? solidHeart : regularHeart}
-                style={{ color: liked[poll._id] ? "red" : "gray", fontSize: "24px" }}
-                onClick={()=> handleLike(poll._id)}
-              />
-            </button>
-            <span style={{ marginLeft: "8px" }}> total like:{poll.total_likes}</span>{" "}
-            {/* Display the like count */}
-            like
+                  <Card.Footer className="d-flex justify-content-between">
+                    <p>
+                      <button
+                        style={{
+                          background: "none",
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {/* {poll._id} */}
+                        {/* {(poll.createdBy.isLiked).toString()} */}
+                        <FontAwesomeIcon
+                          icon={liked[poll._id] ? solidHeart : regularHeart}
+                          style={{
+                            color: liked[poll._id] ? "red" : "gray",
+                            fontSize: "24px",
+                          }}
+                          onClick={() => handleLike(poll._id)}
+                        />
+                      </button>
+                      <span style={{ marginLeft: "8px" }}>
+                        {" "}
+                        total like:{poll.total_likes}
+                      </span>{" "}
+                      {/* Display the like count */}
+                      like
+                    </p>
+
+                    <p
+                      style={{ cursor: "pointer", color: "blue" }}
+                      // onClick={()=>handleViewComment(index)}
+                      onClick={() => handleOnepoll(poll._id)}
+                    >
+                      <i className="bi bi-chat-quote-fill"></i> Comments
+                    </p>
+
+                    <p
+                      ref={target}
+                      onClick={handleShareClick}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <i className="bi bi-share"></i> Share
+                    </p>
+                    <Overlay
+                      show={showOverlay}
+                      target={target.current}
+                      placement="top"
+                      containerPadding={20}
+                      rootClose
+                      onHide={() => setShowOverlay(false)}
+                    >
+                      <Popover id="popover-contained">
+                        <Popover.Header as="h3">Share this Poll</Popover.Header>
+                        <Popover.Body>
+                          <div className="d-flex justify-content-around">
+                            <a
+                              href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-facebook"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-twitter"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://www.instagram.com/?url=yourPollLink"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-instagram"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            &nbsp;&nbsp;
+                            <a
+                              href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <i
+                                className="bi bi-whatsapp"
+                                style={{ fontSize: "35px" }}
+                              ></i>
+                            </a>
+                            {/* Add more social media links here */}
+                          </div>
+                        </Popover.Body>
+                      </Popover>
+                    </Overlay>
+                  </Card.Footer>
+                </Card.Body>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p className="no-polls-message text-center">
+            No polls available for this category
           </p>
-
-                  <p
-                    style={{ cursor: "pointer", color: "blue" }}
-                    // onClick={()=>handleViewComment(index)}
-                    onClick={() => handleOnepoll(poll._id)}
-                  >
-                    <i className="bi bi-chat-quote-fill"></i> Comments
-                  </p>
-
-                  <p
-                    ref={target}
-                    onClick={handleShareClick}
-                    style={{ cursor: "pointer" }}
-                  >
-                    <i className="bi bi-share"></i> Share
-                  </p>
-                  <Overlay
-                    show={showOverlay}
-                    target={target.current}
-                    placement="top"
-                    containerPadding={20}
-                    rootClose
-                    onHide={() => setShowOverlay(false)}
-                  >
-                    <Popover id="popover-contained">
-                      <Popover.Header as="h3">Share this Poll</Popover.Header>
-                      <Popover.Body>
-                        <div className="d-flex justify-content-around">
-                          <a
-                            href="https://www.facebook.com/sharer/sharer.php?u=yourPollLink"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i
-                              className="bi bi-facebook"
-                              style={{ fontSize: "35px" }}
-                            ></i>
-                          </a>
-                          &nbsp;&nbsp;
-                          <a
-                            href="https://twitter.com/share?url=yourPollLink&text=Check+out+this+poll"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i
-                              className="bi bi-twitter"
-                              style={{ fontSize: "35px" }}
-                            ></i>
-                          </a>
-                          &nbsp;&nbsp;
-                          <a
-                            href="https://www.instagram.com/?url=yourPollLink"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i
-                              className="bi bi-instagram"
-                              style={{ fontSize: "35px" }}
-                            ></i>
-                          </a>
-                          &nbsp;&nbsp;
-                          <a
-                            href="https://api.whatsapp.com/send?text=Check%20out%20this%20poll%20https://example.com/poll/123"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <i
-                              className="bi bi-whatsapp"
-                              style={{ fontSize: "35px" }}
-                            ></i>
-                          </a>
-                          {/* Add more social media links here */}
-                        </div>
-                      </Popover.Body>
-                    </Popover>
-                  </Overlay>
-                </Card.Footer>
-              </Card.Body>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <p className="no-polls-message text-center">
-          No polls available for this category
-        </p>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 
