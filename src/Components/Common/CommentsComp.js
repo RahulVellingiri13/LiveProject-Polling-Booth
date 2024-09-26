@@ -2413,6 +2413,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
       );
 
       setComments(updatedComments);
+      console.log("nestedreply", updatedComments);
       setNewReply("");
       setShowReplyModal(false);
     } catch (error) {
@@ -2460,6 +2461,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
       setComments(updatedComments);
       setNewNestedReply("");
       setShowNestedReplyModal(false);
+      console.log(comments);
     } catch (error) {
       console.error("Error adding nested reply:", error);
     }
@@ -2488,6 +2490,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
           : comment
       );
     setComments(updatedComments);
+    console.log("updatedComments", updatedComments);
 
     try {
       await axios.post("http://49.204.232.254:64/comment/likereply", {
@@ -2843,17 +2846,17 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
               <p>Question: {onepoll.question}</p>
               {/* <p>Status: {onepoll.status}</p> */}
               <p
-              style={{
-                color:
-                  onepoll.status === "open"
-                    ? "green"
-                    : onepoll.status === "closed"
-                    ? "red"
-                    : "black",
-              }}
-            >
-              Status: {onepoll.status}
-            </p>
+                style={{
+                  color:
+                    onepoll.status === "open"
+                      ? "green"
+                      : onepoll.status === "closed"
+                      ? "red"
+                      : "black",
+                }}
+              >
+                Status: {onepoll.status}
+              </p>
             </div>
             {userId !== polluserId && poll && (
               <Button
@@ -3093,6 +3096,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                         </p>
 
                         {/* <p>Likes: {comment.likes.count}</p> */}
+
                         <button
                           onClick={() => {
                             handleLikeComment(index, comment._id);
@@ -3165,6 +3169,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                                         }}
                                       />
                                     </button>
+
                                     <span>Likes: {reply.likers.length}</span>
 
                                     <Button

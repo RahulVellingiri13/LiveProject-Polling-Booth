@@ -5137,7 +5137,6 @@ function Signup() {
     });
   }, []);
 
-
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -5152,13 +5151,13 @@ function Signup() {
     },
     validationSchema: Yup.object({
       firstname: Yup.string()
-      .min(3, "First name must be at least 3 characters")
-      .matches(/^[A-Za-z\s]+$/, "First name should only contain alphabets")
-      .required("First name is required"),
-    lastname: Yup.string()
-      .min(1, "Last name is required")
-      .matches(/^[A-Za-z\s]+$/, "Last name should only contain alphabets")
-      .required("Last name is required"),
+        .min(3, "First name must be at least 3 characters")
+        .matches(/^[A-Za-z\s]+$/, "First name should only contain alphabets")
+        .required("First name is required"),
+      lastname: Yup.string()
+        .min(1, "Last name is required")
+        .matches(/^[A-Za-z\s]+$/, "Last name should only contain alphabets")
+        .required("Last name is required"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required")
@@ -5167,8 +5166,17 @@ function Signup() {
           return emailRegex.test(value);
         }),
       phone: Yup.string()
-        .matches(/^\d{10}$/, "Phone number must be 10 digits")
-        .required("Phone number is required"),
+        .required("Phone number is required")
+        .test(
+          "checkphonenumber",
+          "Phone number already exists",
+          async (value) => {
+            const phoneExists =
+              allpoll &&
+              allpoll.users.some((poll) => poll.phone_number === value);
+            return !phoneExists;
+          }
+        ),
       day: Yup.string().required("Day is required"),
       month: Yup.string().required("Month is required"),
       year: Yup.string().required("Year is required"),
@@ -5184,75 +5192,78 @@ function Signup() {
     validateOnBlur: true,
     onSubmit: (values) => {
       console.log(otpVerified);
-      let existingemail = allpoll.users.some((item) => item.email == formik.values.email);
-      console.log(existingemail)
-      let existingphonenumber=allpoll.users.some(item=>item.phone_number==formik.values.phone)
-      console.log(existingphonenumber)
-    //   if (otpVerified) {
-    //     if(existingemail || existingphonenumber){
-    //            if(existingemail || existingphonenumber)
-    //            {
-    //             alert("Already an user")
-    //             navigate("/Loginpg");
-    //            }
-    //            else{
-    //             handleSignup(values);
-    //            }
-    //     }
-    //     // else{
-    //     //        handleSignup(values);
-    //     // }
-       
-    //   } else {
-    //     setOtpError("Please verify OTP.");
-    //   }
-    // },
-    if (otpVerified) {
-      if (existingemail || existingphonenumber) {
-        alert("Already a user");
-        navigate("/Loginpg"); 
+      let existingemail = allpoll.users.some(
+        (item) => item.email == formik.values.email
+      );
+      console.log(existingemail);
+      let existingphonenumber = allpoll.users.some(
+        (item) => item.phone_number == formik.values.phone
+      );
+      console.log(existingphonenumber);
+      //   if (otpVerified) {
+      //     if(existingemail || existingphonenumber){
+      //            if(existingemail || existingphonenumber)
+      //            {
+      //             alert("Already an user")
+      //             navigate("/Loginpg");
+      //            }
+      //            else{
+      //             handleSignup(values);
+      //            }
+      //     }
+      //     // else{
+      //     //        handleSignup(values);
+      //     // }
+
+      //   } else {
+      //     setOtpError("Please verify OTP.");
+      //   }
+      // },
+      if (otpVerified) {
+        if (existingemail || existingphonenumber) {
+          alert("Already a user");
+          navigate("/Loginpg");
+        } else {
+          handleSignup(values);
+        }
       } else {
-        handleSignup(values);
+        setOtpError("Please verify OTP.");
       }
-    } else {
-      setOtpError("Please verify OTP.");
-    }
-  },
+    },
   });
 
-//   validateOnBlur: true,
-//   onSubmit: async (values) => {
-//     try {
-//       const response = await axios.post("http://49.204.232.254:64/api/createuser", {
-//         email: formik.values.email,
-//        phone_number: formik.values.phone,
-//       });
-//       console.log(response);
-      
+  //   validateOnBlur: true,
+  //   onSubmit: async (values) => {
+  //     try {
+  //       const response = await axios.post("http://49.204.232.254:64/api/createuser", {
+  //         email: formik.values.email,
+  //        phone_number: formik.values.phone,
+  //       });
+  //       console.log(response);
 
-//       if (response.data.message="User already exists") {
-//         console.log("existing user")
-//         alert("Already an user")
-//         navigate("/Loginpg");
-//         if (response.data.emailExists) {
-//           formik.setFieldError('email', 'This email is already registered');
-//         }
-//         if (response.data.phoneExists) {
-//           formik.setFieldError('phone', 'This phone number is already registered');
-//         }
-//       } else {
-//         if (otpVerified) {
-//           handleSignup(values);
-//         } else {
-//           setOtpError("Please verify OTP.");
-//         }
-//       }
-//     } catch (error) {
-//       console.error("Error checking email/phone:", error);
-//       alert("Error occurred while checking email/phone. Please try again.");
-//     }
-//   },
-// });
+  //       if (response.data.message="User already exists") {
+  //         console.log("existing user")
+  //         alert("Already an user")
+  //         navigate("/Loginpg");
+  //         if (response.data.emailExists) {
+  //           formik.setFieldError('email', 'This email is already registered');
+  //         }
+  //         if (response.data.phoneExists) {
+  //           formik.setFieldError('phone', 'This phone number is already registered');
+  //         }
+  //       } else {
+  //         if (otpVerified) {
+  //           handleSignup(values);
+  //         } else {
+  //           setOtpError("Please verify OTP.");
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error checking email/phone:", error);
+  //       alert("Error occurred while checking email/phone. Please try again.");
+  //     }
+  //   },
+  // });
 
   const handleSignup = (values) => {
     console.log("signup");
@@ -5392,39 +5403,43 @@ function Signup() {
                 </Alert>
               )}
               <Form onSubmit={formik.handleSubmit}>
-                    {/* Firstname */}
-         <div>   
-          <Row>  
-            <Col sm={6}>          
-        <Form.Control
-          type="text"
-          placeholder="Enter first name"
-          {...formik.getFieldProps("firstname")}
-          isInvalid={formik.touched.firstname && formik.errors.firstname}
-        />
-        <Form.Control.Feedback type="invalid">
-          {formik.errors.firstname}
-        </Form.Control.Feedback>
-        </Col>
+                {/* Firstname */}
+                <div>
+                  <Row>
+                    <Col sm={6}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter first name"
+                        {...formik.getFieldProps("firstname")}
+                        isInvalid={
+                          formik.touched.firstname && formik.errors.firstname
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.firstname}
+                      </Form.Control.Feedback>
+                    </Col>
 
-        {/* Lastname */}
-        <Col sm={6}>
-        <Form.Control
-          type="text"
-          placeholder="Enter last name"
-          {...formik.getFieldProps("lastname")}
-          isInvalid={formik.touched.lastname && formik.errors.lastname}
-        />
-        <Form.Control.Feedback type="invalid">
-          {formik.errors.lastname}
-        </Form.Control.Feedback>
-        </Col>
-        </Row>
-        </div>
+                    {/* Lastname */}
+                    <Col sm={6}>
+                      <Form.Control
+                        type="text"
+                        placeholder="Enter last name"
+                        {...formik.getFieldProps("lastname")}
+                        isInvalid={
+                          formik.touched.lastname && formik.errors.lastname
+                        }
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {formik.errors.lastname}
+                      </Form.Control.Feedback>
+                    </Col>
+                  </Row>
+                </div>
                 {/* Email */}
                 <Form.Control
                   type="text"
-                  style={{marginTop:"10px"}}
+                  style={{ marginTop: "10px" }}
                   placeholder="Email address"
                   className="x4"
                   {...formik.getFieldProps("email")}
