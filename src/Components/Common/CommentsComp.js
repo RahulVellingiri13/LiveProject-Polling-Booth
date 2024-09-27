@@ -3170,7 +3170,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                                       />
                                     </button>
 
-                                    {/* <span>Likes: {reply.likers.length}</span> */}
+                                    <span> {  reply.likers && reply.likers.length > 0 ? `Likes: ${reply.likers.length}`: null}</span>
 
                                     <Button
                                       variant="link"

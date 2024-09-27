@@ -2528,6 +2528,7 @@ function CardComp({
     }
   }, [poll, userId]);
 
+
   const getProgressBarColor = (index) => {
     if (selectedOption === index) {
       return "#28a745"; // Selected option will have a green color (or choose any variant)
@@ -2558,6 +2559,7 @@ function CardComp({
   };
   console.log(options);
 
+  
   let handleOnepoll = (_id) => {
     console.log(_id);
     // navigate('/onepoll/'+_id
