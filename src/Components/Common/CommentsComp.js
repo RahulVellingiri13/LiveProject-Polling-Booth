@@ -2360,7 +2360,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
           user_id: userId,
         }
       );
-      setComments((prev) => [response.data.comment, ...prev]);
+      setComments((prev) => [...prev,response.data.comment ]);
       setNewComment("");
       // fetchComments();
     } catch (error) {
@@ -3170,7 +3170,7 @@ function CommentsComp({ poll, polluserId, createdBy, optionscount }) {
                                       />
                                     </button>
 
-                                    <span>Likes: {reply.likers.length}</span>
+                                    {/* <span>Likes: {reply.likers.length}</span> */}
 
                                     <Button
                                       variant="link"
