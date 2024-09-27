@@ -593,7 +593,6 @@ function CategoryComp({
 
   return (
     <>
-      
       <div className="category-container">
         {/* <h3>Category:{filteredPolls.category_name}</h3> */}
         {/* <h2 className="category-title text-center">{polls.category_name}</h2>` */}

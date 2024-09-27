@@ -489,6 +489,7 @@ console.log("userId:", userId);
             key={index}
             index={index}
             pollId={poll.poll_id}
+            polltotalVotes={poll.total_votes}
             polluserId={poll.createdBy._id} //need to check this once
             votingPeriod={poll.expirationTime}
             _id={poll._id}

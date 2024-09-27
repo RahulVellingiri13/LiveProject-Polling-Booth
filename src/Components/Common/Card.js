@@ -2193,6 +2193,7 @@ function CardComp({
   status,
   question,
   options,
+  polltotalVotes,
   optionscount,
   votingPeriod,
   category,
@@ -2318,6 +2319,15 @@ function CardComp({
   // }, [polls]);
 
   useEffect(() => {
+    if (poll) {
+      setHasVoted((prevState) => ({
+        ...prevState,
+        [poll._id]: poll.voters.some((voter) => voter._id === userId),
+      }));
+    }
+  }, [poll, userId,poll._id]);
+
+  useEffect(() => {
     if (poll && poll.createdBy) {
       setFollowStatus((prevState) => ({
         ...prevState,
@@ -2405,11 +2415,17 @@ function CardComp({
 
   //this is the stable code for the calculate percentage
 
-  const calculatePercentage = (count, totalVotes) => {
-    if (totalVotes === 0) return 0;
-    return ((count / totalVotes) * 100).toFixed(2);
+  const calculatePercentage = (count) => {
+    console.log("count:", count, "totalVotes:", polltotalVotes); 
+    const validCount = Number(count) || 0;        
+    const validTotalVotes = Number(polltotalVotes) || 0;
+  
+    if (validTotalVotes === 0) {
+      return 0;
+    }
+  
+    return ((validCount / validTotalVotes) * 100).toFixed(2); 
   };
-
   // const calculatePercentage = (index) => {
   //   console.log("option Index", index);
   //   console.log(optionscount);
@@ -2519,14 +2535,6 @@ function CardComp({
       });
   };
 
-  useEffect(() => {
-    if (poll) {
-      setHasVoted((prevState) => ({
-        ...prevState,
-        [poll._id]: poll.voters.some((voter) => voter._id === userId),
-      }));
-    }
-  }, [poll, userId]);
 
 
   const getProgressBarColor = (index) => {
@@ -2559,7 +2567,7 @@ function CardComp({
   };
   console.log(options);
 
-  
+
   let handleOnepoll = (_id) => {
     console.log(_id);
     // navigate('/onepoll/'+_id
@@ -2596,6 +2604,9 @@ function CardComp({
   //  // setLiked(!liked);
 
   // };
+
+
+  
 
   const handleLike = (id) => {
     //console.log(createdBy._id);
@@ -2877,10 +2888,11 @@ function CardComp({
                         <label htmlFor={`option-${index + 1}`}>
                           {option.option} {optionscount[index]}
                         </label>
-                        <span>{option.count}</span>
+                        {/* <span>{option.count}</span> */}
                       </div>
                     ))
                   : poll.options?.map((item, index) => (
+                    
                       <div key={index} style={{ position: "relative" }}>
                         <ProgressBar
                           now={calculatePercentage(item.count, totalVotes)}
