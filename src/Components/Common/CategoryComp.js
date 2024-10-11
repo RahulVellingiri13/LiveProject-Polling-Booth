@@ -91,7 +91,7 @@
 //       const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
 
 //       axios
-//         .post("http://49.204.232.254:64/polls/voteonpoll", {
+//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
 //           poll_id: _id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -142,7 +142,7 @@
 
 //   const handleLike = () => {
 //     axios
-//       .post("http://49.204.232.254:64/polls/likeonpoll", {
+//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
 //         poll_id: _id,
 //         user_id: userId,
 //       })
@@ -452,7 +452,7 @@ function CategoryComp({
     const selectedOptionValue = polls.options[selectedOption];
 
     axios
-      .post("http://49.204.232.254:64/polls/voteonpoll", {
+      .post("http://92.205.109.210:8028/polls/voteonpoll", {
         poll_id: poll_id,
         user_id: userId,
         option: selectedOptionValue,
@@ -523,7 +523,7 @@ function CategoryComp({
     // console.log(id)
 
     axios
-      .post("http://49.204.232.254:64/polls/likeonpoll", {
+      .post("http://92.205.109.210:8028/polls/likeonpoll", {
         poll_id: id,
         user_id: userId,
       })
@@ -568,7 +568,7 @@ function CategoryComp({
     const isFollowing = followStatus[polluserId] || false;
 
     axios
-      .post("http://49.204.232.254:64/api/follow", {
+      .post("http://92.205.109.210:8028/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
       })

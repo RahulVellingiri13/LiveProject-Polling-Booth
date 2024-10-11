@@ -34,7 +34,7 @@ function Newpasswordph() {
     console.log(number, values.newPassword);
     try {
       const response = await axios.post(
-        "http://49.204.232.254:64/api/updateuser",
+        "http://92.205.109.210:8028/api/updateuser",
         {
           // identifier: email,
           // phone_number:number,

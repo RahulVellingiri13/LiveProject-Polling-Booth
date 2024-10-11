@@ -1418,7 +1418,7 @@
 
 //   const toggleLike = async () => {
 //     try {
-//       const response = await axios.post("http://49.204.232.254:64/polls/likeonpoll", {
+//       const response = await axios.post("http://92.205.109.210:8028/polls/likeonpoll", {
 //         pollId: pollId, // Pass the poll ID to the API
 //       });
 
@@ -1435,7 +1435,7 @@
 
 //   const handleVote = async (index) => {
 //     try {
-//       const response = await axios.post("http://49.204.232.254:64/polls/voteonpoll", {
+//       const response = await axios.post("http://92.205.109.210:8028/polls/voteonpoll", {
 //         pollId: pollId, // Pass the poll ID to the API
 //         optionIndex: index, // Pass the selected option index
 //       });
@@ -1761,7 +1761,7 @@
 //   //new vote Toggle after progreebar operation
 //   const fetchTotalVotes = () => {
 //     axios
-//       .post("http://49.204.232.254:64/polls/totalvote", {
+//       .post("http://92.205.109.210:8028/polls/totalvote", {
 //         poll_id: _id,
 //       })
 //       .then((response) => {
@@ -1785,7 +1785,7 @@
 //       console.log(selectedOptionValue);
 
 //       axios
-//         .post("http://49.204.232.254:64/polls/voteonpoll", {
+//         .post("http://92.205.109.210:8028/polls/voteonpoll", {
 //           poll_id: _id,
 //           user_id: userId,
 //           option: selectedOptionValue,
@@ -1816,7 +1816,7 @@
 //     //   if (selectedOption != null) {
 //     //     const selectedOptionValue = options[selectedOption]; // Get the value of the selected option
 //     //     axios
-//     //       .post("http://49.204.232.254:64/polls/voteonpoll", {
+//     //       .post("http://92.205.109.210:8028/polls/voteonpoll", {
 //     //         poll_id: _id,
 //     //         user_id: userId,
 //     //         option: selectedOptionValue,
@@ -1830,7 +1830,7 @@
 
 //     //           // Fetch updated vote results from the API
 //     //           axios
-//     //             .post(`http://49.204.232.254:64/polls/totalvote`,{
+//     //             .post(`http://92.205.109.210:8028/polls/totalvote`,{
 //     //               poll_id: _id,
 
 //     //             })
@@ -1870,7 +1870,7 @@
 //     // console.log(selectedOptionValue)
 
 //     // console.log(_id, createdBy._id, selectedOptionValue)
-//     //       axios.post('http://49.204.232.254:64/polls/voteonpoll',{
+//     //       axios.post('http://92.205.109.210:8028/polls/voteonpoll',{
 
 //     //       poll_id: _id,
 //     //       user_id: userId,
@@ -1929,7 +1929,7 @@
 //   const handleLike = () => {
 //     console.log(createdBy._id);
 //     axios
-//       .post("http://49.204.232.254:64/polls/likeonpoll", {
+//       .post("http://92.205.109.210:8028/polls/likeonpoll", {
 //         poll_id: _id,
 //         user_id: userId,
 //       })
@@ -2302,7 +2302,7 @@ function CardComp({
   // const fetchPolls = async () => {
   //   try {
   //     const response = await axios.post(
-  //       "http://49.204.232.254:64/polls/getall",
+  //       "http://92.205.109.210:8028/polls/getall",
   //       {
   //         user_id: userId,
   //       }
@@ -2394,7 +2394,7 @@ function CardComp({
 
   const fetchTotalVotes = () => {
     axios
-      .post("http://49.204.232.254:64/polls/totalvote", {
+      .post("http://92.205.109.210:8028/polls/totalvote", {
         poll_id: _id,
       })
       .then((response) => {
@@ -2454,7 +2454,7 @@ function CardComp({
   //   console.log(selectedOptionValue);
 
   //   axios
-  //     .post("http://49.204.232.254:64/polls/voteonpoll", {
+  //     .post("http://92.205.109.210:8028/polls/voteonpoll", {
   //       poll_id: _id,
   //       user_id: userId,
   //       option: selectedOptionValue,
@@ -2502,7 +2502,7 @@ function CardComp({
     const selectedOptionValue = options[selectedOption];
 
     axios
-      .post("http://49.204.232.254:64/polls/voteonpoll", {
+      .post("http://92.205.109.210:8028/polls/voteonpoll", {
         poll_id: _id,
         user_id: userId,
         option: selectedOptionValue,
@@ -2613,7 +2613,7 @@ function CardComp({
     // console.log(id)
 
     axios
-      .post("http://49.204.232.254:64/polls/likeonpoll", {
+      .post("http://92.205.109.210:8028/polls/likeonpoll", {
         poll_id: id,
         user_id: userId,
       })
@@ -2656,7 +2656,7 @@ function CardComp({
   //   console.log("Poll User ID:", polluserId);
 
   //   axios
-  //     .post("http://49.204.232.254:64/api/follow", {
+  //     .post("http://92.205.109.210:8028/api/follow", {
   //       user_id: userId,
   //       follow_user_id: polluserId,
   //     })
@@ -2686,7 +2686,7 @@ function CardComp({
     const isFollowing = followStatus[polluserId] || false;
 
     axios
-      .post("http://49.204.232.254:64/api/follow", {
+      .post("http://92.205.109.210:8028/api/follow", {
         follow_user_id: polluserId,
         user_id: userId,
         action: isFollowing ? "unfollow" : "follow",

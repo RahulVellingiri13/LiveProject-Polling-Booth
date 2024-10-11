@@ -73,7 +73,7 @@
 //   // Function to fetch polls data from the API
 //   //   const fetchPolls = async () => {
 //   //    try {
-//   //      const response = await axios.post("http://49.204.232.254:64/polls/getall", {
+//   //      const response = await axios.post("http://92.205.109.210:8028/polls/getall", {
 //   //        user_id: userId
 //   //      });
 //   //      setPolls(response.data); // Set the initial polls data
@@ -89,7 +89,7 @@
 //   const fetchPolls = async () => {
 //     try {
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/polls/getall",
+//         "http://92.205.109.210:8028/polls/getall",
 //         {
 //           user_id: userId,
 //         }
@@ -125,7 +125,7 @@
 //     const fetchCategories = async () => {
 //       try {
 //         const response = await axios.get(
-//           "http://49.204.232.254:64/category/getall"
+//           "http://92.205.109.210:8028/category/getall"
 //         );
 //         console.log(response.data);
 //         setCategories(response.data);
@@ -176,7 +176,7 @@
 //   const onPhoneSubmit = async () => {
 //     try {
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/send-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/send-otp-sms",
 //         { number: phoneNumber }
 //       );
 //       if (response.status === 200) {
@@ -194,7 +194,7 @@
 //     console.log(phoneNumber);
 //     try {
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
 //         { number: phoneNumber, otp: otp }
 //       );
 //       if (response.status === 200) {
@@ -215,7 +215,7 @@
 
 //   useEffect(() => {
 //     axios
-//       .get("http://49.204.232.254:64/polls/top3")
+//       .get("http://92.205.109.210:8028/polls/top3")
 //       .then((response) => {
 //         setTrendingPolls(response.data);
 //       })
@@ -241,7 +241,7 @@
 //     console.log(searchQuery);
 //     try {
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/polls/search",
+//         "http://92.205.109.210:8028/polls/search",
 //         {
 //           query: searchQuery,
 //         }
@@ -601,7 +601,7 @@ function Homepage({ poll }) {
   // Function to fetch polls data from the API
   //   const fetchPolls = async () => {
   //    try {
-  //      const response = await axios.post("http://49.204.232.254:64/polls/getall", {
+  //      const response = await axios.post("http://92.205.109.210:8028/polls/getall", {
   //        user_id: userId
   //      });
   //      setPolls(response.data); // Set the initial polls data
@@ -618,7 +618,7 @@ function Homepage({ poll }) {
   const fetchPolls = async () => {
     try {
       const response = await axios.post(
-        "http://49.204.232.254:64/polls/getall",
+        "http://92.205.109.210:8028/polls/getall",
         {
           user_id: userId,
         }
@@ -688,7 +688,7 @@ function Homepage({ poll }) {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://49.204.232.254:64/category/getall"
+          "http://92.205.109.210:8028/category/getall"
         );
         console.log(response.data);
         setCategories(response.data);
@@ -739,7 +739,7 @@ function Homepage({ poll }) {
   const onPhoneSubmit = async () => {
     try {
       const response = await axios.post(
-        "http://49.204.232.254:64/mobileauth/send-otp-sms",
+        "http://92.205.109.210:8028/mobileauth/send-otp-sms",
         { number: phoneNumber }
       );
       if (response.status === 200) {
@@ -757,7 +757,7 @@ function Homepage({ poll }) {
     console.log(phoneNumber);
     try {
       const response = await axios.post(
-        "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+        "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
         { number: phoneNumber, otp: otp }
       );
       if (response.status === 200) {
@@ -780,7 +780,7 @@ function Homepage({ poll }) {
 
   useEffect(() => {
     axios
-      .get("http://49.204.232.254:64/polls/top3")
+      .get("http://92.205.109.210:8028/polls/top3")
       .then((response) => {
         setTrendingPolls(response.data);
       })
@@ -806,7 +806,7 @@ function Homepage({ poll }) {
     console.log(searchQuery);
     try {
       const response = await axios.post(
-        "http://49.204.232.254:64/polls/search",
+        "http://92.205.109.210:8028/polls/search",
         {
           query: searchQuery,
         }

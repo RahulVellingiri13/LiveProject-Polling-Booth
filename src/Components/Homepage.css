@@ -110,7 +110,7 @@ body {
   justify-content: space-between;
   /* width: 100%; */
   overflow: auto;
-  width: 75%;
+  /* width: 75%; */
   height: 40rem;
   /* margin-right:-20px; */
 }

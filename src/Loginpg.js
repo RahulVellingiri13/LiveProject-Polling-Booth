@@ -173,7 +173,7 @@ const [loginuser,setLoginuser]=useState("")
                   };
                   console.log(loginData);
                   axios
-                    .post("http://49.204.232.254:64/log/loginuser", loginData)
+                    .post("http://92.205.109.210:8028/log/loginuser", loginData)
                     .then((response) => {
                       console.log("Login successful:", response.data);
                       console.log(response.data)

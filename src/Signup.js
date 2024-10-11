@@ -1076,7 +1076,7 @@
 //     console.log(signupdata);
 
 //     axios
-//       .post("http://49.204.232.254:64/api/createuser", signupdata)
+//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -1097,7 +1097,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
+//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -1126,7 +1126,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -1732,7 +1732,7 @@
 //     };
 
 //     axios
-//     .post("http://49.204.232.254:64/api/createuser", signupdata)
+//     .post("http://92.205.109.210:8028/api/createuser", signupdata)
 //     .then((response) => {
 //       alert("Created successfully");
 //       setShowAlert(true);
@@ -1752,7 +1752,7 @@
 // const sendOtp = async () => {
 //   if (formik.values.phone && !formik.errors.phone) {
 //     try {
-//       const response = await fetch("http://49.204.232.254:64/mobileauth/send-otp-sms", {
+//       const response = await fetch("http://92.205.109.210:8028/mobileauth/send-otp-sms", {
 //         method: "POST",
 //         headers: { "Content-Type": "application/json" },
 //         body: JSON.stringify({ number: formik.values.phone }),
@@ -1778,7 +1778,7 @@
 // const verifyOtp = async () => {
 //   try {
 //     console.log(otp)
-//     const response = await axios.post("http://49.204.232.254:64/mobileauth/verify-otp-sms", {
+//     const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
 //       number: formik.values.phone,
 //       otp: otp,
 //     });
@@ -2467,7 +2467,7 @@
 //       // dob: formattedDob,
 //     };
 //     console.log(signupdata)
-//     axios.post("http://49.204.232.254:64/api/createuser", signupdata)
+//     axios.post("http://92.205.109.210:8028/api/createuser", signupdata)
 //       .then((response) => {
 //         console.log(response.data)
 //         alert("Created successfully");
@@ -2488,7 +2488,7 @@
 //   const sendOtp = async () => {
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
-//         const response = await fetch("http://49.204.232.254:64/mobileauth/send-otp-sms", {
+//         const response = await fetch("http://92.205.109.210:8028/mobileauth/send-otp-sms", {
 //           method: "POST",
 //           headers: { "Content-Type": "application/json" },
 //           body: JSON.stringify({ number: formik.values.phone }),
@@ -2514,7 +2514,7 @@
 //   const verifyOtp = async () => {
 //     try {
 //       console.log(otp)
-//       const response = await axios.post("http://49.204.232.254:64/mobileauth/verify-otp-sms", {
+//       const response = await axios.post("http://92.205.109.210:8028/mobileauth/verify-otp-sms", {
 //         number: formik.values.phone,
 //         otp: otp,
 //       });
@@ -3207,7 +3207,7 @@
 //     console.log(signupdata)
 
 //     axios
-//       .post("http://49.204.232.254:64/api/createuser", signupdata)
+//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -3228,7 +3228,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
+//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -3257,7 +3257,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -3867,7 +3867,7 @@
 //     console.log(signupdata)
 
 //     axios
-//       .post("http://49.204.232.254:64/api/createuser", signupdata)
+//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -3888,7 +3888,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
+//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -3917,7 +3917,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -4546,7 +4546,7 @@
 //     console.log(signupdata);
 
 //     axios
-//       .post("http://49.204.232.254:64/api/createuser", signupdata)
+//       .post("http://92.205.109.210:8028/api/createuser", signupdata)
 //       .then((response) => {
 //         alert("Created successfully");
 //         setShowAlert(true);
@@ -4567,7 +4567,7 @@
 //     if (formik.values.phone && !formik.errors.phone) {
 //       try {
 //         const response = await fetch(
-//           "http://49.204.232.254:64/mobileauth/send-otp-sms",
+//           "http://92.205.109.210:8028/mobileauth/send-otp-sms",
 //           {
 //             method: "POST",
 //             headers: { "Content-Type": "application/json" },
@@ -4596,7 +4596,7 @@
 //     try {
 //       console.log(otp);
 //       const response = await axios.post(
-//         "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+//         "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
 //         {
 //           number: formik.values.phone,
 //           otp: otp,
@@ -5130,7 +5130,7 @@ function Signup() {
 
   let [allpoll, setAllpoll] = useState([]);
   useEffect(() => {
-    axios.get("http://49.204.232.254:64/api/getall").then((res) => {
+    axios.get("http://92.205.109.210:8028/api/getall").then((res) => {
       console.log(res.data.users);
       setAllpoll(res.data);
       console.log(allpoll);
@@ -5235,7 +5235,7 @@ function Signup() {
   //   validateOnBlur: true,
   //   onSubmit: async (values) => {
   //     try {
-  //       const response = await axios.post("http://49.204.232.254:64/api/createuser", {
+  //       const response = await axios.post("http://92.205.109.210:8028/api/createuser", {
   //         email: formik.values.email,
   //        phone_number: formik.values.phone,
   //       });
@@ -5296,7 +5296,7 @@ function Signup() {
     console.log(signupdata);
 
     axios
-      .post("http://49.204.232.254:64/api/createuser", signupdata)
+      .post("http://92.205.109.210:8028/api/createuser", signupdata)
       .then((response) => {
         alert("Created successfully");
         setShowAlert(true);
@@ -5317,7 +5317,7 @@ function Signup() {
     if (formik.values.phone && !formik.errors.phone) {
       try {
         const response = await fetch(
-          "http://49.204.232.254:64/mobileauth/send-otp-sms",
+          "http://92.205.109.210:8028/mobileauth/send-otp-sms",
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -5346,7 +5346,7 @@ function Signup() {
     try {
       console.log(otp);
       const response = await axios.post(
-        "http://49.204.232.254:64/mobileauth/verify-otp-sms",
+        "http://92.205.109.210:8028/mobileauth/verify-otp-sms",
         {
           number: formik.values.phone,
           otp: otp,
